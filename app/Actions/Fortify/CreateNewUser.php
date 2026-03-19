@@ -7,7 +7,7 @@ use App\Concerns\ProfileValidationRules;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
-
+use App\Rules\CedulaEcuatoriana;
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules, ProfileValidationRules;
@@ -19,10 +19,17 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        if(isset($input['cedula'])) {
+            Validator::make($input, [
+                'cedula' => ['required', new CedulaEcuatoriana],
+            ])->validate();
+        }
+        
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
         ])->validate();
+
 
         return User::create([
             'name' => $input['name'],

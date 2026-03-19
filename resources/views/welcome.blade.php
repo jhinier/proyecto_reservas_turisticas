@@ -85,23 +85,34 @@
         </svg>
     </button>
     <ul x-cloak x-show="mobileMenuIsOpen" x-transition:enter="transition motion-reduce:transition-none ease-out duration-300" x-transition:enter-start="-translate-y-full" x-transition:enter-end="translate-y-0" x-transition:leave="transition motion-reduce:transition-none ease-out duration-300" x-transition:leave-start="translate-y-0" x-transition:leave-end="-translate-y-full" class="fixed max-h-svh overflow-y-auto inset-x-0 top-0 z-10 flex flex-col rounded-b-radius border-b border-outline bg-surface-alt px-8 pb-6 pt-10 dark:border-outline-dark dark:bg-surface-dark-alt sm:hidden">
+        
         <li class="mb-4 border-none">
             <div class="flex items-center gap-2 py-2">
                 <img src="https://penguinui.s3.amazonaws.com/component-assets/avatar-8.webp" alt="User Profile" class="size-12 rounded-full object-cover"  />
                 <div>
-                    <span class="font-medium text-on-surface-strong dark:text-on-surface-dark-strong">Alice Brown</span>
-                    <p class="text-sm text-on-surface dark:text-on-surface-dark">alice.brown@gmail.com</p>
+                    <span class="font-medium text-on-surface-strong dark:text-on-surface-dark-strong">Bienvenido</span>
+                    <p class="text-sm text-on-surface dark:text-on-surface-dark">Turista</p>
                 </div>  
             </div>
         </li>
-        <li class="p-2"><a href="#" class="w-full text-lg font-bold text-primary focus:underline dark:text-primary-dark" aria-current="page">Products</a></li>
-        <li class="p-2"><a href="#" class="w-full text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark">Pricing</a></li>
-        <li class="p-2"><a href="#" class="w-full text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark">Blog</a></li>
-        <hr role="none" class="my-2 border-outline dark:border-outline-dark">
-        <li class="p-2"><a href="#" class="w-full text-on-surface focus:underline dark:text-on-surface-dark">Dashboard</a></li>
-        <li class="p-2"><a href="#" class="w-full text-on-surface focus:underline dark:text-on-surface-dark">Subscription</a></li>
-        <li class="p-2"><a href="#" class="w-full text-on-surface focus:underline dark:text-on-surface-dark">Settings</a></li>
-        <li class="mt-4 w-full border-none"><a href="{{ route('login') }}" class="rounded-radius bg-primary border-primary px-4 py-2 block text-center font-medium tracking-wide text-on-primary hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:opacity-100 active:outline-offset-0 dark:bg-primary-dark dark:border-primary-dark dark:text-on-primary-dark dark:focus-visible:outline-primary-dark">Iniciar Sesión</a></li>
+
+        <li class="p-2"><a href="#" class="w-full text-lg font-bold text-primary focus:underline dark:text-primary-dark" aria-current="page">Inicio</a></li>
+        <li class="p-2"><a href="#" class="w-full text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark">Sitios Turísticos</a></li>
+        <li class="p-2"><a href="#" class="w-full text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark">Actividades</a></li>
+        <li class="p-2"><a href="#" class="w-full text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark">Eventos</a></li>
+        
+        <hr role="none" class="my-4 border-outline dark:border-outline-dark">
+        
+        <li class="mt-2 w-full border-none">
+            <a href="{{ route('login') }}" class="rounded-radius bg-surface-alt border border-outline px-4 py-2 block text-center font-medium tracking-wide text-on-surface hover:bg-surface-dark-alt/5 focus-visible:outline-2 dark:bg-surface-dark-alt dark:border-outline-dark dark:text-on-surface-dark">
+                Iniciar Sesión
+            </a>
+        </li>
+        <li class="mt-4 w-full border-none">
+            <a href="{{ route('register') }}" class="rounded-radius bg-primary border-primary px-4 py-2 block text-center font-medium tracking-wide text-on-primary hover:opacity-75 focus-visible:outline-2 focus-visible:outline-primary dark:bg-primary-dark dark:border-primary-dark dark:text-on-primary-dark">
+                Registrarse
+            </a>
+        </li>
     </ul>
 </nav>
 
