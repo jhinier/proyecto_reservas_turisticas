@@ -65,4 +65,12 @@ class User extends Authenticatable
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
+
+    /**
+     * Un usuario puede tener una empresa (o varias, si fuera el caso)
+     */
+    public function empresa()
+    {
+        return $this->hasOne(Emprendimiento::class);
+    }
 }

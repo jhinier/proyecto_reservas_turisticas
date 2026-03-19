@@ -6,178 +6,159 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-       Schema::create('tipo_servicio', function (Blueprint $table) {
-        $table->bigIncrements('id_tipo_servicio');
-        $table->string('nombre_tipo_servicio',100);
-        $table->timestamps();
-    });
+        Schema::create('tipo_servicios', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre', 100);
+            $table->timestamps();
+        });
 
-    Schema::create('tipo_publicacion', function (Blueprint $table) {
-        $table->bigIncrements('id_tipo_publicacion');
-        $table->string('nombre_tipo_publicacion',100);
-        $table->timestamps();
-    });
+        Schema::create('emprendimientos', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('nombre', 150);
+            $table->string('descripcion', 300);
+            // Añadimos el estado. Por defecto, cuando se crea un emprendimiento, estará "activo" (true)
+            $table->boolean('estado')->default(true); 
+            $table->timestamps();
+        });
 
-    Schema::create('empresa', function (Blueprint $table) {
-        $table->bigIncrements('id_empresa');
-        $table->unsignedBigInteger('id_usuario');
-        $table->string('nombre_empresa',150);
-        $table->string('descripcion',300);
-        $table->timestamps();
+        Schema::create('emprendimiento_tipo_servicios', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('tipo_servicio_id')->constrained('tipo_servicios')->onDelete('cascade');
+            $table->foreignId('emprendimiento_id')->constrained('emprendimientos')->onDelete('cascade');
+            $table->timestamps();
+        });
 
-        $table->foreign('id_usuario')->references('id')->on('users');
-    });
+        Schema::create('servicios', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('emprendimiento_tipo_servicio_id')->constrained('emprendimiento_tipo_servicios')->onDelete('cascade');
+            $table->string('nombre', 150);
+            $table->string('descripcion', 300);
+            $table->decimal('precio', 8, 2);
+            $table->integer('stock');
+            $table->timestamps();
+        });
 
-    Schema::create('servicios', function (Blueprint $table) {
-        $table->bigIncrements('id_servicio');
-        $table->unsignedBigInteger('id_tipo_servicio');
-        $table->unsignedBigInteger('id_empresa');
-        $table->string('nombre_servicio',150);
-        $table->string('descripcion',300);
-        $table->decimal('precio',8,2);
-        $table->integer('stock');
-        $table->timestamps();
+        Schema::create('reservas', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('servicio_id')->constrained('servicios')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->date('fecha');
+            $table->string('estado', 20);
+            $table->decimal('precio_total', 8, 2);
+            $table->integer('numero_personas');
+            $table->timestamps();
+        });
 
-        $table->foreign('id_tipo_servicio')->references('id_tipo_servicio')->on('tipo_servicio');
-        $table->foreign('id_empresa')->references('id_empresa')->on('empresa');
-    });
+        Schema::create('imagen_servicios', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('servicio_id')->constrained('servicios')->onDelete('cascade');
+            $table->string('imagen', 255);
+            $table->timestamps();
+        });
 
-    Schema::create('reserva', function (Blueprint $table) {
-        $table->bigIncrements('id_reserva');
-        $table->unsignedBigInteger('id_servicio');
-        $table->unsignedBigInteger('id_usuario');
-        $table->date('fecha');
-        $table->string('estado',20);
-        $table->decimal('precio_total',8,2);
-        $table->integer('numero_personas');
-        $table->timestamps();
+        Schema::create('detalle_hospedajes', function (Blueprint $table) {
+            $table->foreignId('servicio_id')->primary()->constrained('servicios')->onDelete('cascade');
+            $table->integer('capacidad');
+            $table->timestamps();
+        });
 
-        $table->foreign('id_servicio')->references('id_servicio')->on('servicios');
-        $table->foreign('id_usuario')->references('id')->on('users');
-    });
+        Schema::create('detalle_guianzas', function (Blueprint $table) {
+            $table->foreignId('servicio_id')->primary()->constrained('servicios')->onDelete('cascade');
+            $table->string('lugar_salida', 150);
+            $table->time('hora_salida');
+            $table->integer('capacidad');
+            $table->string('servicios_incluidos', 300);
+            $table->string('lugares_actividades', 300);
+            $table->string('recomendaciones', 300);
+            $table->string('documento', 255);
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->timestamps();
+        });
 
-    Schema::create('imagenes_servicio', function (Blueprint $table) {
-        $table->bigIncrements('id_img_servicio');
-        $table->unsignedBigInteger('id_servicio');
-        $table->string('imagen',255);
-        $table->timestamps();
+        Schema::create('detalle_alimentaciones', function (Blueprint $table) {
+            $table->foreignId('servicio_id')->primary()->constrained('servicios')->onDelete('cascade');
+            $table->string('horario', 100);
+            $table->string('tipo_alimentacion', 100);
+            $table->timestamps();
+        });
 
-        $table->foreign('id_servicio')->references('id_servicio')->on('servicios');
-    });
+        Schema::create('tipo_publicaciones', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre', 100);
+            $table->timestamps();
+        });
 
-    Schema::create('detalle_hospedaje', function (Blueprint $table) {
-        $table->unsignedBigInteger('id_servicio')->primary();
-        $table->integer('capacidad');
+        Schema::create('publicaciones_turisticas', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('tipo_publicacion_id')->constrained('tipo_publicaciones')->onDelete('cascade');
+            $table->string('nombre', 150);
+            $table->string('descripcion', 300);
+            $table->timestamps();
+        });
 
-        $table->foreign('id_servicio')->references('id_servicio')->on('servicios');
-    });
+        Schema::create('imagen_publicaciones', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('publicacion_id')->constrained('publicaciones_turisticas')->onDelete('cascade');
+            $table->string('imagen', 255);
+            $table->timestamps();
+        });
 
-    Schema::create('detalle_guianza', function (Blueprint $table) {
-        $table->unsignedBigInteger('id_servicio')->primary();
-        $table->string('lugar_salida',150);
-        $table->time('hora_salida');
-        $table->integer('capacidad');
-        $table->string('servicios_incluidos',300);
-        $table->string('lugares_actividades',300);
-        $table->string('recomendaciones',300);
-        $table->string('documento',255);
-        $table->date('fecha_inicio');
-        $table->date('fecha_fin');
+        Schema::create('sitios_turisticos', function (Blueprint $table) {
+            $table->foreignId('publicacion_id')->primary()->constrained('publicaciones_turisticas')->onDelete('cascade');
+            $table->string('ubicacion', 200);
+            $table->timestamps();
+        });
 
-        $table->foreign('id_servicio')->references('id_servicio')->on('servicios');
-    });
+        Schema::create('actividades_turisticas', function (Blueprint $table) {
+            $table->foreignId('publicacion_id')->primary()->constrained('publicaciones_turisticas')->onDelete('cascade');
+            $table->string('duracion_estimada', 50);
+            $table->string('dificultad', 50);
+            $table->string('recomendaciones', 300);
+            $table->timestamps();
+        });
 
-    Schema::create('detalle_alimentacion', function (Blueprint $table) {
-        $table->unsignedBigInteger('id_servicio')->primary();
-        $table->string('horario',100);
-        $table->string('tipo_alimentacion',100);
+        Schema::create('festividades', function (Blueprint $table) {
+            $table->foreignId('publicacion_id')->primary()->constrained('publicaciones_turisticas')->onDelete('cascade');
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->timestamps();
+        });
 
-        $table->foreign('id_servicio')->references('id_servicio')->on('servicios');
-    });
-
-    Schema::create('publicacion_turistica', function (Blueprint $table) {
-        $table->bigIncrements('id_publicacion');
-        $table->unsignedBigInteger('id_usuario');
-        $table->unsignedBigInteger('id_tipo_publicacion');
-        $table->string('nombre_publicacion',150);
-        $table->string('descripcion',300);
-        $table->timestamps();
-
-        $table->foreign('id_usuario')->references('id')->on('users');
-        $table->foreign('id_tipo_publicacion')->references('id_tipo_publicacion')->on('tipo_publicacion');
-    });
-
-    Schema::create('imagenes_publicacion', function (Blueprint $table) {
-        $table->bigIncrements('id_img_publicacion');
-        $table->unsignedBigInteger('id_publicacion');
-        $table->string('imagen',255);
-        $table->timestamps();
-
-        $table->foreign('id_publicacion')->references('id_publicacion')->on('publicacion_turistica');
-    });
-
-    Schema::create('sitios_turisticos', function (Blueprint $table) {
-        $table->unsignedBigInteger('id_publicacion')->primary();
-        $table->string('ubicacion_sitio_turistico',200);
-
-        $table->foreign('id_publicacion')->references('id_publicacion')->on('publicacion_turistica');
-    });
-
-    Schema::create('actividades_turisticas', function (Blueprint $table) {
-        $table->unsignedBigInteger('id_publicacion')->primary();
-        $table->string('duracion_estimada',50);
-        $table->string('dificultad',50);
-        $table->string('recomendaciones',300);
-
-        $table->foreign('id_publicacion')->references('id_publicacion')->on('publicacion_turistica');
-    });
-
-    Schema::create('festividades', function (Blueprint $table) {
-        $table->unsignedBigInteger('id_publicacion')->primary();
-        $table->date('fecha_inicio');
-        $table->date('fecha_fin');
-
-        $table->foreign('id_publicacion')->references('id_publicacion')->on('publicacion_turistica');
-    });
-
-    Schema::create('actividades_festividad', function (Blueprint $table) {
-        $table->bigIncrements('id_act_festividad');
-        $table->unsignedBigInteger('id_publicacion');
-        $table->string('nombre_act_festividad',150);
-        $table->date('fecha');
-        $table->time('hora');
-        $table->string('lugar',150);
-        $table->string('descripcion',300);
-        $table->string('imagen_act_festividad',255);
-
-        $table->foreign('id_publicacion')->references('id_publicacion')->on('publicacion_turistica');
-    });
+        Schema::create('actividades_festividades', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('publicacion_id')->constrained('publicaciones_turisticas')->onDelete('cascade');
+            $table->string('nombre', 150);
+            $table->date('fecha');
+            $table->time('hora');
+            $table->string('lugar', 150);
+            $table->string('descripcion', 300);
+            $table->string('imagen', 255);
+            $table->timestamps();
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('actividades_festividad');
+        Schema::dropIfExists('actividades_festividades');
         Schema::dropIfExists('festividades');
         Schema::dropIfExists('actividades_turisticas');
         Schema::dropIfExists('sitios_turisticos');
-        Schema::dropIfExists('imagenes_publicacion');
-        Schema::dropIfExists('publicacion_turistica');
-        Schema::dropIfExists('detalle_alimentacion');
-        Schema::dropIfExists('detalle_guianza');
-        Schema::dropIfExists('detalle_hospedaje');
-        Schema::dropIfExists('imagenes_servicio');
-        Schema::dropIfExists('reserva');
+        Schema::dropIfExists('imagen_publicaciones');
+        Schema::dropIfExists('publicaciones_turisticas');
+        Schema::dropIfExists('tipo_publicaciones');
+        Schema::dropIfExists('detalle_alimentaciones');
+        Schema::dropIfExists('detalle_guianzas');
+        Schema::dropIfExists('detalle_hospedajes');
+        Schema::dropIfExists('imagen_servicios');
+        Schema::dropIfExists('reservas');
         Schema::dropIfExists('servicios');
-        Schema::dropIfExists('empresa');
-        Schema::dropIfExists('tipo_publicacion');
-        Schema::dropIfExists('tipo_servicio');
+        Schema::dropIfExists('emprendimiento_tipo_servicios');
+        Schema::dropIfExists('emprendimientos');
+        Schema::dropIfExists('tipo_servicios');
     }
 };
