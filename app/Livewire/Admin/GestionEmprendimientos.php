@@ -98,11 +98,17 @@ class GestionEmprendimientos extends Component
     }
 
     // 🔥 FUNCIÓN ELIMINAR AÑADIDA PARA QUE FUNCIONE EL BOTÓN DE LA TABLA
-    public function eliminar($id)
+    
+    public function eliminar($id, EmprendimientoService $servicio)
     {
-        Emprendimiento::destroy($id);
-        
-        // 🔥 ALERTA DE ELIMINACIÓN (Toasts)
+        if ($servicio->eliminarRegistroCompleto($id)) {
+            $this->dispatch('notify', [
+                'type'    => 'danger',
+                'title'   => 'Registro Eliminado',
+                'message' => 'El negocio y los roles se han borrado. Cédula liberada.'
+            ]);
+        }
+         // 🔥 ALERTA DE ELIMINACIÓN (Toasts)
         $this->dispatch('notify', type: 'danger', title: 'Registro Eliminado', message: 'El emprendimiento ha sido borrado permanentemente del sistema.');
     }
 }

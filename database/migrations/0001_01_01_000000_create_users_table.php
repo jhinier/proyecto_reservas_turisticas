@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('apellidos');
             $table->string('email')->unique();
             $table->string('cedula',10)->unique();
-            $table->string('telefono');
+            $table->integer('edad')->unsigned();
+            $table->string('telefono',15);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

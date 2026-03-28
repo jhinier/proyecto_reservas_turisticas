@@ -76,23 +76,12 @@ class permisos extends Seeder
                 'password' => Hash::make('admin1234'), 
                 'cedula' => '0600000000',
                 'telefono' => '0900000000',
+                'edad'      => 30,
             ]
         );
 
         // Le asignamos el rol de jefe máximo
         $superAdmin->assignRole($roleSuperAdmin);
 
-        // Crear Emprendimiento de Prueba
-        $emprendimiento = User::updateOrCreate(
-            ['email' => 'emprendimiento@test.com'], 
-            [
-                'name' => 'Hostal Riobamba',
-                'apellidos' => 'Turismo', // Rellenamos para evitar el error "Not Null"
-                'password' => Hash::make('12345678'), 
-                'cedula' => '0600000002',
-                'telefono' => '032999999',
-            ]
-        );
-        $emprendimiento->assignRole('emprendimiento');
     }
 }

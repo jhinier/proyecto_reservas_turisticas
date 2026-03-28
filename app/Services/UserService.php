@@ -19,6 +19,7 @@ class UserService
                 'password'  => Hash::make($datos['password']),
                 'cedula'    => $datos['cedula'],
                 'telefono'  => $datos['telefono'],
+                'edad'      => $datos['edad'],
             ]);
 
             // 2. Asignación del rol
