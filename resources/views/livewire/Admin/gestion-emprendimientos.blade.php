@@ -12,6 +12,8 @@
          x-transition.opacity.duration.300ms
          style="display: none;">
 
+         
+
         <div x-show="type === 'success'" class="relative w-full overflow-hidden rounded-sm border border-green-500 bg-surface text-on-surface dark:bg-surface-dark dark:text-on-surface-dark shadow-lg" role="alert">
             <div class="flex w-full items-center gap-2 bg-success/10 p-4">
                 <div class="bg-green-500/15 text-green-500 rounded-full p-1">

@@ -72,6 +72,28 @@ class EmprendimientoService
         });
     }
 
+     public function eliminarRegistroCompleto(int $id): bool
+    {
+        return DB::transaction(function () use ($id) {
+            try {
+                $emp = Emprendimiento::findOrFail($id);
+                $usuario = $emp->user;
+
+                if ($usuario) {
+                    // 1. Limpiamos la tabla de roles (Spatie)
+                    $usuario->syncRoles([]); 
+                    // 2. Borramos al usuario (dispara el onDelete cascade hacia emprendimientos)
+                    return (bool) $usuario->delete();
+                }
+
+                return (bool) $emp->delete();
+            } catch (Exception $e) {
+                Log::error("Fallo crítico al eliminar registro #{$id}: " . $e->getMessage());
+                return false;
+            }
+        });
+    }
+
     /**
      * Registra un servicio turístico asociado a un emprendimiento.
      */

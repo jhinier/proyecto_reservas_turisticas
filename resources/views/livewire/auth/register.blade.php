@@ -41,6 +41,20 @@
                 :placeholder="__('Cédula')"
             />
 
+            <!-- Edad -->
+            <flux:input
+                name="edad"
+                :label="__('Edad')"
+                :value="old('edad')"
+                type="number"
+                required
+                autocomplete="edad"
+                :placeholder="__('Edad')"
+                required
+                autocomplete="cedula"
+                :placeholder="__('Cédula')"
+            />
+
             <!-- Telefono -->
             <flux:input
                 name="telefono"
