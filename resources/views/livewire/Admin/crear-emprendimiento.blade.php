@@ -1,5 +1,5 @@
 <div class="w-full px-4 pt-2 pb-8">
-    <h1 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">Nuevo Emprendimiento</h1>
+    <h1 class="mb-4 text-2xl font-bold text-zinc-900 dark:text-white">Nuevo Emprendimiento_ 22</h1>
 
     <div class="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
         <div class="flex flex-col lg:flex-row">
