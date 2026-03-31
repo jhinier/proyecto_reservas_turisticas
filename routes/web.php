@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\LandingController;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\GestionEmprendimientos; 
 use App\Livewire\Admin\CrearEmprendimiento;
@@ -9,8 +10,8 @@ use App\Livewire\Admin\GestionUsuarios; // Importamos tu nuevo componente
 use App\Livewire\Emprendimiento\Dashboard as EmprendimientoDashboard;
 
 // 1. PÁGINA PÚBLICA (Lo que ve todo el mundo al entrar)
-Route::view('/', 'welcome')->name('home');
-
+//Route::view('/', 'welcome')->name('home');
+    Route::get('/', [LandingController::class, 'index'])->name('home');
 // 2. RUTAS PROTEGIDAS (Solo usuarios logueados)
 Route::middleware(['auth', 'verified'])->group(function () {
     
