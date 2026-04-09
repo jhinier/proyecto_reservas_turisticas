@@ -12,8 +12,6 @@
          x-transition.opacity.duration.300ms
          style="display: none;">
 
-         
-
         <div x-show="type === 'success'" class="relative w-full overflow-hidden rounded-sm border border-green-500 bg-surface text-on-surface dark:bg-surface-dark dark:text-on-surface-dark shadow-lg" role="alert">
             <div class="flex w-full items-center gap-2 bg-success/10 p-4">
                 <div class="bg-green-500/15 text-green-500 rounded-full p-1">
@@ -74,6 +72,7 @@
             </div>
         </div>
     </div>
+
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Gestión de Emprendimientos</h1>
         <a href="{{ route('admin.emprendimientos.crear') }}" wire:navigate class="inline-flex justify-center items-center gap-2 whitespace-nowrap rounded-radius bg-success border border-success dark:border-success px-4 py-2 text-sm font-medium tracking-wide text-on-success transition hover:opacity-75 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-success active:opacity-100 active:outline-offset-0 disabled:opacity-75 disabled:cursor-not-allowed dark:bg-success dark:text-on-success dark:focus-visible:outline-success">
@@ -144,20 +143,22 @@
                         </td>
                         <td class="p-4 text-right">
                             <div class="flex justify-end gap-3">
-                                <button wire:click="verDetalle({{ $emprendimiento->id }})" class="text-neutral-500 hover:text-neutral-800 dark:hover:text-white transition-colors" title="Ver detalles">
+                                <button wire:click="verDetalle({{ $emprendimiento->id }})" 
+                                        x-on:click="$flux.modal('modal-ver-empresa').show()"
+                                        class="text-neutral-500 hover:text-neutral-800 dark:hover:text-white transition-colors" title="Ver detalles">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                                 </button>
                                 <button wire:click="editar({{ $emprendimiento->id }})" x-on:click="$flux.modal('modal-emprendimiento').show()" class="text-primary hover:text-primary-dark transition-colors" title="Editar">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" /></svg>
                                 </button>
-                                <button wire:click="eliminar({{ $emprendimiento->id }})" wire:confirm="¿Estás seguro de que deseas eliminar este emprendimiento?" class="text-danger hover:text-danger-dark transition-colors" title="Eliminar">
+                                <button wire:click="eliminar({{ $emprendimiento->id }})" wire:confirm="¿Estás seguro?" class="text-danger hover:text-danger-dark transition-colors" title="Eliminar">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
                                 </button>
                             </div>
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="p-8 text-center text-neutral-500 dark:text-neutral-400">Aún no hay emprendimientos registrados en el sistema.</td></tr>
+                    <tr><td colspan="6" class="p-8 text-center text-neutral-500 dark:text-neutral-400">Aún no hay emprendimientos registrados.</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -180,6 +181,12 @@
     </nav>
     
     <flux:modal name="modal-ver-empresa" class="w-[92%] mx-auto md:max-w-4xl relative rounded-2xl !p-0">
+        <div wire:loading wire:target="verDetalle" class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 dark:bg-zinc-900/70 rounded-2xl min-h-[400px]">
+            <div class="flex flex-col items-center justify-center translate-y-[-20px]">
+                <flux:icon.loading class="size-12 text-primary" />
+            </div>
+        </div>
+
         <div class="flex flex-col max-h-[85vh]">
             @if($empresaDetalle)
                 <div class="p-6 shrink-0 border-b border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-t-2xl">
@@ -188,7 +195,7 @@
                 </div>
                 <div class="p-6 flex-1 overflow-y-auto bg-neutral-50 dark:bg-zinc-950/30">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-zinc-900">
+                        <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-zinc-900 shadow-sm">
                             <h3 class="text-xs font-bold uppercase text-neutral-500 mb-2">Datos del Establecimiento</h3>
                             <p class="font-semibold text-lg text-on-surface dark:text-on-surface-dark">{{ $empresaDetalle->nombre }}</p>
                             <div class="mt-2">
@@ -200,14 +207,14 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-zinc-900">
+                        <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-zinc-900 shadow-sm">
                             <h3 class="text-xs font-bold uppercase text-neutral-500 mb-2">Responsable Legal</h3>
                             <p class="font-semibold text-on-surface dark:text-on-surface-dark">{{ $empresaDetalle->user->name }} {{ $empresaDetalle->user->apellidos }}</p>
                             <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-1">CI: {{ $empresaDetalle->user->cedula }}</p>
                             <p class="text-sm text-neutral-600 dark:text-neutral-400">Telf: {{ $empresaDetalle->user->telefono }}</p>
                             <p class="text-sm text-neutral-600 dark:text-neutral-400 break-all">{{ $empresaDetalle->user->email }}</p>
                         </div>
-                        <div class="col-span-1 md:col-span-2 p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-zinc-900">
+                        <div class="col-span-1 md:col-span-2 p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-zinc-900 shadow-sm">
                             <h3 class="text-xs font-bold uppercase text-neutral-500 mb-2">Descripción General</h3>
                             <p class="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">{{ $empresaDetalle->descripcion }}</p>
                         </div>
@@ -221,9 +228,12 @@
     </flux:modal>
 
     <flux:modal name="modal-emprendimiento" class="w-[92%] mx-auto md:max-w-4xl relative rounded-2xl !p-0">
-        <div wire:loading wire:target="editar" class="absolute inset-0 z-50 flex items-center justify-center bg-white/50 dark:bg-zinc-900/50 rounded-2xl">
-            <flux:icon.loading class="size-10 text-primary" />
+        <div wire:loading wire:target="editar" class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 dark:bg-zinc-900/70 rounded-2xl min-h-[400px]">
+            <div class="flex flex-col items-center justify-center translate-y-[-20px]">
+                <flux:icon.loading class="size-12 text-primary" />
+            </div>
         </div>
+
         <form wire:submit="actualizar" class="flex flex-col max-h-[85vh]">
             <div class="p-6 shrink-0 border-b border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-t-2xl">
                 <flux:heading size="lg">Editar Información General</flux:heading>
