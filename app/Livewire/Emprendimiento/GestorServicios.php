@@ -5,7 +5,7 @@ namespace App\Livewire\Emprendimiento;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On; 
-use App\Services\Emprendimiento\ServicioService;
+use App\Services\ServicioService;
 use Illuminate\Support\Facades\Auth;
 
 #[Layout('layouts.app.sidebar_emprendimiento')]
@@ -60,6 +60,13 @@ class GestorServicios extends Component
         $this->pestanaActivaId = $pivotId;
         $this->nombrePestanaActiva = $nombre;
         $this->mostrandoFormulario = false; 
+    }
+    /**
+     * Determina semánticamente si la pestaña actual es de Hospedaje.
+     */
+    public function esHospedaje(): bool
+    {
+        return $this->nombrePestanaActiva === 'Hospedaje';
     }
 
     public function toggleFormulario()

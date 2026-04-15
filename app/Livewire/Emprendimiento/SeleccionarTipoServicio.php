@@ -4,7 +4,7 @@ namespace App\Livewire\Emprendimiento;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use App\Services\Emprendimiento\TipoServicioService;
+use App\Services\TipoServicioService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 

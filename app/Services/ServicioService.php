@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Emprendimiento;
+namespace App\Services;
 
 use App\Models\Emprendimiento;
 use App\Models\Servicio;
@@ -36,18 +36,18 @@ class ServicioService
 
     /**
      * Crea un servicio de tipo Hospedaje usando una Transacción Atómica.
-     * Garantiza que el Padre (Servicio) y el Hijo (Detalle) se guarden juntos.
-     * Si el servidor se apaga a la mitad, la base de datos se autoprotege y revierte el proceso.
+     * Garantiza que el Padre (Servicio), Hijo (Detalle) e Imágenes se guarden juntos.
      *
      * @param int $pivotId ID de la categoría activa (emprendimiento_tipo_servicio_id)
      * @param array $datosBase Datos genéricos (nombre, precio, stock, etc.)
      * @param array $datosDetalle Datos específicos (capacidad)
+     * @param array $imagenes Array de archivos subidos (UploadedFile)
      * @return \App\Models\Servicio
      * @throws \Exception Si falla la inserción SQL
      */
-    public function crearHospedaje(int $pivotId, array $datosBase, array $datosDetalle)
+    public function crearHospedaje(int $pivotId, array $datosBase, array $datosDetalle, array $imagenes = [])
     {
-        return DB::transaction(function () use ($pivotId, $datosBase, $datosDetalle) {
+        return DB::transaction(function () use ($pivotId, $datosBase, $datosDetalle, $imagenes) {
             
             // 1. Guardar el Registro Padre (Tabla: servicios)
             $servicio = Servicio::create([
@@ -63,6 +63,19 @@ class ServicioService
                 'servicio_id' => $servicio->id, // Conexión de Herencia
                 'capacidad'   => $datosDetalle['capacidad'],
             ]);
+
+            // 🔥 3. Guardar Imágenes (Física y Base de Datos)
+            if (!empty($imagenes)) {
+                foreach ($imagenes as $imagen) {
+                    // Laravel guarda en storage/app/public/servicios y genera un hash seguro
+                    $rutaImagen = $imagen->store('servicios', 'public');
+                    
+                    // Guarda la ruta en la tabla imagen_servicios atada al servicio actual
+                    $servicio->imagenes()->create([
+                        'imagen' => $rutaImagen
+                    ]);
+                }
+            }
 
             return $servicio;
         });

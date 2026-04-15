@@ -32,7 +32,7 @@ class Servicio extends Model
      */
     protected $casts = [
         'precio' => 'decimal:2',
-        'stock' => 'integer',
+        'stock'  => 'integer',
     ];
 
     /**
@@ -46,8 +46,21 @@ class Servicio extends Model
         return $this->belongsTo(EmprendimientoTipoServicio::class, 'emprendimiento_tipo_servicio_id');
     }
 
+    /**
+     * Relación de Herencia (1:1): Obtiene los detalles específicos si este servicio es una habitación.
+     * * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function detalleHospedaje()
     {
         return $this->hasOne(DetalleHospedaje::class, 'servicio_id');
+    }
+
+    /**
+     * 🔥 NUEVA RELACIÓN (1:N): Un servicio puede tener múltiples imágenes para el catálogo.
+     * * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function imagenes()
+    {
+        return $this->hasMany(ImagenServicio::class, 'servicio_id');
     }
 }

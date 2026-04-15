@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Emprendimiento;
+namespace App\Services;
 
 use App\Models\Emprendimiento;
 use App\Models\TipoServicio;
