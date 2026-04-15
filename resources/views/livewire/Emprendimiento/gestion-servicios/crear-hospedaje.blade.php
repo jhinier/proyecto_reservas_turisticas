@@ -39,8 +39,16 @@
                 rows="4" 
                 placeholder="Incluye TV, baño privado, agua caliente..." 
             />
+
+            <x-image-upload 
+                id="imagenes" 
+                label="Fotografías de la Habitación" 
+                model="imagenes" 
+                :imagesArray="$imagenes" 
+                deleteMethod="eliminarImagen"
+            />
             
-            <div class="flex justify-end pt-6 border-t border-gray-100 dark:border-gray-700">
+            <div class="flex justify-end pt-6 border-t border-gray-100 dark:border-gray-700 mt-4">
                 <button type="submit" wire:loading.attr="disabled" class="inline-flex items-center gap-2 whitespace-nowrap rounded-radius bg-success border border-success px-6 py-2.5 text-sm font-medium tracking-wide text-on-success transition hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-success active:opacity-100 active:outline-offset-0 disabled:opacity-75 disabled:cursor-not-allowed dark:bg-success dark:border-success dark:text-on-success dark:focus-visible:outline-success">
                     <span wire:loading.remove wire:target="guardar">Guardar Habitación</span>
                     
