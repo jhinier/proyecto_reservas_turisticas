@@ -2,15 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\LandingController;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\GestionEmprendimientos; 
 use App\Livewire\Admin\CrearEmprendimiento;
 use App\Livewire\Admin\GestionUsuarios; // Importamos tu nuevo componente
 use App\Livewire\Emprendimiento\Dashboard as EmprendimientoDashboard;
+use App\Livewire\Emprendimiento\GestorServicios;
+use App\Livewire\Emprendimiento\GestionServicios\CrearHospedaje;
 
 // 1. PÁGINA PÚBLICA (Lo que ve todo el mundo al entrar)
-Route::view('/', 'welcome')->name('home');
-
+//Route::view('/', 'welcome')->name('home');
+    Route::get('/', [LandingController::class, 'index'])->name('home');
 // 2. RUTAS PROTEGIDAS (Solo usuarios logueados)
 Route::middleware(['auth', 'verified'])->group(function () {
     
@@ -49,9 +52,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // --- GRUPO DE EMPRENDIMIENTOS ---
-    Route::prefix('emprendimiento')->middleware(['role:emprendimiento'])->group(function () {
+    Route::prefix('emprendimiento')->middleware(['role:emprendimiento', 'emprendimiento.activo']) ->group(function () {
         // Aquí irán tus rutas de servicios y reservas más adelante
         Route::get('/panel', EmprendimientoDashboard::class)->name('emprendimiento.panel');
+        Route::get('/mis-servicios/nuevo', \App\Livewire\Emprendimiento\SeleccionarTipoServicio::class)->name('emprendimiento.servicios.seleccion');
+        Route::get('/mis-servicios/servicios', GestorServicios::class)->name('emprendimiento.servicios.index');
+        Route::get('/emprendimiento/servicios/nuevo-hospedaje/{pivotId}', CrearHospedaje::class)->name('emprendimiento.hospedaje.crear');
     });
 
 });

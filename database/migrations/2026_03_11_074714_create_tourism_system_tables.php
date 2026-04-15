@@ -19,11 +19,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('nombre', 150);
             $table->string('descripcion', 300);
-            // Añadimos el estado. Por defecto, cuando se crea un emprendimiento, estará "activo" (true)
-            $table->boolean('estado')->default(true); 
+            $table->boolean('estado')->default(true);
             $table->timestamps();
         });
 
+        // TABLA PIVOTE CON SU NOMBRE ORIGINAL
         Schema::create('emprendimiento_tipo_servicios', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tipo_servicio_id')->constrained('tipo_servicios')->onDelete('cascade');
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        // SERVICIOS CON SU LLAVE FORÁNEA ORIGINAL
         Schema::create('servicios', function (Blueprint $table) {
             $table->id();
             $table->foreignId('emprendimiento_tipo_servicio_id')->constrained('emprendimiento_tipo_servicios')->onDelete('cascade');
@@ -59,13 +60,15 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        // --- TUS NUEVAS TABLAS DE DETALLES DE SERVICIOS ---
+
         Schema::create('detalle_hospedajes', function (Blueprint $table) {
             $table->foreignId('servicio_id')->primary()->constrained('servicios')->onDelete('cascade');
             $table->integer('capacidad');
             $table->timestamps();
         });
 
-        Schema::create('detalle_guianzas', function (Blueprint $table) {
+        Schema::create('detalle_paquete_turistico', function (Blueprint $table) {
             $table->foreignId('servicio_id')->primary()->constrained('servicios')->onDelete('cascade');
             $table->string('lugar_salida', 150);
             $table->time('hora_salida');
@@ -76,15 +79,24 @@ return new class extends Migration
             $table->string('documento', 255);
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
+            $table->string('mensaje_pago', 255)->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('detalle_guianzas', function (Blueprint $table) {
+            $table->foreignId('servicio_id')->primary()->constrained('servicios')->onDelete('cascade');
+            $table->integer('numero_max_persona');
             $table->timestamps();
         });
 
         Schema::create('detalle_alimentaciones', function (Blueprint $table) {
             $table->foreignId('servicio_id')->primary()->constrained('servicios')->onDelete('cascade');
-            $table->string('horario', 100);
             $table->string('tipo_alimentacion', 100);
+            $table->string('lugar_alimentacion', 150);
             $table->timestamps();
         });
+
+        // --- PUBLICACIONES Y ACTIVIDADES (INTACTAS) ---
 
         Schema::create('tipo_publicaciones', function (Blueprint $table) {
             $table->id();
@@ -153,11 +165,12 @@ return new class extends Migration
         Schema::dropIfExists('tipo_publicaciones');
         Schema::dropIfExists('detalle_alimentaciones');
         Schema::dropIfExists('detalle_guianzas');
+        Schema::dropIfExists('detalle_paquete_turistico');
         Schema::dropIfExists('detalle_hospedajes');
         Schema::dropIfExists('imagen_servicios');
         Schema::dropIfExists('reservas');
         Schema::dropIfExists('servicios');
-        Schema::dropIfExists('emprendimiento_tipo_servicios');
+        Schema::dropIfExists('emprendimiento_tipo_servicios'); // <-- Nombre correcto en el down()
         Schema::dropIfExists('emprendimientos');
         Schema::dropIfExists('tipo_servicios');
     }

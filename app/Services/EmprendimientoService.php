@@ -12,52 +12,63 @@ class EmprendimientoService
 {
     protected $userService;
 
-    /**
-     * Inyectamos el UserService para aplicar el Principio DRY (No te repitas)
-     * y la Composición de Servicios.
-     */
+    // Inyectamos el UserService para aplicar el Principio DRY (No te repitas).
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
     }
 
-    /**
-     * Registra un nuevo Usuario y su Emprendimiento al mismo tiempo.
-     * Usa una transacción para garantizar la Integridad de los Datos (ACID).
-     */
+    // --- MÉTODOS DE LECTURA (Nuevos para conectar con Livewire) ---
+
+    // Obtiene los usuarios con el rol 'emprendimiento' para los selectores de la UI.
+    public function obtenerUsuariosEmprendedores()
+    {
+        return User::role('emprendimiento')->get();
+    }
+
+    // Lista los emprendimientos paginados con su usuario para evitar consultas lentas (N+1).
+    public function listarPaginados(int $porPagina = 10)
+    {
+        return Emprendimiento::with('user')->latest()->paginate($porPagina);
+    }
+
+    // Busca un emprendimiento específico cargando todos sus datos y los de su dueño.
+    public function buscarConRelaciones(int $id)
+    {
+        return Emprendimiento::with('user')->findOrFail($id);
+    }
+
+
+    // --- MÉTODOS DE ESCRITURA (Tu lógica original protegida) ---
+
+    // Registra un nuevo Usuario y su Emprendimiento garantizando integridad ACID.
     public function registrarNuevoEmprendimiento(array $datosUsuario, array $datosEmpresa)
     {
         try {
             return DB::transaction(function () use ($datosUsuario, $datosEmpresa) {
                 
-                // 1. Le decimos al UserService qué rol debe asignarle a esta persona
                 $datosUsuario['role'] = 'emprendimiento';
                 
-                // 2. Delegamos la creación del usuario a su servicio especializado
-                // (Él se encarga de crear, encriptar la clave y asignar el rol)
+                // Delegamos la creación al servicio de usuarios
                 $user = $this->userService->crearUsuario($datosUsuario);
 
-                // 3. Creamos el negocio amarrado al ID de ese nuevo dueño
                 $emprendimiento = Emprendimiento::create([
                     'user_id'     => $user->id,
                     'nombre'      => $datosEmpresa['nombre_emprendimiento'], 
                     'descripcion' => $datosEmpresa['descripcion'],
+                    'estado'      => $datosEmpresa['estado'] ?? 1, // Aseguramos el estado al crear
                 ]);
 
                 return $emprendimiento;
             });
 
         } catch (Exception $e) {
-            // Si la base de datos falla, lo registramos para poder investigarlo luego
             Log::error('Fallo al registrar el usuario y su emprendimiento: ' . $e->getMessage());
             throw $e; 
         }
     }
 
-    /**
-     * Actualiza Empresa y Usuario en una sola transacción atómica.
-     * Si falla uno, no se guarda ninguno (Integridad de datos).
-     */
+    // Actualiza Empresa y Usuario en una sola transacción atómica.
     public function actualizarTodo(int $emprendimientoId, array $datosEmpresa, array $datosUsuario)
     {
         return DB::transaction(function () use ($emprendimientoId, $datosEmpresa, $datosUsuario) {
@@ -72,9 +83,28 @@ class EmprendimientoService
         });
     }
 
-    /**
-     * Registra un servicio turístico asociado a un emprendimiento.
-     */
+    // Elimina el registro, limpia roles y libera la cédula/email.
+    public function eliminarRegistroCompleto(int $id): bool
+    {
+        return DB::transaction(function () use ($id) {
+            try {
+                $emp = Emprendimiento::findOrFail($id);
+                $usuario = $emp->user;
+
+                if ($usuario) {
+                    $usuario->syncRoles([]); 
+                    return (bool) $usuario->delete();
+                }
+
+                return (bool) $emp->delete();
+            } catch (Exception $e) {
+                Log::error("Fallo crítico al eliminar registro #{$id}: " . $e->getMessage());
+                return false;
+            }
+        });
+    }
+
+    // Registra un servicio turístico asociado a un emprendimiento (Lógica futura).
     public function registrarServicioTuristico(array $datos)
     {
         // Lógica futura para servicios

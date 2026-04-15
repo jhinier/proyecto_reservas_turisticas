@@ -27,6 +27,7 @@ class User extends Authenticatable
         'password',
         'cedula',
         'telefono',
+        'edad',
     ];
 
     /**
@@ -69,7 +70,7 @@ class User extends Authenticatable
     /**
      * Un usuario puede tener una empresa (o varias, si fuera el caso)
      */
-    public function empresa()
+    public function emprendimiento()
     {
         return $this->hasOne(Emprendimiento::class);
     }
