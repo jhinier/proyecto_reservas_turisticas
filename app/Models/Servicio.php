@@ -1,24 +1,21 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\{HasOne, HasMany, BelongsTo};
 
-/**
- * Modelo Entidad Padre: Servicio (Habitaciones, Platos, Tours, etc.)
- *
- * Centraliza los atributos comunes para optimizar consultas polimórficas y
- * protege el historial de transacciones (reservas) mediante borrado lógico.
- */
 class Servicio extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
-    /**
-     * @var array Atributos permitidos para asignación masiva (Seguridad contra inyección).
-     */
+    const TIPO_GUIANZA      = 1;
+    const TIPO_PAQUETE      = 2;
+    const TIPO_ALIMENTACION = 3;
+    const TIPO_HOSPEDAJE    = 4;
+    const TIPO_ALQUILER     = 5;
+
     protected $fillable = [
         'emprendimiento_tipo_servicio_id',
         'nombre',
@@ -27,40 +24,97 @@ class Servicio extends Model
         'stock'
     ];
 
-    /**
-     * @var array Casteo de tipos para asegurar integridad matemática y de datos.
-     */
     protected $casts = [
         'precio' => 'decimal:2',
         'stock'  => 'integer',
     ];
 
-    /**
-     * Relación Inversa (N:1): Identifica a qué emprendimiento y categoría pertenece este ítem.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function categoriaPivot()
+    // =========================
+    // DOMINIO (ESTADO)
+    // =========================
+
+    protected function tipoRealId(): Attribute
     {
-        // Se conecta directamente con la tabla pivot que creamos antes
-        return $this->belongsTo(EmprendimientoTipoServicio::class, 'emprendimiento_tipo_servicio_id');
+        return Attribute::get(function () {
+            if (! $this->relationLoaded('categoriaPivot')) {
+                return null;
+            }
+
+            return $this->categoriaPivot?->tipo_servicio_id;
+        });
     }
 
-    /**
-     * Relación de Herencia (1:1): Obtiene los detalles específicos si este servicio es una habitación.
-     * * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function detalleHospedaje()
+    protected function tieneImagen(): Attribute
+    {
+        return Attribute::get(fn () => 
+            $this->relationLoaded('imagenes') && $this->imagenes->isNotEmpty()
+        );
+    }
+
+    protected function permiteGaleria(): Attribute
+    {
+        return Attribute::get(function () {
+            // Si no sabemos qué es (porque olvidamos el ->with()), por seguridad NO permitimos galería
+            if (! $this->tipo_real_id) return false; 
+            
+            return $this->tipo_real_id !== self::TIPO_GUIANZA;
+        });
+    }
+
+    // =========================
+    // RELACIONES
+    // =========================
+
+    public function categoriaPivot(): BelongsTo
+    {
+        return $this->belongsTo(
+            EmprendimientoTipoServicio::class,
+            'emprendimiento_tipo_servicio_id'
+        );
+    }
+
+    public function tipoServicio(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    {
+        return $this->hasOneThrough(
+            TipoServicio::class,
+            EmprendimientoTipoServicio::class,
+            'id', // Llave foránea en EmprendimientoTipoServicio (id de la fila intermedia)
+            'id', // Llave foránea en TipoServicio (id de la categoría)
+            'emprendimiento_tipo_servicio_id', // Llave local en Servicios
+            'tipo_servicio_id' // Llave local en EmprendimientoTipoServicio
+        );
+    }
+
+    public function imagenes(): HasMany
+    {
+        return $this->hasMany(
+            ImagenServicio::class,
+            'servicio_id'
+        );
+    }
+
+    public function detalleHospedaje(): HasOne
     {
         return $this->hasOne(DetalleHospedaje::class, 'servicio_id');
     }
 
-    /**
-     * 🔥 NUEVA RELACIÓN (1:N): Un servicio puede tener múltiples imágenes para el catálogo.
-     * * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function imagenes()
+    public function detalleGuianza(): HasOne
     {
-        return $this->hasMany(ImagenServicio::class, 'servicio_id');
+        return $this->hasOne(DetalleGuianza::class, 'servicio_id');
+    }
+
+    public function detalleAlimentacion(): HasOne
+    {
+        return $this->hasOne(DetalleAlimentacion::class, 'servicio_id');
+    }
+
+    public function detallePaqueteTuristico(): HasOne
+    {
+        return $this->hasOne(DetallePaqueteTuristico::class, 'servicio_id');
+    }
+
+    public function presenter(): \App\Presenters\ServicioPresenter
+    {
+        return new \App\Presenters\ServicioPresenter($this);
     }
 }

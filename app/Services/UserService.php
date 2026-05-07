@@ -28,4 +28,28 @@ class UserService
             return $usuario;
         });
     }
+
+    public function buscarOCrearTurista(array $datos)
+    {
+        return DB::transaction(function () use ($datos) {
+            $usuario = User::firstOrCreate(
+                ['cedula' => $datos['cedula']],
+                [
+                    'name'      => $datos['name'],
+                    'apellidos' => $datos['apellidos'],
+                    'email'     => $datos['email'],
+                    'telefono'  => $datos['telefono'],
+                    'edad'      => $datos['edad'] ?? 18, // Valor por defecto si no lo envían
+                    'password'  => Hash::make(\Illuminate\Support\Str::random(16)), // Contraseña automática
+                ]
+            );
+
+            // Solo asignamos el rol si es un usuario nuevo en el sistema
+            if ($usuario->wasRecentlyCreated) {
+                $usuario->assignRole('turista');
+            }
+
+            return $usuario;
+        });
+    }
 }

@@ -22,7 +22,7 @@
                         Mis Servicios
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="calendar" href="#" wire:navigate>
+                    <flux:sidebar.item icon="calendar" href="{{ route('emprendimiento.reservas') }}" :current="request()->routeIs('emprendimiento.reservas')" wire:navigate>
                         Gestión de Reservas
                     </flux:sidebar.item>
 

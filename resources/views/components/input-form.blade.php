@@ -15,8 +15,9 @@
             <span class="absolute left-3 top-2 text-sm {{ $errors->has($model) ? 'text-danger' : ($errors->any() ? 'text-success' : 'text-gray-500') }}">{{ $simbolo }}</span>
         @endif
         
-        <input id="{{ $id }}" type="{{ $type }}" {{ $model ? 'wire:model='.$model : '' }} placeholder="{{ $placeholder }}" 
-               {{ $attributes->merge(['class' => 'w-full rounded-radius border ' . ($errors->has($model) ? 'border-danger' : ($errors->any() ? 'border-success' : 'border-gray-300 dark:border-gray-600')) . ' bg-surface-alt py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-75 dark:bg-surface-dark-alt/50 dark:focus-visible:outline-primary-dark ' . ($simbolo ? 'pl-7' : 'px-2')]) }} />
+        <input id="{{ $id }}" type="{{ $type }}" placeholder="{{ $placeholder }}" 
+       @if($model) wire:model="{{ $model }}" @endif
+       {{ $attributes->merge(['class' => 'w-full rounded-radius border ' . ($errors->has($model) ? 'border-danger' : ($errors->any() ? 'border-success' : 'border-gray-300 dark:border-gray-600')) . ' bg-surface-alt py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-75 dark:bg-surface-dark-alt/50 dark:focus-visible:outline-primary-dark ' . ($simbolo ? 'pl-7' : 'px-2')]) }} />
     </div>
     
     @if($model)

@@ -8,16 +8,16 @@ use Illuminate\Validation\Rules\Password;
 
 class UsuarioForm extends Form
 {
-    public $nombre = '';
-    public $apellidos = '';
-    public $cedula = '';
-    public $edad = ''; 
-    public $telefono = '';
-    public $email = '';
-    public $password = '';
-    public $password_confirmation = '';
+    public string $nombre = '';
+    public string $apellidos = '';
+    public string $cedula = '';
+    public string $edad = '';
+    public string $telefono = '';
+    public string $email = '';
+    public string $password = '';
+    public string $password_confirmation = '';
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'nombre'    => 'required|string|min:3|max:50|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
@@ -31,7 +31,7 @@ class UsuarioForm extends Form
         ];
     }
 
-    public function messages() 
+    public function messages(): array
     {
         return [
             // MENSAJES PARA CÉDULA

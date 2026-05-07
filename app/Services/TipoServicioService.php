@@ -5,51 +5,50 @@ namespace App\Services;
 use App\Models\Emprendimiento;
 use App\Models\TipoServicio;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 
 /**
- * Servicio de Dominio para la gestión de Servicios Turísticos.
- * Centraliza la lógica de negocio, caché y mutaciones transaccionales.
+ * Servicio para la gestión de Tipos de Servicios Turísticos.
  */
 class TipoServicioService
 {
     /**
-     * Recupera el catálogo maestro de servicios implementando patrón Cache-Aside.
-     * * @return \Illuminate\Database\Eloquent\Collection Colección cacheadada (TTL: 24h).
+     * Recupera el catálogo maestro en tiempo real (Caché removida para desarrollo).
+     * * MEJORA 3: Renombrado a singular (obtenerCatalogo)
      */
-    public function obtenerCatalogos()
+    public function obtenerCatalogo()
     {
-        return Cache::remember('catalogo_tipos_servicios', 86400, function () {
-            return TipoServicio::all(['id', 'nombre']);
-        });
+        // Consulta directa para evitar los "fantasmas" de datos vacíos
+        return TipoServicio::all(['id', 'nombre']);
     }
 
     /**
-     * Sincroniza la relación N:M (Emprendimiento-TipoServicio) preservando el historial.
-     * Implementa Soft-Delete lógico a nivel de tabla pivot mediante el flag 'estado'.
-     *
-     * @param Emprendimiento $emprendimiento Modelo base a mutar.
-     * @param array<int> $seleccionados IDs de los servicios a activar/vincular.
-     * @return void
-     * @throws \Exception Si falla la transacción atómica en base de datos.
+     * Sincroniza la relación N:M preservando historial.
      */
-    public function guardarTiposSeleccionados(Emprendimiento $emprendimiento, array $seleccionados): void
+    public function sincronizarTipos(Emprendimiento $emprendimiento, array $seleccionados): void
     {
+        // MEJORA 4: Protección extra contra IDs duplicados enviados desde el HTML
+        $seleccionados = array_unique($seleccionados);
+
         DB::transaction(function () use ($emprendimiento, $seleccionados) {
             
-            // 1. Soft-Delete (Lógico): Desactiva todas las relaciones previas.
-            $todosSusTipos = $emprendimiento->tiposServicios()->pluck('tipo_servicios.id')->toArray();
+            // MEJORA 1: Eliminado el toArray() innecesario. Dejamos la Colección pura.
+            $tiposActuales = $emprendimiento->tiposServicios()->pluck('tipo_servicios.id');
             
-            if (!empty($todosSusTipos)) {
-                $emprendimiento->tiposServicios()->updateExistingPivot($todosSusTipos, ['estado' => false]);
+            // Como ahora es una Colección de Laravel, usamos isNotEmpty() en lugar de !empty()
+            if ($tiposActuales->isNotEmpty()) {
+                $emprendimiento->tiposServicios()->updateExistingPivot($tiposActuales, ['estado' => false]);
             }
 
-            // 2. Vinculación Segura: Inserta nuevos registros sin eliminar relaciones preexistentes.
+            // Salida temprana (Early Return)
+            if (empty($seleccionados)) {
+                return;
+            }
+
+            // Vincular sin eliminar
             $emprendimiento->tiposServicios()->syncWithoutDetaching($seleccionados);
             
-            // 3. Activación: Enciende el flag (estado = true) únicamente para la selección actual.
+            // Activar selección actual
             $emprendimiento->tiposServicios()->updateExistingPivot($seleccionados, ['estado' => true]);
-            
         });
     }
 }

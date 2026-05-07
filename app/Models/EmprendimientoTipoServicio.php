@@ -27,4 +27,9 @@ class EmprendimientoTipoServicio extends Pivot
     {
         return $this->hasMany(Servicio::class, 'emprendimiento_tipo_servicio_id');
     }
+
+    public function tipoServicio()
+    {
+        return $this->belongsTo(TipoServicio::class, 'tipo_servicio_id'); 
+    }
 }

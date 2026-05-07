@@ -1,94 +1,74 @@
 <?php
-
 namespace App\Livewire\Emprendimiento;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\On; 
-use App\Services\ServicioService;
+use Livewire\Attributes\Url;
+use Livewire\Attributes\Computed;
+use App\Services\ListadoServicioService;
 use Illuminate\Support\Facades\Auth;
 
 #[Layout('layouts.app.sidebar_emprendimiento')]
 class GestorServicios extends Component
 {
-    public $pestanaActivaId = null;
-    public $nombrePestanaActiva = '';
-    public $mostrandoFormulario = false;
+    #[Url(as: 'tab')]
+    public ?int $pestanaActivaId = null;
 
-    // 🔥 AHORA ES UN ARRAY SIMPLE Y SEGURO
     public array $categoriasActivas = [];
 
-    public function mount(ServicioService $service)
+    public function mount(ListadoServicioService $queryService): void
     {
         $emprendimiento = Auth::user()->emprendimiento;
-        $categorias = $service->obtenerCategoriasActivas($emprendimiento);
+        $categorias = $queryService->obtenerCategoriasActivas($emprendimiento);
 
         if ($categorias->isEmpty()) {
-            // 🔥 SPA SPA Redirect: Prepara la navegación suave y aborta el proceso
             $this->redirectRoute('emprendimiento.servicios.seleccion', navigate: true);
-            return; 
+            return;
         }
 
-        // 🔥 EL BLINDAJE: Transformamos el objeto complejo en un Array simple
-        $this->categoriasActivas = $categorias->map(function($cat) {
-            return [
-                'pivot_id' => $cat->pivot->id,
-                'nombre'   => $cat->nombre
-            ];
-        })->toArray();
+        $this->categoriasActivas = $categorias->map(fn($cat) => [
+            'pivot_id'         => $cat->pivot->id,
+            'tipo_servicio_id' => $cat->id,
+            'nombre'           => $cat->nombre,
+            // 🔥 SOLUCIÓN: Asignamos la ruta correcta desde el backend
+            'ruta_crear'       => $this->obtenerRutaPorCategoria($cat->nombre) 
+        ])->toArray();
 
-        // 🔥 LA SOLUCIÓN: Verificamos si venimos de guardar un servicio
-        if (session()->has('tab_activa')) {
-            $tabGuardada = session('tab_activa');
-            
-            // Buscamos el nombre de esa categoría en nuestro array
-            $categoriaDestino = collect($this->categoriasActivas)->firstWhere('pivot_id', $tabGuardada);
-            
-            if ($categoriaDestino) {
-                // Abrimos la pestaña exacta de donde veníamos
-                $this->seleccionarPestana($categoriaDestino['pivot_id'], $categoriaDestino['nombre']);
-            }
-            
-        } elseif (!$this->pestanaActivaId && !empty($this->categoriasActivas)) {
-            // Si no venimos de guardar nada, abrimos la primera por defecto
-            $this->seleccionarPestana($this->categoriasActivas[0]['pivot_id'], $this->categoriasActivas[0]['nombre']);
+        if (!$this->pestanaActivaId && !empty($this->categoriasActivas)) {
+            $this->pestanaActivaId = $this->categoriasActivas[0]['pivot_id'];
         }
     }
 
-    public function seleccionarPestana(int $pivotId, string $nombre)
+    /**
+     * Mapeo seguro de nombres de BD a nombres de Rutas
+     */
+    private function obtenerRutaPorCategoria(string $nombre): string
+    {
+        $mapaRutas = [
+            'Hospedaje'           => 'emprendimiento.hospedaje.crear',
+            'Alimentación'        => 'emprendimiento.alimentacion.crear',
+            'Guianza'             => 'emprendimiento.guianza.crear',
+            'Alquiler de Equipos' => 'emprendimiento.alquiler.crear',
+            'Paquetes Turísticos' => 'emprendimiento.paquete.crear', 
+        ];
+
+        // Devuelve la ruta, o una de fallback si por alguna razón no coincide
+        return $mapaRutas[$nombre] ?? 'emprendimiento.servicios.index';
+    }
+
+    public function seleccionarPestana(int $pivotId): void
     {
         $this->pestanaActivaId = $pivotId;
-        $this->nombrePestanaActiva = $nombre;
-        $this->mostrandoFormulario = false; 
-    }
-    /**
-     * Determina semánticamente si la pestaña actual es de Hospedaje.
-     */
-    public function esHospedaje(): bool
-    {
-        return $this->nombrePestanaActiva === 'Hospedaje';
     }
 
-    public function toggleFormulario()
+    #[Computed]
+    public function categoriaActiva(): ?array
     {
-        $this->mostrandoFormulario = !$this->mostrandoFormulario;
+        return collect($this->categoriasActivas)->firstWhere('pivot_id', $this->pestanaActivaId);
     }
 
-    #[On('servicio-creado')]
-    public function manejarServicioCreado()
+    public function render()
     {
-        $this->mostrandoFormulario = false;
-    }
-
-    public function render(ServicioService $service)
-    {
-        return view('livewire.emprendimiento.gestor-servicios', [
-            // 🔥 OPTIMIZACIÓN DE RENDIMIENTO: 
-            // Si el ID es nulo (ej. porque está a punto de saltar a selección), 
-            // no hace la consulta a la BD. Esto evita el "lag" y el parpadeo.
-            'servicios' => $this->pestanaActivaId 
-                ? $service->obtenerServiciosPorCategoria($this->pestanaActivaId) 
-                : collect()
-        ]);
+        return view('livewire.emprendimiento.gestor-servicios');
     }
 }
