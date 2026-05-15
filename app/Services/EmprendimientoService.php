@@ -10,7 +10,7 @@ use Exception;
 
 class EmprendimientoService
 {
-    protected $userService;
+    protected UserService $userService;
 
     // Inyectamos el UserService para aplicar el Principio DRY (No te repitas).
     public function __construct(UserService $userService)
@@ -104,9 +104,4 @@ class EmprendimientoService
         });
     }
 
-    // Registra un servicio turístico asociado a un emprendimiento (Lógica futura).
-    public function registrarServicioTuristico(array $datos)
-    {
-        // Lógica futura para servicios
-    }
 }

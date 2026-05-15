@@ -59,7 +59,7 @@ class permisos extends Seeder
         ]);
 
         // 3.4. Usuario (Turista)
-        $roleUsuario = Role::create(['name' => 'usuario']);
+        $roleUsuario = Role::create(['name' => 'turista']);
         $roleUsuario->givePermissionTo([
             'hacer reservas'
         ]);

@@ -5,51 +5,64 @@ namespace App\Services;
 use App\Models\Emprendimiento;
 use App\Models\TipoServicio;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 
 /**
- * Servicio de Dominio para la gestión de Servicios Turísticos.
- * Centraliza la lógica de negocio, caché y mutaciones transaccionales.
+ * Servicio para la gestión de Tipos de Servicios Turísticos.
  */
 class TipoServicioService
 {
     /**
-     * Recupera el catálogo maestro de servicios implementando patrón Cache-Aside.
-     * * @return \Illuminate\Database\Eloquent\Collection Colección cacheadada (TTL: 24h).
+     * Recupera el catálogo maestro en tiempo real.
      */
-    public function obtenerCatalogos()
+    public function obtenerCatalogo()
     {
-        return Cache::remember('catalogo_tipos_servicios', 86400, function () {
-            return TipoServicio::all(['id', 'nombre']);
-        });
+        return TipoServicio::all(['id', 'nombre']);
     }
 
     /**
-     * Sincroniza la relación N:M (Emprendimiento-TipoServicio) preservando el historial.
-     * Implementa Soft-Delete lógico a nivel de tabla pivot mediante el flag 'estado'.
-     *
-     * @param Emprendimiento $emprendimiento Modelo base a mutar.
-     * @param array<int> $seleccionados IDs de los servicios a activar/vincular.
-     * @return void
-     * @throws \Exception Si falla la transacción atómica en base de datos.
+     * Recupera SOLO las categorías activas (estado = true) del emprendimiento.
+     * Ideal para el formulario de reservas.
      */
-    public function guardarTiposSeleccionados(Emprendimiento $emprendimiento, array $seleccionados): void
+   /**
+     * Recupera SOLO las categorías activas (estado = true) del emprendimiento.
+     * Ideal para el formulario de reservas.
+     */
+    public function obtenerTiposActivosPorEmprendimiento(int $emprendimientoId)
     {
+        $emprendimiento = Emprendimiento::find($emprendimientoId);
+
+        if (!$emprendimiento) {
+            return collect();
+        }
+
+        // Al usar la relación directamente, Laravel busca automáticamente el nombre correcto de tu tabla pivote
+        return $emprendimiento->tiposServicios()
+            ->wherePivot('estado', true)
+            ->select('tipo_servicios.id', 'tipo_servicios.nombre')
+            ->get();
+    }
+
+    /**
+     * Sincroniza la relación N:M preservando historial.
+     */
+    public function sincronizarTipos(Emprendimiento $emprendimiento, array $seleccionados): void
+    {
+        $seleccionados = array_unique($seleccionados);
+
         DB::transaction(function () use ($emprendimiento, $seleccionados) {
             
-            // 1. Soft-Delete (Lógico): Desactiva todas las relaciones previas.
-            $todosSusTipos = $emprendimiento->tiposServicios()->pluck('tipo_servicios.id')->toArray();
+            $tiposActuales = $emprendimiento->tiposServicios()->pluck('tipo_servicios.id');
             
-            if (!empty($todosSusTipos)) {
-                $emprendimiento->tiposServicios()->updateExistingPivot($todosSusTipos, ['estado' => false]);
+            if ($tiposActuales->isNotEmpty()) {
+                $emprendimiento->tiposServicios()->updateExistingPivot($tiposActuales, ['estado' => false]);
             }
 
-            // 2. Vinculación Segura: Inserta nuevos registros sin eliminar relaciones preexistentes.
+            if (empty($seleccionados)) {
+                return;
+            }
+
             $emprendimiento->tiposServicios()->syncWithoutDetaching($seleccionados);
-            
-            // 3. Activación: Enciende el flag (estado = true) únicamente para la selección actual.
             $emprendimiento->tiposServicios()->updateExistingPivot($seleccionados, ['estado' => true]);
-            
         });
     }
 }

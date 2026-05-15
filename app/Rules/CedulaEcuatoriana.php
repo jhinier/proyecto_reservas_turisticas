@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use Closure;
-use App\Models\User; // <--- Importamos el modelo User para revisar la base de datos
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class CedulaEcuatoriana implements ValidationRule
@@ -16,28 +15,21 @@ class CedulaEcuatoriana implements ValidationRule
             return;
         }
 
-        // 2. REVISAR SI YA ESTÁ REGISTRADA (Lo que faltaba)
-        // Buscamos si existe un usuario con esa cédula
-        if (User::where('cedula', $value)->exists()) {
-            $fail('Esta cédula ya se encuentra registrada en el sistema.');
-            return;
-        }
-
-        // 3. VALIDACIÓN POR PROVINCIA
+        // 2. VALIDACIÓN POR PROVINCIA
         $provincia = (int) substr($value, 0, 2);
         if ($provincia < 1 || $provincia > 24) {
             $fail('Los primeros dos dígitos de la provincia son incorrectos.');
             return;
         }
 
-        // 4. VALIDACIÓN DE TERCER DÍGITO
+        // 3. VALIDACIÓN DE TERCER DÍGITO
         $tercerDigito = (int) substr($value, 2, 1);
         if ($tercerDigito > 5) {
             $fail('El tercer dígito de la cédula es inválido.');
             return;
         }
 
-        // 5. ALGORITMO DE MÓDULO 10 (Matemática)
+        // 4. ALGORITMO DE MÓDULO 10
         $coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
         $suma = 0;
 

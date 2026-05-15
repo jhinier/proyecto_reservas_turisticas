@@ -6,7 +6,8 @@
             <p class="text-sm text-gray-500 mt-1">Registra una nueva habitación en tu catálogo de servicios.</p>
         </div>
 
-        <a href="{{ route('emprendimiento.servicios.index') }}" 
+        {{-- Botón Volver configurado con parámetro de pestaña --}}
+        <a href="{{ route('emprendimiento.servicios.index', ['tab' => $pivotId]) }}" 
            class="inline-flex justify-center items-center gap-2 whitespace-nowrap rounded-radius bg-black border border-black px-4 py-2 text-sm font-medium tracking-wide text-white transition hover:opacity-75 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 dark:bg-white dark:border-white dark:text-black">
             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5 fill-current" fill="currentColor">
                 <path fill-rule="evenodd" d="M9.53 2.47a.75.75 0 010 1.06L4.81 8.25H21a.75.75 0 010 1.5H4.81l4.72 4.72a.75.75 0 11-1.06 1.06l-6-6a.75.75 0 010-1.06l6-6a.75.75 0 011.06 0z" clip-rule="evenodd" />
@@ -28,7 +29,7 @@
 
                 <x-input-form id="precio" label="Precio por Noche ($)" model="precio" type="number" step="0.01" placeholder="0.00" simbolo="$" />
 
-                <x-input-form id="stock" label="Stock (Habitaciones disponibles)" model="stock" type="number" placeholder="Ej. 5" />
+                <x-input-form id="stock" label="Stock por Día (Habitaciones disponibles)" model="stock" type="number" placeholder="Ej. 5" />
                 
             </div>
 
@@ -38,14 +39,6 @@
                 model="descripcion" 
                 rows="4" 
                 placeholder="Incluye TV, baño privado, agua caliente..." 
-            />
-
-            <x-image-upload 
-                id="imagenes" 
-                label="Fotografías de la Habitación" 
-                model="imagenes" 
-                :imagesArray="$imagenes" 
-                deleteMethod="eliminarImagen"
             />
             
             <div class="flex justify-end pt-6 border-t border-gray-100 dark:border-gray-700 mt-4">

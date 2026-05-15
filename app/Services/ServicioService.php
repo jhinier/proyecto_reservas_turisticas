@@ -5,7 +5,11 @@ namespace App\Services;
 use App\Models\Emprendimiento;
 use App\Models\Servicio;
 use App\Models\DetalleHospedaje;
+use App\Models\TipoServicio;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 /**
  * Servicio de Dominio para la entidad Servicio (Habitaciones, Platos, etc.).
@@ -25,6 +29,14 @@ class ServicioService
     }
 
     /**
+     * Obtiene todos los tipos de servicios disponibles para el selector de reservas.
+     */
+    public function obtenerTipos(): Collection
+    {
+        return TipoServicio::all();
+    }
+
+    /**
      * Recupera los ítems físicos filtrados por la llave foránea de la categoría.
      */
     public function obtenerServiciosPorCategoria(int $pivotId)
@@ -32,6 +44,40 @@ class ServicioService
         return Servicio::where('emprendimiento_tipo_servicio_id', $pivotId)
             ->latest()
             ->get();
+    }
+
+    /**
+     * Obtiene servicios para reserva filtrando por el tipo real y el emprendimiento.
+     */
+    public function obtenerServiciosParaReserva(int $emprendimientoId, string|int $filtro): Collection
+    {
+        try {
+            $tipoServicioId = ($filtro === 'paquetes') ? Servicio::TIPO_PAQUETE : (int) $filtro;
+
+            if (empty($tipoServicioId)) {
+                return collect();
+            }
+
+            return Servicio::query()
+                ->select(['id', 'nombre', 'precio', 'descripcion', 'stock', 'emprendimiento_tipo_servicio_id'])
+                ->with([
+                    'imagenes:id,servicio_id,imagen',
+                    'tipoServicio',
+                    'detalleHospedaje',
+                    'detalleGuianza',
+                    'detalleAlimentacion',
+                    'detallePaqueteTuristico',
+                ])
+                ->whereHas('categoriaPivot', function ($query) use ($emprendimientoId, $tipoServicioId) {
+                    $query->where('emprendimiento_id', $emprendimientoId)
+                        ->where('tipo_servicio_id', $tipoServicioId);
+                })
+                ->get();
+        } catch (\Exception $e) {
+            Log::error('Error al obtener servicios para reserva: ' . $e->getMessage());
+
+            return collect();
+        }
     }
 
     /**

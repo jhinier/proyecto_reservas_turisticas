@@ -8,12 +8,19 @@ use App\Livewire\Admin\GestionEmprendimientos;
 use App\Livewire\Admin\CrearEmprendimiento;
 use App\Livewire\Admin\GestionUsuarios; // Importamos tu nuevo componente
 use App\Livewire\Emprendimiento\Dashboard as EmprendimientoDashboard;
+use App\Livewire\Emprendimiento\SeleccionarTipoServicio;
 use App\Livewire\Emprendimiento\GestorServicios;
 use App\Livewire\Emprendimiento\GestionServicios\CrearHospedaje;
 use App\Livewire\Admin\GestionFestividades;
 use App\Livewire\Admin\GestionSitiosTuristicos;
 use App\Livewire\Admin\GestionActividadesTuristicas;
 
+use App\Livewire\Emprendimiento\GestionServicios\CrearGuianza;
+use App\Livewire\Emprendimiento\GestionServicios\CrearAlimentacion;
+use App\Livewire\Emprendimiento\GestionServicios\CrearPaqueteTuristico;
+use App\Livewire\Emprendimiento\GestionServicios\CrearAlquilerEquipo;
+use App\Livewire\Emprendimiento\GestorReservas;
+use App\Livewire\Emprendimiento\Reserva\CrearReserva;
 // 1. PÁGINA PÚBLICA (Lo que ve todo el mundo al entrar)
 //Route::view('/', 'welcome')->name('home');
     Route::get('/', [LandingController::class, 'index'])->name('home');
@@ -58,11 +65,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // --- GRUPO DE EMPRENDIMIENTOS ---
     Route::prefix('emprendimiento')->middleware(['role:emprendimiento', 'emprendimiento.activo']) ->group(function () {
-        // Aquí irán tus rutas de servicios y reservas más adelante
-        Route::get('/panel', EmprendimientoDashboard::class)->name('emprendimiento.panel');
-        Route::get('/mis-servicios/nuevo', \App\Livewire\Emprendimiento\SeleccionarTipoServicio::class)->name('emprendimiento.servicios.seleccion');
-        Route::get('/mis-servicios/servicios', GestorServicios::class)->name('emprendimiento.servicios.index');
-        Route::get('/emprendimiento/servicios/nuevo-hospedaje/{pivotId}', CrearHospedaje::class)->name('emprendimiento.hospedaje.crear');
+    Route::get('/panel', EmprendimientoDashboard::class)->name('emprendimiento.panel');
+    Route::get('/mis-servicios/nuevo', SeleccionarTipoServicio::class)->name('emprendimiento.servicios.seleccion');
+    Route::get('/mis-servicios/servicios', GestorServicios::class)->name('emprendimiento.servicios.index');
+    Route::get('/mis-servicios/servicios/nuevo-hospedaje/{pivotId}', CrearHospedaje::class)->name('emprendimiento.hospedaje.crear');
+    Route::get('/mis-servicios/servicios/nuevo-guianza/{pivotId}', CrearGuianza::class)->name('emprendimiento.guianza.crear');
+    Route::get('/mis-servicios/servicios/nuevo-alimentacion/{pivotId}', CrearAlimentacion::class)->name('emprendimiento.alimentacion.crear');
+    Route::get('/mis-servicios/servicios/nuevo-paquete/{pivotId}', CrearPaqueteTuristico::class)->name('emprendimiento.paquete.crear');
+    Route::get('/mis-servicios/servicios/nuevo-alquiler/{pivotId}', CrearAlquilerEquipo::class)->name('emprendimiento.alquiler.crear');
+
+    Route::get('/reservas', GestorReservas::class)->name('emprendimiento.reservas');
+    Route::get('/reservas/nueva', CrearReserva::class)->name('emprendimiento.reservas.crear');
     });
 
 });

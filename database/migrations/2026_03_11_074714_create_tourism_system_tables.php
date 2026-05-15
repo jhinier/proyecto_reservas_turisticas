@@ -23,7 +23,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // TABLA PIVOTE CON SU NOMBRE ORIGINAL
         Schema::create('emprendimiento_tipo_servicios', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tipo_servicio_id')->constrained('tipo_servicios')->onDelete('cascade');
@@ -60,7 +59,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // --- TUS NUEVAS TABLAS DE DETALLES DE SERVICIOS ---
 
         Schema::create('detalle_hospedajes', function (Blueprint $table) {
             $table->foreignId('servicio_id')->primary()->constrained('servicios')->onDelete('cascade');
@@ -96,7 +94,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // --- PUBLICACIONES Y ACTIVIDADES (INTACTAS) ---
 
         Schema::create('tipo_publicaciones', function (Blueprint $table) {
             $table->id();
