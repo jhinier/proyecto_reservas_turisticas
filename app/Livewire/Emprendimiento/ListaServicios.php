@@ -81,4 +81,11 @@ class ListaServicios extends Component
             'servicios' => $service->obtenerPaginadosPorCategoria($this->pivotId)
         ]);
     }
+
+    #[On('servicio-actualizado')]
+    public function refrescarListaServicios(): void
+    {
+        // Esto destruye el caché de la página actual y obliga a leer la base de datos fresca
+        $this->resetPage();
+    }
 }

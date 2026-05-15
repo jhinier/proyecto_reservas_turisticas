@@ -33,6 +33,10 @@
             <div class="reserva-box">
                 <h3>Detalles de la Reserva</h3>
                 @foreach($reserva->detalles as $detalle)
+                @php
+                    $tipoDetalle = \Illuminate\Support\Str::slug($detalle->servicio->tipoServicio->nombre ?? '', ' ');
+                    $usaPersonas = str_contains($tipoDetalle, 'hospedaje') || str_contains($tipoDetalle, 'guianza');
+                @endphp
                 <div style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #edf2f7;">
                     <div class="reserva-item">
                         <strong>Servicio:</strong> <span style="color: #1a4031; font-weight: 800;">{{ $detalle->servicio->nombre }}</span>
@@ -51,9 +55,15 @@
                         <strong>Hora establecida:</strong> {{ \Carbon\Carbon::parse($detalle->hora)->format('H:i') }}
                     </div>
                     @endif
-                    <div class="reserva-item">
-                        <strong>Cantidad/Personas:</strong> {{ $detalle->cantidad }} (Para {{ $detalle->numero_personas }} pax)
-                    </div>
+                    @if($usaPersonas && $detalle->numero_personas !== null)
+                        <div class="reserva-item">
+                            <strong>Cantidad/Personas:</strong> {{ $detalle->cantidad }} (Para {{ $detalle->numero_personas }} pax)
+                        </div>
+                    @else
+                        <div class="reserva-item">
+                            <strong>Cantidad:</strong> {{ $detalle->cantidad }}
+                        </div>
+                    @endif
                     <div class="reserva-item" style="text-align: right; margin-top: 5px;">
                         <strong>Subtotal:</strong> <span style="font-weight: bold; color: #1a4031;">${{ number_format($detalle->subtotal, 2) }}</span>
                     </div>

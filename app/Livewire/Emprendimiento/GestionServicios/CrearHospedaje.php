@@ -82,7 +82,7 @@ class CrearHospedaje extends Component
 
             // Preparamos la alerta
             session()->flash('success', '¡Registro exitoso! La habitación ha sido creada.');
-            
+            $this->dispatch('servicio-actualizado');
             // 🔥 4. APLICAMOS LA LÓGICA DE REDIRECCIÓN LIMPIA (Igual que en Alimentación)
             $tabDestino = $this->pivotId;
             $this->reset(); 

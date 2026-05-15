@@ -1,7 +1,7 @@
 <div class="space-y-6">
     {{-- Botón Nuevo dinámico --}}
     <div class="flex justify-end pt-4">
-        <a href="{{ route($rutaCrear, ['pivotId' => $pivotId]) }}" wire:navigate 
+        <a href="{{ route($rutaCrear, ['pivotId' => $pivotId]) }}" 
            class="inline-flex items-center gap-2 rounded-lg bg-[#1a4031] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition">
             <svg class="size-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" /></svg>
             Nuevo: {{ $nombreCategoria }}
@@ -33,8 +33,6 @@
     @livewire('emprendimiento.gestion-servicios.editar-alimentacion')
     @livewire('emprendimiento.gestion-servicios.editar-guianza')
     @livewire('emprendimiento.gestion-servicios.editar-alquiler-equipo')
-
-
 
     {{-- 2. Modal de Confirmación de Eliminación --}}
     <div x-data="{ open: false, itemId: null, actionName: 'eliminarServicio' }"

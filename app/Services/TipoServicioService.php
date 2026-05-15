@@ -12,13 +12,34 @@ use Illuminate\Support\Facades\DB;
 class TipoServicioService
 {
     /**
-     * Recupera el catálogo maestro en tiempo real (Caché removida para desarrollo).
-     * * MEJORA 3: Renombrado a singular (obtenerCatalogo)
+     * Recupera el catálogo maestro en tiempo real.
      */
     public function obtenerCatalogo()
     {
-        // Consulta directa para evitar los "fantasmas" de datos vacíos
         return TipoServicio::all(['id', 'nombre']);
+    }
+
+    /**
+     * Recupera SOLO las categorías activas (estado = true) del emprendimiento.
+     * Ideal para el formulario de reservas.
+     */
+   /**
+     * Recupera SOLO las categorías activas (estado = true) del emprendimiento.
+     * Ideal para el formulario de reservas.
+     */
+    public function obtenerTiposActivosPorEmprendimiento(int $emprendimientoId)
+    {
+        $emprendimiento = Emprendimiento::find($emprendimientoId);
+
+        if (!$emprendimiento) {
+            return collect();
+        }
+
+        // Al usar la relación directamente, Laravel busca automáticamente el nombre correcto de tu tabla pivote
+        return $emprendimiento->tiposServicios()
+            ->wherePivot('estado', true)
+            ->select('tipo_servicios.id', 'tipo_servicios.nombre')
+            ->get();
     }
 
     /**
@@ -26,28 +47,21 @@ class TipoServicioService
      */
     public function sincronizarTipos(Emprendimiento $emprendimiento, array $seleccionados): void
     {
-        // MEJORA 4: Protección extra contra IDs duplicados enviados desde el HTML
         $seleccionados = array_unique($seleccionados);
 
         DB::transaction(function () use ($emprendimiento, $seleccionados) {
             
-            // MEJORA 1: Eliminado el toArray() innecesario. Dejamos la Colección pura.
             $tiposActuales = $emprendimiento->tiposServicios()->pluck('tipo_servicios.id');
             
-            // Como ahora es una Colección de Laravel, usamos isNotEmpty() en lugar de !empty()
             if ($tiposActuales->isNotEmpty()) {
                 $emprendimiento->tiposServicios()->updateExistingPivot($tiposActuales, ['estado' => false]);
             }
 
-            // Salida temprana (Early Return)
             if (empty($seleccionados)) {
                 return;
             }
 
-            // Vincular sin eliminar
             $emprendimiento->tiposServicios()->syncWithoutDetaching($seleccionados);
-            
-            // Activar selección actual
             $emprendimiento->tiposServicios()->updateExistingPivot($seleccionados, ['estado' => true]);
         });
     }

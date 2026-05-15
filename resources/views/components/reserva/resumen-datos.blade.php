@@ -37,36 +37,68 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="border-b border-gray-200 text-[10px] uppercase tracking-widest text-gray-400">
-                            <th class="pb-3 font-bold">Servicio</th>
+                            <th class="pb-3 font-bold w-1/3">Servicio</th>
                             <th class="pb-3 font-bold">Fecha / Hora</th>
-                            <th class="pb-3 font-bold text-center">Cant.</th>
+                            <th class="pb-3 font-bold text-center">Desglose de Cantidad</th>
                             <th class="pb-3 font-bold text-right">P. Unitario</th>
                             <th class="pb-3 font-bold text-right">Subtotal</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
                         @foreach($carrito as $item)
+                        @php
+                            $fi = $item['fecha_inicio'] ?? $item['fecha'] ?? now();
+                            $ff = $item['fecha_fin'] ?? $fi;
+                            $dias = max(1, \Carbon\Carbon::parse($fi)->diffInDays(\Carbon\Carbon::parse($ff)) + 1);
+                            
+                            $nombreCat = strtolower($item['categoria_nombre'] ?? '');
+                            $esHospedaje = str_contains($nombreCat, 'hospedaje');
+                            $esGuianza = str_contains($nombreCat, 'guianza');
+                            $esPaquete = str_contains($nombreCat, 'paquete');
+                            
+                            $aplicaDias = $dias > 1 && !$esPaquete && !str_contains($nombreCat, 'aliment');
+                        @endphp
                         <tr class="border-b border-gray-100 last:border-0">
-                            <td class="py-3 font-black text-gray-800">{{ $item['nombre'] }}</td>
-                            <td class="py-3 text-gray-600">
+                            <td class="py-4 pr-4">
+                                <span class="font-black text-gray-800 block">{{ $item['nombre'] }}</span>
+                                <span class="text-[10px] font-bold text-gray-400 uppercase">{{ $item['categoria_nombre'] }}</span>
+                            </td>
+                            <td class="py-4 text-gray-600 text-xs">
                                 <span class="font-bold text-gray-800">Ini:</span> {{ $item['fecha'] ?? 'Sin fecha' }}
                                 @if(isset($item['fecha_fin']) && $item['fecha_fin'] !== $item['fecha'])
                                     <br><span class="font-bold text-gray-800">Fin:</span> {{ $item['fecha_fin'] }}
                                 @endif
                                 @if(isset($item['hora']) && $item['hora'] !== '') 
-                                    <br><span class="text-xs text-gray-400">Hora: {{ $item['hora'] }}</span> 
+                                    <br><span class="text-gray-400 font-bold">Hora: {{ \Carbon\Carbon::parse($item['hora'])->format('H:i') }}</span> 
                                 @endif
                             </td>
-                            <td class="py-3 text-center font-bold text-gray-800">{{ $item['cantidad'] }}</td>
-                            <td class="py-3 text-right text-gray-600">${{ number_format($item['precio_unitario'] ?? ($item['subtotal'] / $item['cantidad']), 2) }}</td>
-                            <td class="py-3 text-right font-black text-[#1a4031]">${{ number_format($item['subtotal'], 2) }}</td>
+                            <td class="py-4 text-center text-xs font-bold text-gray-600 whitespace-nowrap">
+                                @if($esHospedaje)
+                                    {{ $item['cantidad'] }} Hab. &times; {{ $item['numero_personas'] }} Pers. 
+                                    @if($aplicaDias) &times; {{ $dias }} Días @endif
+                                @elseif($esGuianza)
+                                    {{ $item['cantidad'] }} Guías
+                                    @if($aplicaDias) &times; {{ $dias }} Días @endif
+                                @elseif($esPaquete)
+                                    {{ $item['cantidad'] }} Paquetes
+                                @else
+                                    {{ $item['cantidad'] }} Unidades
+                                    @if($aplicaDias) &times; {{ $dias }} Días @endif
+                                @endif
+                            </td>
+                            <td class="py-4 text-right font-bold text-gray-800">
+                                ${{ number_format($item['precio'], 2) }}
+                            </td>
+                            <td class="py-4 text-right font-black text-[#1a4031] text-lg">
+                                ${{ number_format($item['subtotal'], 2) }}
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr class="text-sm">
-                            <td colspan="4" class="pt-4 text-right font-bold text-gray-500 uppercase text-[10px] tracking-widest">Total a pagar:</td>
-                            <td class="pt-4 text-right font-black text-xl text-gray-900">${{ number_format($totalCarrito, 2) }}</td>
+                            <td colspan="4" class="pt-6 text-right font-bold text-gray-500 uppercase text-[10px] tracking-widest pr-4">Total a pagar:</td>
+                            <td class="pt-6 text-right font-black text-2xl text-gray-900">${{ number_format($totalCarrito, 2) }}</td>
                         </tr>
                     </tfoot>
                 </table>

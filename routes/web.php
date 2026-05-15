@@ -16,6 +16,7 @@ use App\Livewire\Emprendimiento\GestionServicios\CrearAlimentacion;
 use App\Livewire\Emprendimiento\GestionServicios\CrearPaqueteTuristico;
 use App\Livewire\Emprendimiento\GestionServicios\CrearAlquilerEquipo;
 use App\Livewire\Emprendimiento\GestorReservas;
+use App\Livewire\Emprendimiento\Reserva\CrearReserva;
 // 1. PÁGINA PÚBLICA (Lo que ve todo el mundo al entrar)
 //Route::view('/', 'welcome')->name('home');
     Route::get('/', [LandingController::class, 'index'])->name('home');
@@ -68,7 +69,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mis-servicios/servicios/nuevo-alquiler/{pivotId}', CrearAlquilerEquipo::class)->name('emprendimiento.alquiler.crear');
 
     Route::get('/reservas', GestorReservas::class)->name('emprendimiento.reservas');
-    Route::get('/reservas/nueva', App\Livewire\Emprendimiento\Reserva\CrearReserva::class)->name('emprendimiento.reservas.crear');
+    Route::get('/reservas/nueva', CrearReserva::class)->name('emprendimiento.reservas.crear');
     });
 
 });

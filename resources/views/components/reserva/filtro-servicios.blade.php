@@ -1,17 +1,24 @@
 @props(['categorias', 'filtroCategoria'])
 
+@php
+    // Busca la categoría de paquetes dentro de las activas
+    $categoriaPaquetes = $categorias->first(function($cat) {
+        return \Illuminate\Support\Str::contains(\Illuminate\Support\Str::slug($cat->nombre, ' '), 'paquete');
+    });
+@endphp
+
 <div class="space-y-1">
     <div class="h-px bg-gray-300 w-full"></div>
 
     <div class="flex flex-col md:flex-row justify-center items-center gap-6 py-1">
         <div wire:ignore x-data="{
-            options: @js($categorias->filter(fn($c) => strtolower($c->nombre) !== 'paquetes turisticos')->map(fn($c) => ['value' => $c->id, 'label' => $c->nombre])->values()),
+            options: @js($categorias->filter(fn($c) => \Illuminate\Support\Str::slug($c->nombre, ' ') !== 'paquetes turisticos')->map(fn($c) => ['value' => $c->id, 'label' => $c->nombre])->values()),
             isOpen: false,
             selectedOption: null,
             setSelectedOption(option) {
                 this.selectedOption = option;
                 this.isOpen = false;
-                $wire.set('filtroCategoria', option.value);
+                $wire.seleccionarCategoria(option.value);
             }
         }" class="w-full max-w-xs">
             <div class="relative">
@@ -29,19 +36,16 @@
                 </ul>
             </div>
         </div>
-        <span class="text-gray-300 font-black text-xs hidden md:block">|</span>
-        <button type="button" wire:click="$set('filtroCategoria', 'paquetes')" class="w-full md:w-auto inline-flex justify-center items-center gap-3 rounded-2xl bg-[#1a4031] border-2 border-[#1a4031] px-8 py-2.5 text-xs font-black tracking-widest text-white transition hover:bg-[#122d22] uppercase">
-            <svg class="size-5 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.378 1.602a.75.75 0 00-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 00.372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 00.372.648l8.628 5.033z"/></svg>
-            Paquetes Turisticos
-        </button>
+        
+        @if($categoriaPaquetes)
+            <span class="text-gray-300 font-black text-xs hidden md:block">|</span>
+            <button type="button" wire:click="seleccionarCategoria('{{ $categoriaPaquetes->id }}')" class="w-full md:w-auto inline-flex justify-center items-center gap-3 rounded-2xl bg-[#1a4031] border-2 border-[#1a4031] px-8 py-2.5 text-xs font-black tracking-widest text-white transition hover:bg-[#122d22] uppercase">
+                <svg class="size-5 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.378 1.602a.75.75 0 00-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 00.372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 00.372.648l8.628 5.033z"/></svg>
+                Paquetes Turisticos
+            </button>
+        @endif
     </div>
 
     <div class="h-px bg-gray-300 w-full"></div>
 
-    <div class="pt-4" wire:loading.class="opacity-40" wire:target="filtroCategoria">
-        <livewire:emprendimiento.reserva.lista-servicios-reservas
-            :filtroCategoria="$filtroCategoria"
-            :wire:key="'lista-servicios-' . $filtroCategoria"
-        />
-    </div>
 </div>

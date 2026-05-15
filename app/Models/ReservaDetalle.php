@@ -12,7 +12,9 @@ class ReservaDetalle extends Model
         'servicio_id',
         'fecha_inicio',
         'fecha_fin',
+        'hora_llegada',
         'cantidad',
+        'numero_personas',
         'precio_unitario',
         'subtotal'
     ];
@@ -20,6 +22,7 @@ class ReservaDetalle extends Model
     protected $casts = [
         'fecha_inicio' => 'date',
         'fecha_fin' => 'date',
+        'hora_llegada' => 'string',
     ];
 
     public function reserva(): BelongsTo

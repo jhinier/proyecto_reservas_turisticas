@@ -9,7 +9,7 @@
             </h1>
             <p class="text-sm text-gray-500 mt-1 uppercase tracking-wider font-semibold">Configuración de expediciones y tours comunitarios</p>
         </div>
-        <a href="{{ route('emprendimiento.servicios.index', ['tab' => $pivotId]) }}" wire:navigate class="inline-flex justify-center items-center gap-2 whitespace-nowrap rounded-xl bg-black px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
+        <a href="{{ route('emprendimiento.servicios.index', ['tab' => $pivotId]) }}" class="inline-flex justify-center items-center gap-2 whitespace-nowrap rounded-xl bg-black px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5 fill-current">
                 <path fill-rule="evenodd" d="M9.53 2.47a.75.75 0 010 1.06L4.81 8.25H21a.75.75 0 010 1.5H4.81l4.72 4.72a.75.75 0 11-1.06 1.06l-6-6a.75.75 0 010-1.06l6-6a.75.75 0 011.06 0z" clip-rule="evenodd" />
             </svg>

@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+
 /**
  * Servicio de Dominio para la entidad Servicio (Habitaciones, Platos, etc.).
  * Maneja consultas optimizadas y transacciones atómicas de guardado.

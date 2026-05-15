@@ -1,29 +1,33 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Reserva;
+use App\Models\ReservaDetalle;
 use App\Models\Servicio;
-use App\Models\User;
-use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservaCanceladaMail;
+use App\Mail\ReservaReagendadaMail;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class ReservaService
 {
-    private const TIPOS_CON_STOCK_DIARIO = [
-        'Alquiler de Equipos',
-        'Hospedaje',
-        'Guianza',
-        'Paquetes Turísticos',
-        'Alimentación',
-    ];
+    protected InventarioService $inventarioService;
+    protected UserService       $userService; // Cambiado para usar el servicio correcto
 
-    public function obtenerReservasPorEmprendimiento(int $emprendimientoId, string $filtroEstado = '')
+    public function __construct(InventarioService $inventarioService, UserService $userService)
     {
-        $query = Reserva::with(['turista', 'detalles.servicio'])
+        $this->inventarioService = $inventarioService;
+        $this->userService       = $userService;
+    }
+
+    public function obtenerReservasPorEmprendimiento(int $emprendimientoId, string $filtroEstado = '', string $filtroCategoria = '', string $buscarCedula = '')
+    {
+        $query = Reserva::with(['turista', 'detalles.servicio.tipoServicio'])
             ->whereHas('detalles.servicio.categoriaPivot', function ($q) use ($emprendimientoId) {
                 $q->where('emprendimiento_id', $emprendimientoId);
             });
@@ -32,16 +36,31 @@ class ReservaService
             $query->where('estado', $filtroEstado);
         }
 
-        return $query->latest()->paginate(10);
+        // Limpieza de espacios en la cédula
+        if (!empty($buscarCedula)) {
+            $cedulaLimpia = trim($buscarCedula);
+            $query->whereHas('turista', function ($q) use ($cedulaLimpia) {
+                $q->where('cedula', 'like', '%' . $cedulaLimpia . '%');
+            });
+        }
+
+        if (!empty($filtroCategoria)) {
+            $query->whereHas('detalles.servicio.categoriaPivot', function ($q) use ($filtroCategoria) {
+                $q->where('tipo_servicio_id', $filtroCategoria);
+            });
+        }
+
+        // Ordenamos por la última modificación (updated_at) de forma descendente
+        return $query->latest('updated_at')->paginate(10);
     }
 
     public function obtenerDetalleSeguro(int $reservaId, int $emprendimientoId): ?Reserva
     {
         return Reserva::with([
-            'turista', 
-            'detalles.servicio.detalleHospedaje', 
-            'detalles.servicio.detalleGuianza', 
-            'detalles.servicio.detallePaqueteTuristico'
+            'turista',
+            'detalles.servicio.detalleHospedaje',
+            'detalles.servicio.detalleGuianza',
+            'detalles.servicio.detallePaqueteTuristico',
         ])
             ->where('id', $reservaId)
             ->whereHas('detalles.servicio.categoriaPivot', function ($q) use ($emprendimientoId) {
@@ -51,100 +70,157 @@ class ReservaService
 
     public function cambiarEstado(int $reservaId, string $nuevoEstado, int $emprendimientoId, ?string $motivo = null): bool
     {
-        $reserva = $this->obtenerDetalleSeguro($reservaId, $emprendimientoId);
-        
-        if (!$reserva) {
-            return false;
-        }
-
-        $reserva->estado = $nuevoEstado;
-        
-        if (in_array($nuevoEstado, ['Cancelada', 'Rechazada'], true)) {
-            $reserva->cancelada_en = now();
-            $reserva->cancelada_por_rol = 'Emprendimiento';
-            $reserva->motivo_cancelacion = $motivo;
-        }
-
-        return $reserva->save();
-    }
-
-    public function calcularDisponibilidadEnRango(int $servicioId, string $fechaInicio, string $fechaFin): int
-    {
-        $servicio = Servicio::with('tipoServicio')->findOrFail($servicioId);
-        $nombreTipo = $servicio->tipoServicio->nombre ?? '';
-
-        if (!$this->manejaStockDiario($nombreTipo)) {
-            return 999;
-        }
-
-        // Determinar si es un rango (Hospedaje, Alquiler, Guianza) o solo día de inicio (Paquetes, Alimentación)
-        $esRangoCompleto = in_array($nombreTipo, ['Hospedaje', 'Alquiler de Equipos', 'Guianza']);
-        $esPaqueteTuristico = $nombreTipo === 'Paquetes Turísticos';
-        
-        // Para Paquetes Turísticos, solo considerar el día de inicio
-        $fechaFinReal = $esRangoCompleto ? $fechaFin : $fechaInicio;
-
-        $reservasAfectadas = DB::table('reserva_detalles')
-            ->join('reservas', 'reserva_detalles.reserva_id', '=', 'reservas.id')
-            ->where('reserva_detalles.servicio_id', $servicioId)
-            ->whereIn('reservas.estado', ['Confirmada', 'Pendiente'])
-            ->where(function ($query) use ($fechaInicio, $fechaFinReal, $esPaqueteTuristico) {
-                if ($esPaqueteTuristico) {
-                    // Paquetes: solo importa que el día de inicio esté en el rango de inicio
-                    $query->whereDate('reserva_detalles.fecha_inicio', $fechaInicio);
-                } else {
-                    // Hospedaje/Guianza/Alquiler: rango completo debe traslaparse
-                    $query->where('reserva_detalles.fecha_inicio', '<=', $fechaFinReal)
-                          ->where('reserva_detalles.fecha_fin', '>=', $fechaInicio);
-                }
-            })
-            ->get(['fecha_inicio', 'fecha_fin', 'cantidad']);
-
-        if ($reservasAfectadas->isEmpty()) {
-            return $servicio->stock;
-        }
-
-        // Para Paquetes Turísticos, solo contar ocupación del día de inicio
-        if ($esPaqueteTuristico) {
-            $ocupacionTotal = $reservasAfectadas->sum('cantidad');
-            return max(0, $servicio->stock - $ocupacionTotal);
-        }
-
-        // Para Hospedaje/Guianza/Alquiler: calcular cuello de botella (mínimo disponible cada día)
-        $ocupacionDiaria = [];
-        $periodoBuscado = CarbonPeriod::create($fechaInicio, $fechaFinReal);
-
-        foreach ($periodoBuscado as $fecha) {
-            $ocupacionDiaria[$fecha->format('Y-m-d')] = 0;
-        }
-
-        foreach ($reservasAfectadas as $reserva) {
-            $rangoReserva = CarbonPeriod::create($reserva->fecha_inicio, $reserva->fecha_fin);
-            foreach ($rangoReserva as $fecha) {
-                $fechaStr = $fecha->format('Y-m-d');
-                if (isset($ocupacionDiaria[$fechaStr])) {
-                    $ocupacionDiaria[$fechaStr] += $reserva->cantidad;
-                }
+        return DB::transaction(function () use ($reservaId, $nuevoEstado, $emprendimientoId, $motivo) {
+            $reserva = $this->obtenerDetalleSeguro($reservaId, $emprendimientoId);
+            
+            if (!$reserva) {
+                return false;
             }
-        }
 
-        $maximaOcupacionEnElRango = empty($ocupacionDiaria) ? 0 : max($ocupacionDiaria);
+            $reserva->estado = $nuevoEstado;
 
-        return max(0, $servicio->stock - $maximaOcupacionEnElRango);
+            if (in_array($nuevoEstado, ['Cancelada', 'Rechazada'], true)) {
+                $reserva->cancelada_en        = now();
+                $reserva->cancelada_por_rol   = 'Emprendimiento';
+                $reserva->motivo_cancelacion  = $motivo;
+            }
+
+            $reserva->save();
+
+            // Enviar correo solo después de que la base de datos guarda los cambios
+            DB::afterCommit(function () use ($reserva, $nuevoEstado, $motivo) {
+                try {
+                    if (in_array($nuevoEstado, ['Cancelada', 'Rechazada'], true)) {
+                        Mail::to($reserva->turista->email)->send(new ReservaCanceladaMail($reserva, $motivo));
+                    } elseif ($nuevoEstado === 'Confirmada') {
+                        $mensaje = 'Tu reserva ha sido revisada y confirmada por el establecimiento. Te esperamos.';
+                        Mail::to($reserva->turista->email)->send(new ReservaReagendadaMail($reserva, $mensaje));
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Error enviando correo de cambio de estado: ' . $e->getMessage());
+                }
+            });
+
+            return true;
+        });
     }
-    
+
+   public function reagendarReserva(int $reservaId, array $nuevasFechas, int $emprendimientoId): bool
+    {
+        return DB::transaction(function () use ($reservaId, $nuevasFechas, $emprendimientoId) {
+            $reserva = $this->obtenerDetalleSeguro($reservaId, $emprendimientoId);
+            if (!$reserva) return false;
+
+            $estadoOriginal = $reserva->estado;
+            $reserva->estado = 'Reagendando';
+            $reserva->save();
+
+            try {
+                $nuevoTotalReserva = 0;
+
+                foreach ($reserva->detalles as $detalle) {
+                    if (isset($nuevasFechas[$detalle->id])) {
+                        
+                        $fechaInicio = $nuevasFechas[$detalle->id]['inicio'];
+                        $horaLlegada = $nuevasFechas[$detalle->id]['hora_llegada'] ?? null;
+                        
+                        $servicioDB = Servicio::with('tipoServicio')
+                            ->where('id', $detalle->servicio_id)
+                            ->lockForUpdate()
+                            ->firstOrFail();
+
+                        $nombreTipo      = $servicioDB->tipoServicio->nombre ?? '';
+                        $tipoNormalizado = Str::slug($nombreTipo, ' ');
+                        
+                        $esAlimentacion = str_contains($tipoNormalizado, 'alimentacion');
+                        $esPaquete      = str_contains($tipoNormalizado, 'paquete');
+                        $esAlquiler     = str_contains($tipoNormalizado, 'alquiler');
+                        $esGuianza      = str_contains($tipoNormalizado, 'guianza');
+                        $esHospedaje    = str_contains($tipoNormalizado, 'hospedaje');
+
+                        $fechaFin = $esAlimentacion ? $fechaInicio : ($nuevasFechas[$detalle->id]['fin'] ?? $fechaInicio);
+                        
+                        $fechaParaCalculo = $fechaFin ?: $fechaInicio;
+                        $diasCalculados = max(1, Carbon::parse($fechaInicio)->diffInDays(Carbon::parse($fechaParaCalculo)) + 1);
+                        $cantidad = $detalle->cantidad;
+                        $numeroPersonasCalculo = max(1, $detalle->numero_personas);
+
+                        if ($this->inventarioService->manejaStockDiario($nombreTipo) && !$esAlimentacion) {
+                            $fechaFinCheck = $esPaquete ? $fechaInicio : $fechaFin;
+                            
+                            $disponibleEnRango = $this->inventarioService->calcularDisponibilidadEnRango(
+                                $servicioDB->id,
+                                $fechaInicio,
+                                $fechaFinCheck
+                            );
+
+                            if ($disponibleEnRango < $cantidad) {
+                                throw new \Exception("Fechas sin disponibilidad. No hay cupos para: {$servicioDB->nombre}");
+                            }
+                        }
+
+                        if ($esPaquete) {
+                            $subtotal = $servicioDB->precio * $cantidad;
+                        } elseif ($esHospedaje) {
+                            $subtotal = $servicioDB->precio * $numeroPersonasCalculo * $cantidad * $diasCalculados;
+                        } elseif ($esGuianza || $esAlquiler) {
+                            $subtotal = $servicioDB->precio * $cantidad * $diasCalculados;
+                        } else {
+                            $subtotal = $servicioDB->precio * $cantidad;
+                        }
+
+                        $detalle->update([
+                            'fecha_inicio' => $fechaInicio,
+                            'fecha_fin'    => $fechaFin,
+                            'hora_llegada' => $horaLlegada,
+                            'subtotal'     => $subtotal,
+                        ]);
+
+                        $nuevoTotalReserva += $subtotal;
+                    } else {
+                        $nuevoTotalReserva += $detalle->subtotal;
+                    }
+                }
+
+                $reserva->precio_total = $nuevoTotalReserva;
+                $reserva->estado = 'Confirmada';
+                $reserva->save();
+
+                DB::afterCommit(function () use ($reserva) {
+                    try {
+                        $mensajeAutomatico = 'Tus fechas de reserva han sido actualizadas y confirmadas por el establecimiento. Te esperamos.';
+                        Mail::to($reserva->turista->email)->send(new ReservaReagendadaMail($reserva, $mensajeAutomatico));
+                    } catch (\Exception $e) {
+                        Log::error('Error enviando correo al reagendar: ' . $e->getMessage());
+                    }
+                });
+
+                return true;
+
+            } catch (\Exception $e) {
+                $reserva->estado = $estadoOriginal;
+                $reserva->save();
+                throw $e;
+            }
+        });
+    }
+
     public function crearReserva(array $datosTurista, array $carrito, int $emprendimientoId)
     {
-        $passwordPlana = Str::random(10);
+        return DB::transaction(function () use ($datosTurista, $carrito, $emprendimientoId) {
 
-        return DB::transaction(function () use ($datosTurista, $carrito, $passwordPlana) {
-            
-            $user = $this->obtenerOCrearTurista($datosTurista, $passwordPlana);
+            // Buscamos al usuario existente en lugar de crearlo
+            $user = $this->userService->buscarPorIdentificacion($datosTurista['identificacion']);
+
+            if (!$user) {
+                throw new \Exception("El turista no existe en el sistema.");
+            }
 
             $reserva = Reserva::create([
-                'user_id' => $user->id,
-                'estado' => 'Confirmada',
-                'precio_total' => 0,
+                'user_id'           => $user->id,
+                'emprendimiento_id' => $emprendimientoId,
+                'estado'            => 'Confirmada',
+                'precio_total'      => 0,
                 'reservada_por_rol' => 'Emprendimiento',
             ]);
 
@@ -152,98 +228,19 @@ class ReservaService
 
             $reserva->update(['precio_total' => $totalCalculado]);
 
-            // El envío de correo ocurre de forma segura solo si la transacción hace commit exitosamente.
-            DB::afterCommit(function () use ($user, $reserva, $passwordPlana) {
-                if ($user->wasRecentlyCreated) {
-                    try {
-                        Mail::to($user->email)->send(new \App\Mail\NuevoUsuarioCreadoMail($user, $reserva, $passwordPlana));
-                    } catch (\Exception $e) {
-                        Log::error('Fallo al enviar correo a turista: ' . $e->getMessage());
-                    }
+            // Enviar el correo de confirmación
+            DB::afterCommit(function () use ($user, $reserva, $carrito) {
+                try {
+                    Mail::to($user->email)->send(
+                        new \App\Mail\ReservaConfirmadaMail($reserva, $user, $carrito)
+                    );
+                } catch (\Exception $e) {
+                    Log::error('Fallo al enviar correo de reserva al turista: ' . $e->getMessage());
                 }
             });
 
             return $reserva;
         });
-    }
-
-    public function obtenerFechasAgotadas(int $servicioId): array
-    {
-        $servicio = Servicio::with('tipoServicio')->findOrFail($servicioId);
-        $nombreTipo = $servicio->tipoServicio->nombre ?? '';
-
-        if (!$this->manejaStockDiario($nombreTipo)) {
-            return [];
-        }
-
-        $esRangoCompleto = in_array($nombreTipo, ['Hospedaje', 'Alquiler de Equipos', 'Guianza']);
-        $esPaqueteTuristico = $nombreTipo === 'Paquetes Turísticos';
-
-        // Para Paquetes Turísticos y Alimentación: solo analizar por día de inicio
-        if ($esPaqueteTuristico || $nombreTipo === 'Alimentación') {
-            return DB::table('reserva_detalles')
-                ->join('reservas', 'reserva_detalles.reserva_id', '=', 'reservas.id')
-                ->selectRaw('DATE(fecha_inicio) as fecha_inicio, SUM(cantidad) as total_reservado')
-                ->where('servicio_id', $servicioId)
-                ->whereIn('reservas.estado', ['Confirmada', 'Pendiente'])
-                ->where('fecha_inicio', '>=', now()->format('Y-m-d'))
-                ->groupBy('fecha_inicio')
-                ->havingRaw('SUM(cantidad) >= ?', [$servicio->stock])
-                ->pluck('fecha_inicio')
-                ->toArray();
-        }
-
-        // Para Hospedaje/Guianza/Alquiler: analizar rango completo con cuello de botella
-        $reservas = DB::table('reserva_detalles')
-            ->join('reservas', 'reserva_detalles.reserva_id', '=', 'reservas.id')
-            ->where('servicio_id', $servicioId)
-            ->whereIn('reservas.estado', ['Confirmada', 'Pendiente'])
-            ->where('fecha_fin', '>=', now()->format('Y-m-d'))
-            ->get(['fecha_inicio', 'fecha_fin', 'cantidad']);
-
-        $ocupacionPorDia = [];
-        
-        foreach ($reservas as $res) {
-            $periodo = CarbonPeriod::create($res->fecha_inicio, $res->fecha_fin);
-            
-            foreach ($periodo as $fecha) {
-                $fechaStr = $fecha->format('Y-m-d');
-                if (!isset($ocupacionPorDia[$fechaStr])) {
-                    $ocupacionPorDia[$fechaStr] = 0;
-                }
-                $ocupacionPorDia[$fechaStr] += $res->cantidad;
-            }
-        }
-
-        $fechasAgotadas = [];
-        foreach ($ocupacionPorDia as $fecha => $ocupado) {
-            if ($ocupado >= $servicio->stock) {
-                $fechasAgotadas[] = $fecha;
-            }
-        }
-
-        return $fechasAgotadas;
-    }
-
-    private function obtenerOCrearTurista(array $datosTurista, string $passwordPlana): User
-    {
-        $user = User::firstOrCreate(
-            ['cedula' => $datosTurista['identificacion']],
-            [
-                'name' => $datosTurista['nombres'],
-                'apellidos' => $datosTurista['apellidos'],
-                'email' => $datosTurista['correo'],
-                'telefono' => $datosTurista['telefono'] ?? null,
-                'edad' => $datosTurista['edad'] ?? null,
-                'password' => Hash::make($passwordPlana),
-            ]
-        );
-
-        if (!$user->hasRole('turista')) {
-            $user->assignRole('turista');
-        }
-
-        return $user;
     }
 
     private function procesarDetallesCarrito(Reserva $reserva, array $carrito): float
@@ -256,37 +253,66 @@ class ReservaService
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            $fechaInicio = $item['fecha'] ?? $item['fecha_inicio'];
-            $cantidad = (int) $item['cantidad'];
-            $nombreTipo = $servicioDB->tipoServicio->nombre ?? '';
+            $nombreTipo      = $servicioDB->tipoServicio->nombre ?? '';
+            $tipoNormalizado = Str::slug($nombreTipo, ' ');
+            
+            $esAlimentacion = str_contains($tipoNormalizado, 'alimentacion');
+            $esPaquete      = str_contains($tipoNormalizado, 'paquete');
+            $esAlquiler     = str_contains($tipoNormalizado, 'alquiler');
+            $esGuianza      = str_contains($tipoNormalizado, 'guianza');
+            $esHospedaje    = str_contains($tipoNormalizado, 'hospedaje');
+                
+            $fechaInicio    = $item['fecha_inicio'];
+            $cantidad       = (int) $item['cantidad'];
+            
+            // Para la BD, hospedaje usa número de personas, los demás mandan 0
+            $numeroPersonas = $esHospedaje ? (int) ($item['numero_personas'] ?? 1) : 0;
+            $numeroPersonasCalculo = max(1, $numeroPersonas);
 
-            // Para Alimentación: fecha_inicio = fecha_fin (solo día, no rango)
-            // Para otros: usar fecha_fin proporcionada o fecha_inicio si no existe
-            if ($nombreTipo === 'Alimentación') {
+            if ($esAlimentacion) {
                 $fechaFin = $fechaInicio;
             } else {
                 $fechaFin = $item['fecha_fin'] ?? $fechaInicio;
             }
 
-            if ($this->manejaStockDiario($nombreTipo)) {
-                $disponibleEnRango = $this->calcularDisponibilidadEnRango($servicioDB->id, $fechaInicio, $fechaFin);
+            $fechaParaCalculo = $fechaFin ?: $fechaInicio;
+            // Corrección: añadimos + 1 para que el backend cobre los días inclusivos igual que la vista
+            $diasCalculados = max(1, Carbon::parse($fechaInicio)->diffInDays(Carbon::parse($fechaParaCalculo)) + 1);
+
+            if ($this->inventarioService->manejaStockDiario($nombreTipo) && !$esAlimentacion) {
+                $fechaFinCheck   = $esPaquete ? $fechaInicio : $fechaFin;
+                $disponibleEnRango = $this->inventarioService->calcularDisponibilidadEnRango(
+                    $servicioDB->id,
+                    $fechaInicio,
+                    $fechaFinCheck
+                );
 
                 if ($disponibleEnRango < $cantidad) {
                     throw new \Exception("Cupos insuficientes para el servicio: {$servicioDB->nombre}");
                 }
             }
 
-            $subtotal = $servicioDB->precio * $cantidad;
+            // Matemática exacta y alineada con la vista
+            if ($esPaquete) {
+                $subtotal = $servicioDB->precio * $cantidad;
+            } elseif ($esHospedaje) {
+                $subtotal = $servicioDB->precio * $numeroPersonasCalculo * $cantidad * $diasCalculados;
+            } elseif ($esGuianza || $esAlquiler) {
+                // Guianza y Alquiler NO multiplican por el número de personas
+                $subtotal = $servicioDB->precio * $cantidad * $diasCalculados;
+            } else {
+                $subtotal = $servicioDB->precio * $cantidad;
+            }
 
             $reserva->detalles()->create([
-                'servicio_id' => $servicioDB->id,
-                'fecha_inicio' => $fechaInicio,
-                'fecha_fin' => $fechaFin,
-                'hora' => $item['hora'] ?? null,
-                'numero_personas' => $item['numero_personas'] ?? 1,
-                'cantidad' => $cantidad,
+                'servicio_id'     => $servicioDB->id,
+                'fecha_inicio'    => $fechaInicio,
+                'fecha_fin'       => $fechaFin,
+                'hora_llegada'    => $item['hora'] ?? null, // Nombre correcto de la base de datos
+                'numero_personas' => $numeroPersonas,
+                'cantidad'        => $cantidad,
                 'precio_unitario' => $servicioDB->precio,
-                'subtotal' => $subtotal,
+                'subtotal'        => $subtotal,
             ]);
 
             $totalCalculado += $subtotal;
@@ -294,9 +320,45 @@ class ReservaService
 
         return $totalCalculado;
     }
+    
+    public function obtenerAgendaPorRangoYFiltros(
+        int $emprendimientoId, 
+        string $inicio, 
+        string $fin, 
+        ?string $categoria = null, 
+        ?string $estado = null, 
+        ?string $cedula = null
+    ) {
+        $query = ReservaDetalle::with(['reserva.turista', 'servicio.tipoServicio'])
+            ->whereHas('servicio.categoriaPivot', function ($q) use ($emprendimientoId) {
+                $q->where('emprendimiento_id', $emprendimientoId);
+            })
+            ->whereDate('fecha_inicio', '<=', $fin)
+            ->whereDate('fecha_fin', '>=', $inicio);
 
-    private function manejaStockDiario(string $nombreTipo): bool
-    {
-        return in_array($nombreTipo, self::TIPOS_CON_STOCK_DIARIO, true);
+        if (!empty($estado)) {
+            $query->whereHas('reserva', function ($q) use ($estado) {
+                $q->where('estado', $estado);
+            });
+        } else {
+            $query->whereHas('reserva', function ($q) {
+                $q->whereIn('estado', ['Confirmada', 'Reagendada']);
+            });
+        }
+
+        if (!empty($cedula)) {
+            $cedulaLimpia = trim($cedula);
+            $query->whereHas('reserva.turista', function ($q) use ($cedulaLimpia) {
+                $q->where('cedula', 'like', '%' . $cedulaLimpia . '%');
+            });
+        }
+
+        if (!empty($categoria)) {
+            $query->whereHas('servicio.tipoServicio', function ($q) use ($categoria) {
+                $q->where('id', $categoria);
+            });
+        }
+
+        return $query->orderBy('hora_llegada', 'asc')->get();
     }
 }

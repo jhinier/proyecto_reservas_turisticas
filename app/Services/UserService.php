@@ -11,10 +11,9 @@ class UserService
     public function crearUsuario(array $datos)
     {
         return DB::transaction(function () use ($datos) {
-            // 1. Creación con los nombres exactos que vienen del Form Object
             $usuario = User::create([
-                'name'      => $datos['nombre'],    // Antes decía 'name', ahora coincide con el Form
-                'apellidos' => $datos['apellidos'], // ¡No te olvides de los apellidos!
+                'name'      => $datos['nombre'],
+                'apellidos' => $datos['apellidos'],
                 'email'     => $datos['email'],
                 'password'  => Hash::make($datos['password']),
                 'cedula'    => $datos['cedula'],
@@ -22,7 +21,6 @@ class UserService
                 'edad'      => $datos['edad'],
             ]);
 
-            // 2. Asignación del rol
             $usuario->assignRole($datos['role']);
 
             return $usuario;
@@ -39,12 +37,11 @@ class UserService
                     'apellidos' => $datos['apellidos'],
                     'email'     => $datos['email'],
                     'telefono'  => $datos['telefono'],
-                    'edad'      => $datos['edad'] ?? 18, // Valor por defecto si no lo envían
-                    'password'  => Hash::make(\Illuminate\Support\Str::random(16)), // Contraseña automática
+                    'edad'      => $datos['edad'] ?? 18,
+                    'password'  => Hash::make(\Illuminate\Support\Str::random(16)),
                 ]
             );
 
-            // Solo asignamos el rol si es un usuario nuevo en el sistema
             if ($usuario->wasRecentlyCreated) {
                 $usuario->assignRole('turista');
             }
@@ -52,4 +49,13 @@ class UserService
             return $usuario;
         });
     }
+
+    // Función movida desde TuristaService
+    public function buscarPorIdentificacion(string $identificacion): ?User
+{
+    // El scope role('turista') obliga a que el usuario tenga ese rol específico
+    return User::role('turista')
+        ->where('cedula', $identificacion)
+        ->first(['id', 'cedula', 'email', 'name', 'apellidos', 'edad', 'telefono']);
+}
 }

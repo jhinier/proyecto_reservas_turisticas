@@ -3,9 +3,8 @@
 namespace App\Livewire\Emprendimiento\Reserva;
 
 use Livewire\Component;
-use App\Services\TuristaService;
+use App\Services\UserService; // Cambiamos la importación
 use App\Rules\CedulaEcuatoriana;
-use Illuminate\Support\Facades\Log;
 
 class DatosTurista extends Component
 {
@@ -22,26 +21,24 @@ class DatosTurista extends Component
     public function updatedIdentificacion()
     {
         $this->busquedaRealizada = false;
+        $this->usuarioEncontrado = false;
     }
 
     protected function rules()
     {
         return [
             'identificacion' => ['required', 'numeric', 'digits:10', new CedulaEcuatoriana()],
-            'correo' => 'required|email|max:255',
-            'nombres' => 'required|string|max:255',
-            'apellidos' => 'required|string|max:255',
-            'edad' => 'required|integer|min:1|max:120',
-            'telefono' => 'nullable|numeric|digits:10',
         ];
     }
 
-    public function buscarTurista(TuristaService $turistaService)
+    // Inyectamos UserService
+    public function buscarTurista(UserService $userService)
     {
         $this->resetErrorBag();
         $this->validateOnly('identificacion');
 
-        $turista = $turistaService->buscarPorIdentificacion($this->identificacion);
+        // Usamos la función desde UserService
+        $turista = $userService->buscarPorIdentificacion($this->identificacion);
         $this->busquedaRealizada = true;
 
         if ($turista) {
@@ -58,20 +55,18 @@ class DatosTurista extends Component
 
     public function procesarDatos()
     {
-        $this->resetErrorBag();
-        $datosValidados = $this->validate();
-
-        // Validación extra de correo duplicado
-        $existeCorreo = \App\Models\User::where('email', $this->correo)
-            ->where('cedula', '!=', $this->identificacion)
-            ->exists();
-
-        if ($existeCorreo) {
-            $this->addError('correo', 'Este correo electrónico ya pertenece a otra persona en el sistema.');
+        if (!$this->usuarioEncontrado) {
             return;
         }
 
-        $this->dispatch('datos-turista-completados', datos: $datosValidados);
+        $this->dispatch('datos-turista-completados', datos: [
+            'identificacion' => $this->identificacion,
+            'correo' => $this->correo,
+            'nombres' => $this->nombres,
+            'apellidos' => $this->apellidos,
+            'edad' => $this->edad,
+            'telefono' => $this->telefono,
+        ]);
     }
 
     private function limpiarCampos()
