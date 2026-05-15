@@ -2,7 +2,11 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         @include('partials.head')
+         @stack('styles')
+       
     </head>
+
+
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
@@ -19,6 +23,31 @@
                     <flux:sidebar.item icon="clapperboard" :href="route('admin.emprendimientos.gestion')" :current="request()->routeIs('admin.emprendimientos.gestion')" wire:navigate>
                         {{ __('Emprendimientos') }}
                     </flux:sidebar.item>
+
+                    <flux:sidebar.item 
+                     icon="calendar" 
+                     :href="route('admin.festividades.gestion')" 
+                     :current="request()->routeIs('admin.festividades.gestion')" 
+                     wire:navigate>
+                     {{ __('Festividades') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item 
+                    icon="map" 
+                    :href="route('admin.sitios.gestion')" 
+                    :current="request()->routeIs('admin.sitios.gestion')" 
+                    wire:navigate>
+                    {{ __('Sitios Turísticos') }}
+                </flux:sidebar.item>
+
+                <flux:sidebar.item 
+                    icon="sparkles" 
+                    :href="route('admin.actividades')" 
+                    :current="request()->routeIs('admin.actividades')" 
+                    wire:navigate>
+                    {{ __('Actividades Turísticas') }}
+                </flux:sidebar.item>
+                
             </flux:sidebar.nav>
 
             <flux:spacer />
@@ -82,6 +111,7 @@
         </flux:header>
 
         {{ $slot }}
+    @stack('scripts')
 
         @fluxScripts
     </body>
