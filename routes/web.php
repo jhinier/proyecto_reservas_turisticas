@@ -10,6 +10,9 @@ use App\Livewire\Admin\GestionUsuarios; // Importamos tu nuevo componente
 use App\Livewire\Emprendimiento\Dashboard as EmprendimientoDashboard;
 use App\Livewire\Emprendimiento\GestorServicios;
 use App\Livewire\Emprendimiento\GestionServicios\CrearHospedaje;
+use App\Livewire\Admin\GestionFestividades;
+use App\Livewire\Admin\GestionSitiosTuristicos;
+use App\Livewire\Admin\GestionActividadesTuristicas;
 
 // 1. PÁGINA PÚBLICA (Lo que ve todo el mundo al entrar)
 //Route::view('/', 'welcome')->name('home');
@@ -48,7 +51,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/emprendimientos/gestion/crear', CrearEmprendimiento::class)->name('admin.emprendimientos.crear');
 
         Route::get('/usuarios', GestionUsuarios::class)->name('admin.usuarios');
-        
+        Route::get('/festividades/gestion', GestionFestividades::class)->name('admin.festividades.gestion');
+        Route::get('/admin/sitios', GestionSitiosTuristicos::class)->name('admin.sitios.gestion');
+        Route::get('/admin/actividades', GestionActividadesTuristicas::class)->name('admin.actividades');
     });
 
     // --- GRUPO DE EMPRENDIMIENTOS ---
