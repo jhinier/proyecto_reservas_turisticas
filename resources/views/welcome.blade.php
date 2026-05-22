@@ -12,25 +12,35 @@
             darkMode: 'class', // O 'media'
             theme: {
                 extend: {
-                    colors: {
-                        primary: '#3b82f6', // Azul Tailwind (puedes cambiarlo)
-                        'primary-dark': '#60a5fa',
-                        'on-primary': '#ffffff',
-                        'on-primary-dark': '#000000',
-                        
-                        surface: '#ffffff',
-                        'surface-alt': '#f8fafc',
-                        'surface-dark': '#0f172a',
-                        'surface-dark-alt': '#1e293b',
-                        
-                        'on-surface': '#475569',
-                        'on-surface-strong': '#0f172a',
-                        'on-surface-dark': '#cbd5e1',
-                        'on-surface-dark-strong': '#f8fafc',
-                        
-                        outline: '#e2e8f0',
-                        'outline-dark': '#334155',
-                    },
+                colors: {
+            
+                    /* VERDES PRINCIPALES */
+                    primary: '#07b25f',
+                    'primary-dark': '#87ec83',
+                    secondary: '#7ed957',
+                
+                    /* TEXTOS */
+                    'on-primary': '#ffffff',
+                    'on-primary-dark': '#ffffff',
+                
+                    /* FONDOS */
+                    surface: '#ffffff',
+                    'surface-alt': '#f5fdf5',
+                
+                    'surface-dark': '#0b1a0b',
+                    'surface-dark-alt': '#163016',
+                
+                   /* TEXTOS GENERALES */
+                    'on-surface': '#f3f4f6',
+                    'on-surface-strong': '#ffffff',
+
+                    'on-surface-dark': '#d1fae5',
+                    'on-surface-dark-strong': '#ffffff',
+                
+                    /* BORDES */
+                    outline: '#d1d5db',
+                    'outline-dark': '#276a25',
+                },
                     borderRadius: {
                         radius: '0.5rem',
                     }
@@ -48,9 +58,31 @@
 </head>
 <body class="bg-gray-100 min-h-screen">
 
-   <nav x-data="{ mobileMenuIsOpen: false }" x-on:click.away="mobileMenuIsOpen = false" class="flex items-center justify-between bg-surface-alt border-outline dark:border-outline-dark px-6 py-4 dark:border-outline-dark dark:bg-surface-dark-alt" aria-label="penguin ui menu">
-    <a href="#" class="text-2xl font-bold text-on-surface-strong dark:text-on-surface-dark-strong">
-        <span>Peng<span class="text-primary dark:text-primary-dark">ui</span>n</span>
+   <nav 
+        x-data="{ mobileMenuIsOpen: false }"
+        x-on:click.away="mobileMenuIsOpen = false"
+        class="absolute top-0 left-0 w-full z-50 flex items-center justify-between px-8 lg:px-14 py-6 bg-zinc-900/60 backdrop-blur-md border-b border-white/10"
+        aria-label="menu principal">
+        <a href="#" class="flex items-center gap-3">
+    
+            <!-- LOGO -->
+            <img 
+                src="{{ asset('img/Logo1.png') }}"
+                class="w-14 h-14 object-contain"
+                alt="Explora Candelaria"
+            >
+    
+            <!-- TEXTO -->
+            <div class="hidden sm:block">
+                <h1 class="text-xl font-black uppercase tracking-wide text-[#77f062] leading-none">
+                    Explora Candelaria
+                </h1>
+    
+                <p class="text-xs text-gray-500 tracking-[0.2em] uppercase mt-1">
+                    Descubre · Reserva · Vive
+                </p>
+            </div>
+    
         </a>
     <ul class="hidden items-center gap-4 sm:flex">
         <li><a href="#" class="font-bold text-primary underline-offset-2 hover:text-primary focus:outline-hidden focus:underline dark:text-primary-dark dark:hover:text-primary-dark" aria-current="page">Inicio</a></li>
@@ -104,19 +136,60 @@
             <button x-on:click="userDropDownIsOpen = ! userDropDownIsOpen" x-bind:aria-expanded="userDropDownIsOpen" x-on:keydown.space.prevent="openWithKeyboard = true" x-on:keydown.enter.prevent="openWithKeyboard = true" x-on:keydown.down.prevent="openWithKeyboard = true" class="rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-primary-dark" aria-controls="userMenu">
                 <img src="https://penguinui.s3.amazonaws.com/component-assets/avatar-8.webp" alt="User Profile" class="size-10 rounded-full object-cover" />
             </button>
-            <ul x-cloak x-show="userDropDownIsOpen || openWithKeyboard" x-transition.opacity x-trap="openWithKeyboard" x-on:click.outside="userDropDownIsOpen = false, openWithKeyboard = false" x-on:keydown.down.prevent="$focus.wrap().next()" x-on:keydown.up.prevent="$focus.wrap().previous()" id="userMenu" class="absolute right-0 top-12 flex w-fit min-w-48 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt">
-                <li class="border-b border-outline dark:border-outline-dark">
-                    <div class="flex flex-col px-4 py-2">   
-                        <span class="text-sm font-medium text-on-surface-strong dark:text-on-surface-dark-strong">Alice Brown</span>
-                        <p class="text-xs text-on-surface dark:text-on-surface-dark">alice.brown@gmail.com</p>
-                    </div>
-                </li>
-                <li><a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong">Dashboard</a></li>
-                <li><a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong">Subscription</a></li>
-                <li><a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong">Configuración</a></li>
-                <li><a href="{{ route('login') }}" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong">Iniciar Sesión</a></li>
-                <li><a href="{{ route('register') }}" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong">Registrarse</a></li>
-            </ul>
+                <ul x-cloak x-show="userDropDownIsOpen || openWithKeyboard"
+                        x-transition.opacity
+                        x-trap="openWithKeyboard"
+                        x-on:click.outside="userDropDownIsOpen = false, openWithKeyboard = false"
+                        x-on:keydown.down.prevent="$focus.wrap().next()"
+                        x-on:keydown.up.prevent="$focus.wrap().previous()"
+                        id="userMenu"
+
+                        class="absolute right-0 top-14 flex w-56 flex-col overflow-hidden rounded-3xl
+                        border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-2xl py-2">
+
+                        <!-- PERFIL -->
+                        <li class="border-b border-white/10">
+                            <div class="flex flex-col px-5 py-4">
+                                <span class="text-sm font-semibold text-white">
+                                    Bienvenido
+                                </span>
+
+                                <p class="text-xs text-gray-400">
+                                    Explora Candelaria
+                                </p>
+                            </div>
+                        </li>
+
+                        <!-- OPCIONES -->
+                        <li>
+                            <a href="#"
+                            class="block px-5 py-3 text-sm text-gray-200 hover:bg-white/10 hover:text-[#7ed957] transition">
+                                Dashboard
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                            class="block px-5 py-3 text-sm text-gray-200 hover:bg-white/10 hover:text-[#7ed957] transition">
+                                Configuración
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('login') }}"
+                            class="block px-5 py-3 text-sm text-gray-200 hover:bg-white/10 hover:text-[#7ed957] transition">
+                                Iniciar Sesión
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('register') }}"
+                            class="block px-5 py-3 text-sm text-gray-200 hover:bg-white/10 hover:text-[#7ed957] transition">
+                                Registrarse
+                            </a>
+                        </li>
+
+                </ul>
         </li>
     </ul>
     <button x-on:click="mobileMenuIsOpen = !mobileMenuIsOpen" x-bind:aria-expanded="mobileMenuIsOpen" x-bind:class="mobileMenuIsOpen ? 'fixed top-6 right-6 z-20' : null" type="button" class="flex text-on-surface dark:text-on-surface-dark sm:hidden" aria-label="mobile menu" aria-controls="mobileMenu">
@@ -183,6 +256,118 @@
         </li>
     </ul>
 </nav>
+
+<!-- DISEÑO  -->
+<!-- HERO PRINCIPAL -->
+<section class="relative w-full h-screen overflow-hidden">
+
+    <!-- IMAGEN FONDO -->
+    <div class="absolute inset-0">
+
+        <img 
+            src="{{ asset('img/fondo4.png') }}"
+            class="w-full h-full object-cover"
+            alt="Explora Candelaria"
+        >
+
+        <!-- OVERLAY -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/20"></div>
+
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="relative z-20 flex h-full">
+
+        <!-- SIDEBAR -->
+        <div class="hidden lg:flex w-28 bg-black/40 backdrop-blur-md flex-col items-center justify-between py-10 border-r border-white/10">
+
+            <!-- LOGO -->
+            <div class="flex flex-col items-center">
+
+
+            </div>
+
+            <!-- TEXTO -->
+            <div class="rotate-[-90deg] whitespace-nowrap text-white/50 tracking-[0.4em] text-xs uppercase">
+                Descubre · Reserva · Vive experiencias
+            </div>
+
+            <!-- BOTON -->
+            <button class="w-14 h-14 rounded-full bg-[#0b8a0f] hover:bg-[#276a25] transition flex items-center justify-center text-white text-2xl shadow-2xl">
+                ↓
+            </button>
+
+        </div>
+
+        <!-- TEXO PRINCIPAL -->
+        <div class="flex items-center px-10 lg:px-24 w-full">
+
+            <div class="max-w-3xl mt-24">
+                 
+                <!-- MINI TEXTO -->
+                <p class="uppercase tracking-[0.5em] text-[#7ed957] text-sm mb-5">
+                    Turismo • Naturaleza • Cultura
+                </p>
+
+                <!-- TITULO -->
+                <h1 class="text-white text-6xl md:text-8xl font-black uppercase leading-none drop-shadow-2xl">
+                    Explora <br>
+                    La Candelaria
+                </h1>
+
+                <!-- DESCRIPCION -->
+                <p class="mt-8 text-lg md:text-xl text-gray-200 leading-relaxed max-w-2xl">
+                    Descubre destinos únicos, reserva experiencias inolvidables
+                    y vive la magia turística de La Candelaria desde un solo lugar.
+                </p>
+
+                <!-- BOTONES -->
+                <div class="flex flex-wrap gap-5 mt-10">
+
+                    <a href="#"
+                    class="px-8 py-4 bg-[#0b8a0f] hover:bg-[#276a25] text-white rounded-full text-sm uppercase tracking-[0.3em] transition duration-300 shadow-2xl">
+                        Explorar
+                    </a>
+
+                    <a href="#"
+                    class="px-8 py-4 border border-white/40 hover:bg-white hover:text-black text-white rounded-full text-sm uppercase tracking-[0.3em] transition duration-300 backdrop-blur-md">
+                        Reservar Ahora
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SOCIAL BAR -->
+    <div class="absolute bottom-0 right-0 z-30">
+
+        <div class="flex items-center gap-8 bg-black/50 backdrop-blur-md px-10 py-5 border-t border-l border-white/10 rounded-tl-3xl">
+
+            <span class="text-white/60 uppercase tracking-[0.3em] text-xs">
+                Síguenos
+            </span>
+
+            <a href="https://www.facebook.com/parroquia.lacandelaria.5" class="text-white hover:text-[#7ed957] transition text-lg">
+                Facebook
+            </a>
+
+            <a href="" class="text-white hover:text-[#7ed957] transition text-lg">
+                Instagram
+            </a>
+
+            <a href="https://www.tiktok.com/@gadlacandelaria" class="text-white hover:text-[#7ed957] transition text-lg">
+                TikTok
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
 
 </body>
 </html>

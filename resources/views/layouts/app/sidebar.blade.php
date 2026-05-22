@@ -1,118 +1,112 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
-    <head>
-        @include('partials.head')
-         @stack('styles')
-       
-    </head>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="light">
 
+<head>
+    @include('partials.head')
+    @stack('styles')
+</head>
 
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
-            <flux:sidebar.header>
-                <x-app-logo :sidebar="true" href="{{ route('admin.dashboard') }}" wire:navigate />
-                <flux:sidebar.collapse class="lg:hidden" />
-            </flux:sidebar.header>
+<body class="min-h-screen flex bg-slate-50 text-zinc-800 font-sans antialiased">
 
-            <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Platform')" class="grid">
-                    <flux:sidebar.item icon="home" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </flux:sidebar.item>
-                </flux:sidebar.group>
-                    <flux:sidebar.item icon="clapperboard" :href="route('admin.emprendimientos.gestion')" :current="request()->routeIs('admin.emprendimientos.gestion')" wire:navigate>
-                        {{ __('Emprendimientos') }}
-                    </flux:sidebar.item>
+    {{-- SIDEBAR WRAPPER REAL --}}
+    <aside class="w-72 min-h-screen flex flex-col shadow-2xl sticky top-0 z-50 text-white bg-emerald-800 border-r border-emerald-900/20">
 
-                    <flux:sidebar.item 
-                     icon="calendar" 
-                     :href="route('admin.festividades.gestion')" 
-                     :current="request()->routeIs('admin.festividades.gestion')" 
-                     wire:navigate>
-                     {{ __('Festividades') }}
-                    </flux:sidebar.item>
+        {{-- LOGO SECTION --}}
+        <div class="px-6 py-6 border-b border-emerald-700/50 bg-emerald-900/20">
+            <a href="{{ route('admin.dashboard') }}"
+               wire:navigate
+               class="flex items-center gap-3 group">
+               
+                <img src="{{ asset('img/logo1.png') }}"
+                     class="h-11 w-11 rounded-xl bg-white p-1.5 shadow-md transform group-hover:scale-105 transition-all duration-200"
+                     alt="Explora Candelaria">
 
-                    <flux:sidebar.item 
-                    icon="map" 
-                    :href="route('admin.sitios.gestion')" 
-                    :current="request()->routeIs('admin.sitios.gestion')" 
-                    wire:navigate>
-                    {{ __('Sitios Turísticos') }}
-                </flux:sidebar.item>
+                <div>
+                    <h1 class="font-bold text-base tracking-wide text-white transition-colors">
+                        Explora Candelaria
+                    </h1>
+                    <p class="text-xs text-emerald-200/60 font-medium tracking-wider uppercase">Admin Panel</p>
+                </div>
+            </a>
+        </div>
 
-                <flux:sidebar.item 
-                    icon="sparkles" 
-                    :href="route('admin.actividades')" 
-                    :current="request()->routeIs('admin.actividades')" 
-                    wire:navigate>
-                    {{ __('Actividades Turísticas') }}
-                </flux:sidebar.item>
+        {{-- MENU NAVIGATION --}}
+        <nav class="flex-1 px-4 py-6 space-y-7 overflow-y-auto">
+
+            <div class="space-y-1.5">
+                <p class="px-4 text-[10px] font-bold text-emerald-200/40 uppercase tracking-widest mb-2">Principal</p>
                 
-            </flux:sidebar.nav>
+                <a href="{{ route('admin.dashboard') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.dashboard') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
+                    <flux:icon.home class="w-5 h-5" style="color: white !important;" />
+                    <span>Dashboard</span>
+                </a>
+            </div>
 
-            <flux:spacer />
-    
-            <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->name" />
-        </flux:sidebar>
+            <div class="border-t border-emerald-700/40 mx-2"></div>
 
-        <!-- Mobile User Menu -->
-        <flux:header class="lg:hidden">
-            <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+            <div class="space-y-1.5">
+                <p class="px-4 text-[10px] font-bold text-emerald-200/40 uppercase tracking-widest mb-2">Módulos</p>
 
-            <flux:spacer />
+                <a href="{{ route('admin.emprendimientos.gestion') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.emprendimientos.gestion') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
+                    <flux:icon.clapperboard class="w-5 h-5" style="color: white !important;" />
+                    <span>Emprendimientos</span>
+                </a>
 
-            <flux:dropdown position="top" align="end">
-                <flux:profile
-                    :initials="auth()->user()->initials()"
-                    icon-trailing="chevron-down"
-                />
+                <a href="{{ route('admin.festividades.gestion') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.festividades.gestion') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
+                    <flux:icon.calendar class="w-5 h-5" style="color: white !important;" />
+                    <span>Festividades</span>
+                </a>
+            </div>
 
-                <flux:menu>
-                    <flux:menu.radio.group>
-                        <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                <flux:avatar
-                                    :name="auth()->user()->name"
-                                    :initials="auth()->user()->initials()"
-                                />
+            <div class="border-t border-emerald-700/40 mx-2"></div>
 
-                                <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <flux:heading class="truncate">{{ auth()->user()->name }}</flux:heading>
-                                    <flux:text class="truncate">{{ auth()->user()->email }}</flux:text>
-                                </div>
-                            </div>
-                        </div>
-                    </flux:menu.radio.group>
+            <div class="space-y-1.5">
+                <p class="px-4 text-[10px] font-bold text-emerald-200/40 uppercase tracking-widest mb-2">Exploración</p>
 
-                    <flux:menu.separator />
+                <a href="{{ route('admin.sitios.gestion') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.sitios.gestion') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
+                    <flux:icon.map class="w-5 h-5" style="color: white !important;" />
+                    <span>Sitios Turísticos</span>
+                </a>
 
-                    <flux:menu.radio.group>
-                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
-                            {{ __('Settings') }}
-                        </flux:menu.item>
-                    </flux:menu.radio.group>
+                <a href="{{ route('admin.actividades') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.actividades') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
+                    <flux:icon.sparkles class="w-5 h-5" style="color: white !important;" />
+                    <span>Actividades</span>
+                </a>
 
-                    <flux:menu.separator />
+                <a href="{{ route('admin.mapa.turistico') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white 
+                   {{ request()->routeIs('admin.mapa.turistico') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
+                
+                    <flux:icon.map class="w-5 h-5" style="color: white !important;" />
+                    <span>Mapa Turístico</span>
+                </a>
+            </div>
 
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
-                        @csrf
-                        <flux:menu.item
-                            as="button"
-                            type="submit"
-                            icon="arrow-right-start-on-rectangle"
-                            class="w-full cursor-pointer"
-                            data-test="logout-button"
-                        >
-                            {{ __('Log out') }}
-                        </flux:menu.item>
-                    </form>
-                </flux:menu>
-            </flux:dropdown>
-        </flux:header>
+        </nav>
 
-        {{ $slot }}
+        {{-- USER SECTION --}}
+        <div class="p-4 bg-emerald-950/30 border-t border-emerald-700/50">
+            <div class="p-1 rounded-xl text-white hover:bg-white/5 transition duration-200">
+                <x-desktop-user-menu :name="auth()->user()->name" />
+            </div>
+        </div>
+
+    </aside>
+
+    {{-- CONTENIDO PRINCIPAL --}}
+    <main class="flex-1 min-h-screen overflow-y-auto bg-slate-50">
+        <div class="mx-auto max-w-7xl p-8">
+            {{ $slot }}
+        </div>
+    </main>
+
     @stack('scripts')
+    @fluxScripts
 
-        @fluxScripts
-    </body>
+</body>
 </html>
