@@ -3,7 +3,6 @@
 namespace App\Livewire\Emprendimiento\GestionServicios;
 
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use App\Services\AlquilerEquipoService;
 use Illuminate\Support\Facades\Log;
@@ -11,8 +10,6 @@ use Illuminate\Support\Facades\Log;
 #[Layout('layouts.app.sidebar_emprendimiento')]
 class CrearAlquilerEquipo extends Component
 {
-    use WithFileUploads;
-
     public int $pivotId;
     
     // Datos Base de la tabla Servicio
@@ -20,9 +17,6 @@ class CrearAlquilerEquipo extends Component
     public string $descripcion = '';
     public float|int|string|null $precio = null;
     public int|string|null $stock = null;
-    
-    // Archivos (Se deja preparado aunque no se use en la vista actualmente)
-    public array $imagenes = [];
 
     public function mount(int $pivotId): void
     {
@@ -34,7 +28,6 @@ class CrearAlquilerEquipo extends Component
         'descripcion' => 'required|string|max:1000',
         'precio'      => 'required|numeric|min:0',
         'stock'       => 'required|integer|min:1', 
-        'imagenes.*'  => 'image|max:2048' 
     ];
 
     public function guardar(AlquilerEquipoService $alquilerService)
@@ -43,16 +36,12 @@ class CrearAlquilerEquipo extends Component
 
         try {
             // Mandamos a llamar a nuestro servicio limpio
-            $alquilerService->crear(
-                $this->pivotId,
-                [
-                    'nombre'      => $this->nombre,
-                    'descripcion' => $this->descripcion,
-                    'precio'      => $this->precio,
-                    'stock'       => $this->stock,
-                ],
-                $this->imagenes
-            );
+            $alquilerService->crear($this->pivotId, [
+                'nombre'      => $this->nombre,
+                'descripcion' => $this->descripcion,
+                'precio'      => $this->precio,
+                'stock'       => $this->stock,
+            ]);
 
             // 🔥 CORREGIDO: Ahora enviamos solo un String, no un Array
             session()->flash('success', 'Equipo de alquiler registrado correctamente.');

@@ -27,11 +27,11 @@ class DashboardEmprendimientoService
         ];
     }
 
-    public function obtenerAgendaHoy(int $emprendimientoId): Collection
+    public function obtenerAgendaHoy(int $emprendimientoId, string $search = ''): Collection
     {
         $hoy = Carbon::today();
 
-        return ReservaDetalle::with(['reserva.turista', 'servicio.tipoServicio'])
+        $query = ReservaDetalle::with(['reserva.turista', 'servicio.tipoServicio'])
             ->whereHas('servicio.categoriaPivot', function ($q) use ($emprendimientoId) {
                 $q->where('emprendimiento_id', $emprendimientoId);
             })
@@ -39,9 +39,17 @@ class DashboardEmprendimientoService
                 $q->whereIn('estado', ['Confirmada', 'Reagendada']);
             })
             ->whereDate('fecha_inicio', '<=', $hoy)
-            ->whereDate('fecha_fin', '>=', $hoy)
-            ->orderBy('hora_llegada', 'asc')
-            ->get();
+            ->whereDate('fecha_fin', '>=', $hoy);
+
+        if ($search !== '') {
+            $query->whereHas('reserva.turista', function($q) use ($search) {
+                $q->where('nombres', 'like', '%' . $search . '%')
+                  ->orWhere('apellidos', 'like', '%' . $search . '%')
+                  ->orWhere('identificacion', 'like', '%' . $search . '%');
+            });
+        }
+
+        return $query->orderBy('hora_llegada', 'asc')->get();
     }
 
     private function obtenerRangoFechas(string $periodo): array

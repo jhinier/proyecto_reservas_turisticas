@@ -57,6 +57,49 @@
         <li><a href="#" class="font-medium text-on-surface underline-offset-2 hover:text-primary focus:outline-hidden focus:underline dark:text-on-surface-dark dark:hover:text-primary-dark">Sitios Turisticos</a></li>
         <li><a href="#" class="font-medium text-on-surface underline-offset-2 hover:text-primary focus:outline-hidden focus:underline dark:text-on-surface-dark dark:hover:text-primary-dark">Actividades</a></li>
         <li><a href="#" class="font-medium text-on-surface underline-offset-2 hover:text-primary focus:outline-hidden focus:underline dark:text-on-surface-dark dark:hover:text-primary-dark">Eventos</a></li>
+
+        <li x-data="{ serviciosDropDownIsOpen: false, serviciosOpenWithKeyboard: false }" x-on:keydown.esc.window="serviciosDropDownIsOpen = false, serviciosOpenWithKeyboard = false" class="relative flex items-center">
+            <button
+                x-on:click="serviciosDropDownIsOpen = ! serviciosDropDownIsOpen"
+                x-bind:aria-expanded="serviciosDropDownIsOpen"
+                x-on:keydown.space.prevent="serviciosOpenWithKeyboard = true"
+                x-on:keydown.enter.prevent="serviciosOpenWithKeyboard = true"
+                x-on:keydown.down.prevent="serviciosOpenWithKeyboard = true"
+                class="rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-primary-dark"
+                aria-controls="serviciosMenu"
+            >
+                <span class="font-medium text-on-surface underline-offset-2 hover:text-primary focus:outline-hidden focus:underline dark:text-primary-dark dark:hover:text-primary-dark">Servicios</span>
+            </button>
+
+            <ul
+                x-cloak
+                x-show="serviciosDropDownIsOpen || serviciosOpenWithKeyboard"
+                x-transition:opacity
+                x-trap="serviciosOpenWithKeyboard"
+                x-on:click.outside="serviciosDropDownIsOpen = false, serviciosOpenWithKeyboard = false"
+                x-on:keydown.down.prevent="$focus.wrap().next()"
+                x-on:keydown.up.prevent="$focus.wrap().previous()"
+                id="serviciosMenu"
+                class="absolute left-0 top-12 flex w-fit min-w-60 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+            >
+                <li>
+                    <a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-strong">Hospedaje</a>
+                </li>
+                <li>
+                    <a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-strong">Alimentación</a>
+                </li>
+                <li>
+                    <a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-strong">Guianza</a>
+                </li>
+                <li>
+                    <a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-strong">Equipos turisticos</a>
+                </li>
+                <li>
+                    <a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-strong">Paquetes turisticos</a>
+                </li>
+            </ul>
+        </li>
+
         <li x-data="{ userDropDownIsOpen: false, openWithKeyboard: false }" x-on:keydown.esc.window="userDropDownIsOpen = false, openWithKeyboard = false" class="relative flex items-center">
             <button x-on:click="userDropDownIsOpen = ! userDropDownIsOpen" x-bind:aria-expanded="userDropDownIsOpen" x-on:keydown.space.prevent="openWithKeyboard = true" x-on:keydown.enter.prevent="openWithKeyboard = true" x-on:keydown.down.prevent="openWithKeyboard = true" class="rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-primary-dark" aria-controls="userMenu">
                 <img src="https://penguinui.s3.amazonaws.com/component-assets/avatar-8.webp" alt="User Profile" class="size-10 rounded-full object-cover" />
@@ -100,7 +143,32 @@
         <li class="p-2"><a href="#" class="w-full text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark">Sitios Turísticos</a></li>
         <li class="p-2"><a href="#" class="w-full text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark">Actividades</a></li>
         <li class="p-2"><a href="#" class="w-full text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark">Eventos</a></li>
-        
+
+        <li class="p-2" x-data="{ serviciosDropDownIsOpenMobile: false }">
+            <button
+                x-on:click="serviciosDropDownIsOpenMobile = !serviciosDropDownIsOpenMobile"
+                class="w-full text-left text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark"
+                type="button"
+                aria-controls="serviciosMenuMobile"
+                x-bind:aria-expanded="serviciosDropDownIsOpenMobile"
+            >
+                Servicios
+            </button>
+
+            <ul
+                id="serviciosMenuMobile"
+                x-cloak
+                x-show="serviciosDropDownIsOpenMobile"
+                class="mt-2 flex flex-col gap-2 pl-2"
+            >
+                <li><a href="#" class="w-full text-base font-medium text-on-surface hover:text-primary focus:underline dark:text-on-surface-dark">Hospedaje</a></li>
+                <li><a href="#" class="w-full text-base font-medium text-on-surface hover:text-primary focus:underline dark:text-on-surface-dark">Alimentación</a></li>
+                <li><a href="#" class="w-full text-base font-medium text-on-surface hover:text-primary focus:underline dark:text-on-surface-dark">Guianza</a></li>
+                <li><a href="#" class="w-full text-base font-medium text-on-surface hover:text-primary focus:underline dark:text-on-surface-dark">Equipos turisticos</a></li>
+                <li><a href="#" class="w-full text-base font-medium text-on-surface hover:text-primary focus:underline dark:text-on-surface-dark">Paquetes turisticos</a></li>
+            </ul>
+        </li>
+
         <hr role="none" class="my-4 border-outline dark:border-outline-dark">
         
         <li class="mt-2 w-full border-none">

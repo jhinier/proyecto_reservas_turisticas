@@ -4,22 +4,18 @@ namespace App\Livewire\Emprendimiento\GestionServicios;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout; 
-use Livewire\WithFileUploads; 
 use App\Services\AlimentacionService;
 use Illuminate\Support\Facades\Log;
 
 #[Layout('layouts.app.sidebar_emprendimiento')] 
 class CrearAlimentacion extends Component
 {
-    use WithFileUploads;
-
     public int $pivotId;
     public string $nombre = '';
     public string $descripcion = '';
     public float|int|null $precio = null;
     public string $tipo_alimentacion = '';
     public string $lugar_alimentacion = '';
-    public array $imagenes = [];
 
     public function mount(int $pivotId): void
     {
@@ -34,16 +30,7 @@ class CrearAlimentacion extends Component
             'precio'             => 'required|numeric|min:0.01',
             'tipo_alimentacion'  => 'required|string|max:100',
             'lugar_alimentacion' => 'required|string|max:150',
-            'imagenes.*'         => 'image|mimes:jpeg,png,jpg,webp|max:2048', 
         ];
-    }
-
-    public function eliminarImagen(int $index): void
-    {
-        if (isset($this->imagenes[$index])) {
-            unset($this->imagenes[$index]);
-            $this->imagenes = array_values($this->imagenes);
-        }
     }
 
     public function guardar(AlimentacionService $service)
@@ -58,7 +45,7 @@ class CrearAlimentacion extends Component
             $datosDetalle = $this->only(['tipo_alimentacion', 'lugar_alimentacion']);
 
             // 1. Guardamos el servicio
-            $service->crear($this->pivotId, $datosBase, $datosDetalle, $this->imagenes);
+            $service->crear($this->pivotId, $datosBase, $datosDetalle);
 
             // 2. Preparamos el mensaje de éxito
             session()->flash('success', '¡Registro exitoso! El plato/servicio ha sido creado.');

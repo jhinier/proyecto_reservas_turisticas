@@ -197,6 +197,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-zinc-900 shadow-sm">
                             <h3 class="text-xs font-bold uppercase text-neutral-500 mb-2">Datos del Establecimiento</h3>
+                            @if($empresaDetalle->imagen)
+                                <img src="{{ asset('storage/' . $empresaDetalle->imagen) }}" alt="{{ $empresaDetalle->nombre }}" class="mb-4 h-40 w-full rounded-lg border border-neutral-200 object-cover dark:border-neutral-700">
+                            @else
+                                <div class="mb-4 flex h-32 w-full items-center justify-center rounded-lg border border-dashed border-neutral-300 bg-neutral-50 text-sm text-neutral-500 dark:border-neutral-700 dark:bg-zinc-800/50 dark:text-neutral-400">
+                                    Sin imagen registrada
+                                </div>
+                            @endif
                             <p class="font-semibold text-lg text-on-surface dark:text-on-surface-dark">{{ $empresaDetalle->nombre }}</p>
                             <div class="mt-2">
                                 <span class="text-xs text-neutral-500">Estado:</span>
@@ -234,7 +241,7 @@
             </div>
         </div>
 
-        <form wire:submit="actualizar" class="flex flex-col max-h-[85vh]">
+        <form wire:submit="actualizar" enctype="multipart/form-data" class="flex flex-col max-h-[85vh]">
             <div class="p-6 shrink-0 border-b border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-t-2xl">
                 <flux:heading size="lg">Editar Información General</flux:heading>
                 <flux:subheading>Modifica los datos del emprendimiento y responsable.</flux:subheading>
@@ -243,6 +250,27 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="space-y-4">
                         <flux:heading level="3" size="sm" class="text-blue-600 uppercase tracking-wider">Empresa</flux:heading>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Logo o Imagen Principal</label>
+                            <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
+                                <div class="h-28 w-full overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100 sm:w-40 dark:border-neutral-700 dark:bg-zinc-800">
+                                    @if($imagen)
+                                        <img src="{{ $imagen->temporaryUrl() }}" class="h-full w-full object-cover" alt="Vista previa de la nueva imagen">
+                                    @elseif($imagenActual)
+                                        <img src="{{ asset('storage/' . $imagenActual) }}" class="h-full w-full object-cover" alt="Imagen actual del emprendimiento">
+                                    @else
+                                        <div class="flex h-full w-full items-center justify-center px-3 text-center text-xs text-neutral-500 dark:text-neutral-400">
+                                            Sin imagen registrada
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="flex-1">
+                                    <input type="file" wire:model="imagen" accept="image/*" class="w-full rounded-radius border border-outline bg-surface-alt px-3 py-2 text-sm text-zinc-600 file:mr-4 file:rounded-full file:border-0 file:bg-primary/10 file:px-4 file:py-1 file:text-sm file:font-semibold file:text-primary hover:file:bg-primary/20 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-300 dark:file:bg-blue-900/30 dark:file:text-blue-400" />
+                                    <div wire:loading wire:target="imagen" class="mt-2 text-sm text-primary dark:text-blue-400">Cargando imagen...</div>
+                                    @error('imagen') <small class="mt-1 block text-danger dark:text-red-400">{{ $message }}</small> @enderror
+                                </div>
+                            </div>
+                        </div>
                         <flux:input wire:model="nombre" label="Nombre Comercial" />
                         <flux:select wire:model="estado" label="Estado">
                             <option value="1">🟢 Activo</option>

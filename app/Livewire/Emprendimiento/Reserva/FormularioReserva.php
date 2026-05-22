@@ -12,7 +12,7 @@ class FormularioReserva extends Component
 
     public string $fecha    = '';
     public string $fechaFin = '';
-    public ?int   $personas = 1;
+    public ?int   $personas = 0; // Cambiado a cero para obligar el ingreso
 
     public function requiereFechaFin(): bool
     {
@@ -59,7 +59,7 @@ class FormularioReserva extends Component
         }
 
         if ($this->requierePersonas()) {
-            $reglas['personas'] = 'required|integer|min:1';
+            $reglas['personas'] = 'required|integer|min:1'; // Obliga a ingresar un número mayor a cero
         }
 
         $this->validate($reglas);

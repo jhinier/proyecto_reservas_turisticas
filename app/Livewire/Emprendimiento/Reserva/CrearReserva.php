@@ -178,7 +178,7 @@ class CrearReserva extends Component
     /**
      * Normaliza nombres de categoría para lógica interna.
      */
-    private function normalizarNombreCategoria($valor): string
+    private function normalizarNombreCategoria(int|string|null $valor): string
     {
         if (empty($valor)) return '';
         $nombre = is_numeric($valor) ? (TipoServicio::find($valor)->nombre ?? '') : $valor;

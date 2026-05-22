@@ -2,7 +2,7 @@
      class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm" style="display: none;">
     
     {{-- Contenedor del Modal --}}
-    <div @click.outside="show = false" class="bg-white dark:bg-gray-900 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col">
+    <div class="bg-white dark:bg-gray-900 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col">
         
         {{-- Header Compacto del Modal --}}
         <div class="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center sticky top-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-20">
@@ -26,11 +26,11 @@
                         <div wire:key="f-nombre"><x-input-form id="nombre" label="Nombre de la Habitación" model="nombre" /></div>
                         <div wire:key="f-capacidad"><x-input-form id="capacidad" label="Capacidad (Personas)" model="capacidad" type="number" /></div>
                         <div wire:key="f-precio"><x-input-form id="precio" label="Precio por Noche ($)" model="precio" type="number" step="0.01" simbolo="$" /></div>
-                        <div wire:key="f-stock"><x-input-form id="stock" label="Stock por Día (Disponibles)" model="stock" type="number" /></div>
+                        <div wire:key="f-stock"><x-input-form id="stock" label="Stock por Día (Habitaciones disponibles)" model="stock" type="number" /></div>
                     </div>
                     
                     <div wire:key="f-desc" class="mt-6">
-                        <x-textarea-form id="descripcion" label="Descripción detallada" model="descripcion" rows="4" />
+                        <x-textarea-form id="descripcion" label="Descripción de la habitación" model="descripcion" rows="4" />
                     </div>
                 </section>
                 

@@ -6,6 +6,8 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Computed;
 use App\Services\DashboardEmprendimientoService;
+use App\Models\TipoServicio;
+use App\Models\Servicio;
 use Illuminate\Support\Facades\Auth;
 
 #[Layout('layouts.app.sidebar_emprendimiento')] 
@@ -18,6 +20,26 @@ class Dashboard extends Component
         unset($this->metricas);
     }
 
+    #[Computed]
+    public function categorias()
+    {
+        $emprendimientoId = Auth::user()->emprendimiento->id;
+        
+        return TipoServicio::whereHas('emprendimientos', function ($q) use ($emprendimientoId) {
+            $q->where('emprendimientos.id', $emprendimientoId);
+            $q->where('emprendimiento_tipo_servicios.estado', 1);
+        })->get()->map(function ($tipo) use ($emprendimientoId) {
+            
+            // EL CAMBIO ESTÁ AQUÍ: Metimos el 'tipo_servicio_id' dentro de la función del pivot
+            $tipo->servicios_count = Servicio::whereHas('categoriaPivot', function ($q) use ($emprendimientoId, $tipo) {
+                $q->where('emprendimiento_id', $emprendimientoId)
+                  ->where('tipo_servicio_id', $tipo->id);
+            })->count();
+            
+            return $tipo;
+        });
+    }
+    
     #[Computed]
     public function metricas()
     {
