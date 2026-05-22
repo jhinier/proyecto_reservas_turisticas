@@ -1,4 +1,33 @@
-<div x-data="{ seleccionados: @entangle('seleccionados').live }" class="flex h-full w-full flex-1 flex-col gap-6 rounded-xl p-4 md:p-6">
+<div x-data="{ seleccionados: @js($seleccionados) }" class="flex h-full w-full flex-1 flex-col gap-6 rounded-xl p-4 md:p-6">
+    <style>
+        [data-service-card][data-selected="true"] {
+            background-color: #1a4031;
+            border-color: #1a4031;
+            color: #ffffff;
+        }
+
+        [data-service-card][data-selected="false"] {
+            background-color: #ffffff;
+            border-color: #e5e7eb;
+            color: #1f2937;
+        }
+
+        [data-service-card][data-selected="false"]:hover {
+            border-color: rgb(26 64 49 / 0.5);
+        }
+
+        [data-service-check][data-selected="true"] {
+            background-color: #facc15;
+            border-color: #facc15;
+            color: #ffffff;
+        }
+
+        [data-service-check][data-selected="false"] {
+            background-color: transparent;
+            border-color: #d1d5db;
+            color: transparent;
+        }
+    </style>
     
     <div class="flex flex-col gap-1 mb-2">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
@@ -8,7 +37,6 @@
             Selecciona uno o más servicios para configurarlos en tu emprendimiento.
         </p>
     </div>
-
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         
@@ -24,24 +52,28 @@
                     'Paquetes Turísticos' => 'tent-tree',
                     default => 'layout-grid'                 
                 };
+
+                $estaSeleccionado = in_array($catalogo->id, $seleccionados, true);
             @endphp
 
+            {{-- IMPORTANTE: Se agregó wire:key para evitar parpadeos en el DOM diffing --}}
             <div 
+                wire:key="catalogo-{{ $catalogo->id }}"
                 @click="if(seleccionados.includes({{ $catalogo->id }})) { seleccionados = seleccionados.filter(i => i !== {{ $catalogo->id }}) } else { seleccionados.push({{ $catalogo->id }}) }"
                 class="cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-[1.02]"
             >
                 <div 
-                    :class="seleccionados.includes({{ $catalogo->id }}) 
-                        ? 'bg-[#1a4031] border-[#1a4031] text-white' 
-                        : 'bg-white border-gray-200 text-gray-800 hover:border-[#1a4031]/50'"
+                    data-service-card
+                    data-selected="{{ $estaSeleccionado ? 'true' : 'false' }}"
+                    x-bind:data-selected="seleccionados.includes({{ $catalogo->id }}) ? 'true' : 'false'"
                     class="relative flex flex-col items-center justify-center p-6 rounded-xl border-2 shadow-sm h-32 transition-colors duration-200"
                 >
                     
                     <div 
+                        data-service-check
+                        data-selected="{{ $estaSeleccionado ? 'true' : 'false' }}"
+                        x-bind:data-selected="seleccionados.includes({{ $catalogo->id }}) ? 'true' : 'false'"
                         class="absolute top-4 right-4 flex items-center justify-center w-6 h-6 rounded-full border-2 transition-colors duration-200"
-                        :class="seleccionados.includes({{ $catalogo->id }}) 
-                            ? 'bg-yellow-400 border-yellow-400 text-white' 
-                            : 'border-gray-300 bg-transparent text-transparent'"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
                             <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
@@ -70,10 +102,17 @@
         </div>
     @enderror
 
-    <div class="mt-4 flex justify-start">
+    <div class="mt-6 flex items-center justify-start gap-4">
         
+        <a
+            href="{{ route('emprendimiento.servicios.index') }}"
+            class="inline-flex items-center justify-center rounded-radius border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+        >
+            Cancelar
+        </a>
+
         <button 
-            wire:click="guardarSeleccion"
+            @click="$wire.guardarSeleccion(seleccionados)"
             wire:loading.attr="disabled"
             type="button" 
             class="inline-flex items-center gap-2 whitespace-nowrap rounded-radius bg-success border border-success px-4 py-2 text-sm font-medium tracking-wide text-on-success transition hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-success active:opacity-100 active:outline-offset-0 disabled:opacity-75 disabled:cursor-not-allowed dark:bg-success dark:border-success dark:text-on-success dark:focus-visible:outline-success"

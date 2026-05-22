@@ -4,7 +4,7 @@
     'model' => 'imagenes', 
     'imagesArray' => [], 
     'deleteMethod' => 'eliminarImagen',
-    'helpText' => 'PNG, JPG o WEBP (Máx. 2MB por foto)'
+    'helpText' => 'PNG, JPG o WEBP (Máx. 5MB por foto)'
 ])
 
 <div class="col-span-1 md:col-span-2 pt-2" wire:key="componente-upload-{{ $id }}">

@@ -1,7 +1,7 @@
 <div x-data="{ show: @entangle('abierto') }" x-show="show" 
      class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm" style="display: none;">
     
-    <div @click.outside="show = false" class="bg-white dark:bg-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col">
+    <div class="bg-white dark:bg-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col">
         
         {{-- Header --}}
         <div class="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center sticky top-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-20">
@@ -22,31 +22,36 @@
                 <section>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div wire:key="p-nombre"><x-input-form id="nombre" label="Nombre del Paquete" model="nombre" /></div>
-                        <div wire:key="p-salida"><x-input-form id="lugar_salida" label="Lugar de Salida" model="lugar_salida" /></div>
-                        <div wire:key="p-hora"><x-input-form id="hora_salida" label="Hora de Salida" model="hora_salida" type="time" /></div>
-                        <div wire:key="p-dias"><x-input-form id="duracion_dias" label="Duración (Días)" model="duracion_dias" type="number" /></div>
+                        <div wire:key="p-precio"><x-input-form id="precio" label="Precio por Persona" model="precio" type="number" step="0.01" simbolo="$" /></div>
+                        <div wire:key="p-stock"><x-input-form id="stock" label="Stock por Día (Cupos disponibles)" model="stock" type="number" /></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                        <div wire:key="p-dias"><x-input-form id="duracion_dias" label="Días de duración" model="duracion_dias" type="number" /></div>
+                        <div wire:key="p-salida"><x-input-form id="lugar_salida" label="Punto de Encuentro" model="lugar_salida" /></div>
+                        <div wire:key="p-hora"><x-input-form id="hora_salida" label="Hora de Inicio" model="hora_salida" type="time" /></div>
                     </div>
                     
-                    {{-- Textareas más grandes --}}
                     <div wire:key="p-desc" class="mt-6">
-                        <x-textarea-form id="descripcion" label="Descripción General" model="descripcion" rows="5" />
+                        <x-textarea-form id="descripcion" label="Resumen General" model="descripcion" rows="3" />
                     </div>
 
-                    <div wire:key="p-itinerario" class="mt-6">
-                        <x-textarea-form id="lugares_actividades" label="Itinerario Detallado" model="lugares_actividades" rows="10" />
-                    </div>
-
-                    <div wire:key="p-incluye" class="mt-6">
-                        <x-textarea-form id="servicios_incluidos" label="¿Qué incluye el precio?" model="servicios_incluidos" rows="6" />
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <div wire:key="p-itinerario">
+                            <x-textarea-form id="lugares_actividades" label="Itinerario Detallado" model="lugares_actividades" rows="4" />
+                        </div>
+                        <div wire:key="p-incluye">
+                            <x-textarea-form id="servicios_incluidos" label="¿Qué incluye?" model="servicios_incluidos" rows="4" />
+                        </div>
                     </div>
 
                     <div wire:key="p-recom" class="mt-6">
-                        <x-input-form id="recomendaciones" label="Recomendaciones (Ropa, equipo, etc.)" model="recomendaciones" />
+                        <x-textarea-form id="recomendaciones" label="Recomendaciones para el turista" model="recomendaciones" rows="3" />
                     </div>
 
                     {{-- Campo de archivo PDF --}}
                     <div wire:key="p-pdf" class="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
-                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Documento de Itinerario (PDF)</label>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Itinerario PDF (Opcional)</label>
                         <input type="file" wire:model="nuevo_documento" accept=".pdf" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100">
                         
                         @if($documento)

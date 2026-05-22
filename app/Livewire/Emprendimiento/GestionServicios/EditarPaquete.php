@@ -20,6 +20,8 @@ class EditarPaquete extends Component
 
     public string $nombre = '';
     public string $descripcion = '';
+    public float|int|string|null $precio = null;
+    public int|string|null $stock = null;
     public string $lugar_salida = '';
     public ?string $hora_salida = null;
     public int|string|null $duracion_dias = null;
@@ -34,15 +36,17 @@ class EditarPaquete extends Component
     protected function rules()
     {
         return [
-            'nombre' => 'required|string|max:100',
-            'descripcion' => 'required|string',
-            'lugar_salida' => 'required|string',
+            'nombre' => 'required|string|min:3|max:150',
+            'descripcion' => 'required|string|min:10|max:500',
+            'precio' => 'required|numeric|min:0.01',
+            'stock' => 'required|integer|min:1',
+            'lugar_salida' => 'required|string|max:150',
             'hora_salida' => 'required',
             'duracion_dias' => 'required|integer|min:1',
-            'servicios_incluidos' => 'required|string',
-            'lugares_actividades' => 'required|string',
-            'recomendaciones' => 'required|string',
-            'nuevo_documento' => 'nullable|mimes:pdf|max:2048', // Valida que sea PDF
+            'servicios_incluidos' => 'required|string|max:500',
+            'lugares_actividades' => 'required|string|max:500',
+            'recomendaciones' => 'required|string|max:500',
+            'nuevo_documento' => 'nullable|mimes:pdf|max:5120', // Valida que sea PDF
         ];
     }
 
@@ -55,6 +59,8 @@ class EditarPaquete extends Component
         
         $this->nombre = $servicio->nombre;
         $this->descripcion = $servicio->descripcion;
+        $this->precio = $servicio->precio;
+        $this->stock = $servicio->stock;
         
         if ($servicio->detallePaqueteTuristico) {
             $detalle = $servicio->detallePaqueteTuristico;
@@ -76,7 +82,7 @@ class EditarPaquete extends Component
         $this->validate();
 
         try {
-            $datosBase = $this->only(['nombre', 'descripcion']);
+            $datosBase = $this->only(['nombre', 'descripcion', 'precio', 'stock']);
             $datosDetalle = $this->only([
                 'lugar_salida', 'hora_salida',
                 'duracion_dias', 'servicios_incluidos', 

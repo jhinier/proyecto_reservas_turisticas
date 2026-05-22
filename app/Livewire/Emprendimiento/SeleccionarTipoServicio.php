@@ -51,13 +51,20 @@ class SeleccionarTipoServicio extends Component
     /**
      * Valida entrada y sincroniza selección.
      */
-    public function guardarSeleccion(TipoServicioService $service)
+    public function guardarSeleccion(array $seleccionados, TipoServicioService $service)
     {
+        $this->seleccionados = array_values(array_unique(array_map('intval', $seleccionados)));
+
         $this->ejecutarValidacion();
 
         try {
-            $emprendimiento = Auth::user()->emprendimiento; 
+            $emprendimiento = Auth::user()?->emprendimiento;
 
+            if (!$emprendimiento) {
+                abort(403, 'Acceso denegado. No tienes un emprendimiento asignado.');
+            }
+
+            /** @var \App\Models\Emprendimiento $emprendimiento */
             // Persistencia delegada al servicio
             $service->sincronizarTipos($emprendimiento, $this->seleccionados);
 

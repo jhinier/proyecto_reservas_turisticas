@@ -18,16 +18,17 @@
          class="fixed right-0 top-0 h-full w-full sm:w-[450px] md:w-[90vw] lg:w-[85vw] bg-white shadow-2xl z-[70] flex flex-col md:flex-row overflow-hidden border-l-4 border-[#C6A24D]"
          style="display: none;">
         
-        {{-- SIDEBAR IZQUIERDO (Mini Calendario Mensual y Leyendas) --}}
-        <div class="w-full md:w-80 bg-[#3B4D36] text-[#F1EAD7] flex flex-col h-full shrink-0 shadow-lg z-20">
-            <div class="p-6 flex justify-between items-center border-b border-[#8DBEA2]/20">
+        {{-- SIDEBAR IZQUIERDO --}}
+        <div class="w-full md:w-80 bg-[#3B4D36] text-[#F1EAD7] flex flex-col flex-none md:h-full shadow-lg z-20">
+            <div class="p-4 md:p-6 flex justify-between items-center border-b border-[#8DBEA2]/20 shrink-0">
                 <button @click="$wire.cerrar()" class="bg-white/10 p-2 rounded-xl hover:bg-[#C6A24D] hover:text-[#3B4D36] transition">
                     <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
                 </button>
                 <h2 class="text-xl font-black text-[#C6A24D]">Agenda</h2>
             </div>
 
-            <div class="p-6 flex-1 overflow-y-auto space-y-8">
+            {{-- Ocultamos el calendario mensual en móviles (hidden md:block) --}}
+            <div class="hidden md:block p-6 flex-1 overflow-y-auto space-y-8 custom-scrollbar">
                 <div class="bg-[#F1EAD7]/10 p-5 rounded-3xl border border-[#8DBEA2]/20">
                     <div class="flex justify-between items-center mb-5">
                         <span class="font-black text-[#F1EAD7] text-sm capitalize">{{ $this->datosCalendario['nombreMes'] }}</span>
@@ -81,14 +82,14 @@
             </div>
         </div>
 
-        {{-- CONTENIDO DERECHO (Agenda Semanal) --}}
-        <div class="flex-1 flex flex-col h-full bg-white relative">
+        {{-- CONTENIDO DERECHO (min-h-0 arregla el corte visual) --}}
+        <div class="flex-1 flex flex-col min-h-0 bg-white relative">
             <div wire:loading.flex wire:target="mesAnterior, mesSiguiente, seleccionarDia, semanaAnterior, semanaSiguiente, irAHoy" class="absolute inset-0 bg-white/60 backdrop-blur-sm z-30 items-center justify-center">
                 <div class="animate-spin size-8 border-4 border-[#C6A24D] border-t-[#3B4D36] rounded-full"></div>
             </div>
 
-            {{-- Cabecera del Panel Derecho --}}
-            <div class="p-4 md:p-6 border-b border-[#CFE2CF] flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-white z-20 shrink-0">
+            {{-- Cabecera --}}
+            <div class="p-4 md:p-6 border-b border-[#CFE2CF] flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-white z-20 shrink-0 shadow-sm">
                 <div>
                     <h2 class="text-xl md:text-2xl font-black text-[#3B4D36] flex items-center gap-2">
                         @if(isset($this->diasMostrar) && count($this->diasMostrar) > 0)
@@ -97,26 +98,40 @@
                             {{ $this->diasMostrar[6]->translatedFormat('d M, Y') }}
                         @endif
                     </h2>
-                    <p class="text-xs font-bold text-[#7C8D54] uppercase tracking-wider mt-1">Control de ocupación semanal</p>
+                    <p class="text-xs font-bold text-[#7C8D54] uppercase tracking-wider mt-1">Control de ocupación</p>
                 </div>
                 
-                <div class="flex items-center gap-2 bg-[#F1EAD7]/30 border border-[#CFE2CF]/50 rounded-xl p-1">
+                <div class="flex items-center gap-2 bg-[#F1EAD7]/30 border border-[#CFE2CF]/50 rounded-xl p-1 shrink-0 w-max">
                     <button wire:click="semanaAnterior" class="p-2 hover:bg-white rounded-lg text-[#32744C] transition shadow-sm border border-transparent hover:border-[#CFE2CF]">
                         <svg class="size-4 md:size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" /></svg>
                     </button>
-                    <button wire:click="irAHoy" class="px-3 py-1.5 text-xs font-black text-[#3B4D36] hover:text-[#C6A24D] uppercase tracking-wide transition">
-                        Hoy
+                    
+                    @php
+                        $estamosEnSemanaActual = false;
+                        if(isset($this->diasMostrar)) {
+                            foreach($this->diasMostrar as $diaVerificar) {
+                                if($diaVerificar->isToday()) {
+                                    $estamosEnSemanaActual = true;
+                                    break;
+                                }
+                            }
+                        }
+                    @endphp
+                    <button wire:click="irAHoy" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-black text-[#3B4D36] hover:text-[#C6A24D] uppercase tracking-wide transition">
+                        @if(!$estamosEnSemanaActual)
+                            <span class="size-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                        @endif
+                        {{ $estamosEnSemanaActual ? 'Hoy' : 'Volver' }}
                     </button>
+
                     <button wire:click="semanaSiguiente" class="p-2 hover:bg-white rounded-lg text-[#32744C] transition shadow-sm border border-transparent hover:border-[#CFE2CF]">
                         <svg class="size-4 md:size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
                     </button>
                 </div>
             </div>
 
-            {{-- ========================================== --}}
             {{-- VISTA MÓVIL: Timeline Vertical --}}
-            {{-- ========================================== --}}
-            <div class="block lg:hidden flex-1 overflow-y-auto px-4 py-6 space-y-8 bg-white relative">
+            <div class="block lg:hidden flex-1 overflow-y-auto px-4 py-6 bg-white relative">
                 @if(isset($this->diasMostrar))
                     @foreach($this->diasMostrar as $dia)
                         @php 
@@ -125,42 +140,45 @@
                             $serviciosDelDia = $this->agendaPorDia[$fechaStr] ?? [];
                         @endphp
                         
-                        <div class="relative">
-                            <div class="flex items-center gap-3 mb-3">
-                                <div class="flex flex-col items-center justify-center w-12 h-12 rounded-2xl {{ $esHoy ? 'bg-[#32744C] text-[#F1EAD7] shadow-md' : 'bg-white text-[#3B4D36] border border-[#CFE2CF]' }}">
-                                    <span class="text-[9px] font-black uppercase tracking-widest">{{ $dia->translatedFormat('D') }}</span>
-                                    <span class="text-lg font-black leading-none mt-0.5">{{ $dia->format('d') }}</span>
-                                </div>
-                                <div class="flex-1 border-b-2 {{ $esHoy ? 'border-[#32744C]' : 'border-[#CFE2CF]/50' }} border-dashed mt-2"></div>
+                        <div class="mb-8">
+                            <div class="mb-4 flex items-baseline gap-2 border-b border-gray-100 pb-2 sticky top-0 bg-white/95 backdrop-blur z-10">
+                                <h3 class="text-lg font-black text-[#3B4D36]">{{ $dia->format('d M') }}</h3>
+                                <span class="text-sm font-bold text-gray-400 capitalize">{{ $dia->translatedFormat('l') }}</span>
+                                @if($esHoy) <span class="text-[10px] uppercase bg-[#C6A24D]/10 px-2 py-0.5 rounded text-[#C6A24D] font-black tracking-widest ml-auto border border-[#C6A24D]/20">Hoy</span> @endif
                             </div>
 
-                            <div class="pl-[3.5rem] space-y-2">
+                            <div class="space-y-3">
                                 @forelse($serviciosDelDia as $item)
                                     @php
                                         $tipo = \Illuminate\Support\Str::slug($item->servicio->tipoServicio->nombre ?? '');
                                         
                                         $estilo = match(true) {
-                                            str_contains($tipo, 'hospedaje') => ['bg' => 'bg-[#8DBEA2]/40', 'border' => 'border-l-[12px] border-l-[#8DBEA2] border-y border-r border-[#8DBEA2]/50', 'text' => 'text-[#3B4D36]'],
-                                            str_contains($tipo, 'guianza') || str_contains($tipo, 'tour') => ['bg' => 'bg-[#C6A24D]/30', 'border' => 'border-l-[12px] border-l-[#C6A24D] border-y border-r border-[#C6A24D]/50', 'text' => 'text-[#855A37]'],
-                                            str_contains($tipo, 'alimentacion') => ['bg' => 'bg-[#855A37]/20', 'border' => 'border-l-[12px] border-l-[#855A37] border-y border-r border-[#855A37]/40', 'text' => 'text-[#855A37]'],
-                                            default => ['bg' => 'bg-[#32744C]/20', 'border' => 'border-l-[12px] border-l-[#32744C] border-y border-r border-[#32744C]/40', 'text' => 'text-[#32744C]'],
+                                            str_contains($tipo, 'hospedaj') || str_contains($tipo, 'alojamient') => 'border-l-[6px] border-l-[#8DBEA2] border-y border-r border-gray-100',
+                                            str_contains($tipo, 'guianz') || str_contains($tipo, 'tour') => 'border-l-[6px] border-l-[#C6A24D] border-y border-r border-gray-100',
+                                            str_contains($tipo, 'aliment') || str_contains($tipo, 'restauran') => 'border-l-[6px] border-l-[#855A37] border-y border-r border-gray-100',
+                                            default => 'border-l-[6px] border-l-[#32744C] border-y border-r border-gray-100',
                                         };
 
                                         $hora = $item->hora_llegada ? \Carbon\Carbon::parse($item->hora_llegada)->format('H:i') : '--:--';
                                     @endphp
 
-                                    <div class="p-3 rounded-xl shadow-sm hover:shadow-md transition flex flex-col gap-1 {{ $estilo['bg'] }} {{ $estilo['border'] }}">
-                                        <div class="flex items-center gap-1.5 mb-1 {{ $estilo['text'] }}">
-                                            <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                            <span class="text-xs font-black">{{ $hora }}</span>
+                                    <div class="flex gap-3 items-center">
+                                        <div class="w-12 shrink-0 text-right">
+                                            <p class="text-[11px] font-black text-[#3B4D36] opacity-80">{{ $hora }}</p>
                                         </div>
-                                        <p class="text-sm font-extrabold leading-tight text-[#3B4D36]">{{ $item->servicio->nombre }}</p>
+                                        
+                                        <div class="flex-1 p-3 rounded-xl bg-gray-50 shadow-sm flex justify-between items-center hover:scale-[1.02] transition {{ $estilo }}">
+                                            <div>
+                                                <h4 class="text-sm font-bold text-[#3B4D36] mb-0.5">{{ $item->servicio->nombre }}</h4>
+                                                <div class="flex items-center gap-2">
+                                                    <p class="text-[9px] text-[#7C8D54] uppercase tracking-wider font-bold">{{ $item->servicio->tipoServicio->nombre }}</p>
+                                                    <span class="text-[9px] bg-black/5 px-1.5 py-0.5 rounded font-black text-[#3B4D36]">x{{ $item->cantidad }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 @empty
-                                    <div class="bg-gray-50 border border-gray-100 border-dashed rounded-xl p-3 flex items-center gap-2">
-                                        <div class="size-1.5 rounded-full bg-gray-300"></div>
-                                        <p class="text-[11px] font-medium text-gray-400">Sin agendamientos</p>
-                                    </div>
+                                    <p class="text-xs font-bold text-gray-300 pl-16 pt-2 italic">Sin agendamientos</p>
                                 @endforelse
                             </div>
                         </div>
@@ -168,12 +186,8 @@
                 @endif
             </div>
 
-            {{-- ========================================== --}}
             {{-- VISTA DESKTOP: Grid Corporativo --}}
-            {{-- ========================================== --}}
             <div class="hidden lg:flex flex-col flex-1 overflow-hidden bg-white">
-                
-                {{-- Fila de Cabeceras (Días) --}}
                 <div class="grid grid-cols-7 border-b border-[#CFE2CF] shrink-0 bg-white shadow-sm z-10">
                     @if(isset($this->diasMostrar))
                         @foreach($this->diasMostrar as $dia)
@@ -183,7 +197,7 @@
                                     <div class="absolute top-0 left-0 right-0 h-1 bg-[#C6A24D]"></div>
                                 @endif
                                 <span class="block text-[10px] font-bold uppercase tracking-widest {{ $esHoy ? 'text-[#C6A24D]' : 'text-[#7C8D54]' }}">
-                                    {{ $dia->translatedFormat('l') }}
+                                    {{ $esHoy ? 'Hoy' : $dia->translatedFormat('l') }}
                                 </span>
                                 <span class="text-xl md:text-2xl font-black {{ $esHoy ? 'text-[#32744C]' : 'text-[#3B4D36]' }}">
                                     {{ $dia->format('d') }}
@@ -193,7 +207,6 @@
                     @endif
                 </div>
 
-                {{-- Cuerpo del Calendario --}}
                 <div class="flex-1 overflow-y-auto relative bg-white">
                     <div class="absolute inset-0 pointer-events-none" style="background-image: repeating-linear-gradient(transparent, transparent 59px, #CFE2CF 60px); opacity: 0.4;"></div>
                     
@@ -212,19 +225,22 @@
                                             $tipo = \Illuminate\Support\Str::slug($item->servicio->tipoServicio->nombre ?? '');
                                             
                                             $estilo = match(true) {
-                                                str_contains($tipo, 'hospedaje') => ['bg' => 'bg-[#8DBEA2]/40', 'border' => 'border-l-[12px] border-l-[#8DBEA2] border-y border-r border-[#8DBEA2]/50', 'text' => 'text-[#3B4D36]'],
-                                                str_contains($tipo, 'guianza') || str_contains($tipo, 'tour') => ['bg' => 'bg-[#C6A24D]/30', 'border' => 'border-l-[12px] border-l-[#C6A24D] border-y border-r border-[#C6A24D]/50', 'text' => 'text-[#855A37]'],
-                                                str_contains($tipo, 'alimentacion') => ['bg' => 'bg-[#855A37]/20', 'border' => 'border-l-[12px] border-l-[#855A37] border-y border-r border-[#855A37]/40', 'text' => 'text-[#855A37]'],
+                                                str_contains($tipo, 'hospedaj') || str_contains($tipo, 'alojamient') => ['bg' => 'bg-[#8DBEA2]/40', 'border' => 'border-l-[12px] border-l-[#8DBEA2] border-y border-r border-[#8DBEA2]/50', 'text' => 'text-[#3B4D36]'],
+                                                str_contains($tipo, 'guianz') || str_contains($tipo, 'tour') => ['bg' => 'bg-[#C6A24D]/30', 'border' => 'border-l-[12px] border-l-[#C6A24D] border-y border-r border-[#C6A24D]/50', 'text' => 'text-[#855A37]'],
+                                                str_contains($tipo, 'aliment') || str_contains($tipo, 'restauran') => ['bg' => 'bg-[#855A37]/20', 'border' => 'border-l-[12px] border-l-[#855A37] border-y border-r border-[#855A37]/40', 'text' => 'text-[#855A37]'],
                                                 default => ['bg' => 'bg-[#32744C]/20', 'border' => 'border-l-[12px] border-l-[#32744C] border-y border-r border-[#32744C]/40', 'text' => 'text-[#32744C]'],
                                             };
 
                                             $hora = $item->hora_llegada ? \Carbon\Carbon::parse($item->hora_llegada)->format('H:i') : '--:--';
                                         @endphp
 
-                                        <div class="p-2 rounded-lg shadow-sm transition flex flex-col gap-1 {{ $estilo['bg'] }} {{ $estilo['border'] }}">
-                                            <div class="flex items-center gap-1 mb-0.5 {{ $estilo['text'] }}">
-                                                <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                                <span class="text-[10px] font-black">{{ $hora }}</span>
+                                        <div class="p-2 rounded-lg shadow-sm transition flex flex-col gap-1 hover:shadow-md cursor-pointer {{ $estilo['bg'] }} {{ $estilo['border'] }}">
+                                            <div class="flex items-center justify-between mb-0.5 {{ $estilo['text'] }}">
+                                                <div class="flex items-center gap-1">
+                                                    <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                    <span class="text-[10px] font-black">{{ $hora }}</span>
+                                                </div>
+                                                <span class="text-[8px] font-black opacity-60">#{{ $item->reserva->id }}</span>
                                             </div>
                                             <p class="text-xs font-bold leading-tight text-[#3B4D36] line-clamp-3">{{ $item->servicio->nombre }}</p>
                                         </div>

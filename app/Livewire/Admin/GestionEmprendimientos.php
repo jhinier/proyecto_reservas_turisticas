@@ -4,14 +4,15 @@ namespace App\Livewire\Admin;
 
 use App\Services\EmprendimientoService;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class GestionEmprendimientos extends Component
 {
-    use WithPagination; 
+    use WithFileUploads, WithPagination;
 
     // Propiedades del formulario (Emprendimiento)
-    public $selected_id, $nombre, $descripcion, $estado, $user_id;
+    public $selected_id, $nombre, $descripcion, $estado, $user_id, $imagen, $imagenActual;
 
     // Propiedades del formulario (Usuario Responsable)
     public $user_name, $user_apellidos, $user_email, $user_telefono, $user_cedula;
@@ -63,6 +64,8 @@ class GestionEmprendimientos extends Component
         $this->nombre = $emp->nombre;
         $this->descripcion = $emp->descripcion;
         $this->estado = $emp->estado ? '1' : '0';
+        $this->imagen = null;
+        $this->imagenActual = $emp->imagen;
 
         $this->user_id = $emp->user_id;
         $this->user_name = $emp->user->name;
@@ -130,6 +133,7 @@ class GestionEmprendimientos extends Component
             'user_cedula' => 'required|digits:10',
             'user_telefono' => 'required',
             'user_email' => 'required|email',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
         $datosEmpresa = [
@@ -146,8 +150,9 @@ class GestionEmprendimientos extends Component
             'cedula' => $this->user_cedula,
         ];
 
-        $servicio->actualizarTodo($this->selected_id, $datosEmpresa, $datosUsuario);
+        $servicio->actualizarTodo($this->selected_id, $datosEmpresa, $datosUsuario, $this->imagen);
 
+        $this->reset(['imagen', 'imagenActual']);
         $this->modal('modal-emprendimiento')->close();
         $this->dispatch('notify', type: 'success', title: 'Actualización Exitosa', message: 'Los datos han sido guardados.');
     }

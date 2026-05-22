@@ -12,10 +12,14 @@
                 'name' => $name,
                 'hasError' => $hasError,
                 'isSuccess' => $isSuccess,
-                'statusClass' => $hasError ? 'border-danger' : ($isSuccess ? 'border-success' : 'border-outline'),
-                'labelClass' => $hasError ? 'text-danger' : ($isSuccess ? 'text-success' : 'text-on-surface')
+                'statusClass' => $hasError ? 'border-danger dark:border-red-500' : ($isSuccess ? 'border-success dark:border-green-500' : 'border-outline dark:border-zinc-700'),
+                'labelClass' => $hasError ? 'text-danger dark:text-red-400' : ($isSuccess ? 'text-success dark:text-green-400' : 'text-on-surface dark:text-on-surface-dark')
             ];
         };
+
+        $controlClass = 'bg-surface-alt text-gray-900 transition-colors dark:bg-zinc-900 dark:text-white';
+        $inputClass = $controlClass . ' placeholder-gray-400 dark:placeholder-gray-500 dark:[&:-webkit-autofill]:[box-shadow:0_0_0px_1000px_#18181b_inset] dark:[&:-webkit-autofill]:[-webkit-text-fill-color:#fff]';
+        $focusClass = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-blue-500';
     @endphp
 
     {{-- 1. NOMBRES --}}
@@ -30,7 +34,7 @@
             Nombres
         </label>
         <input wire:model="{{ $nombre['name'] }}" type="text" autofocus autocomplete="off" placeholder="Ej: Juan Antonio"
-            class="w-full rounded-radius border {{ $nombre['statusClass'] }} bg-surface-alt px-2 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:bg-surface-dark-alt/50" />
+            class="w-full rounded-radius border {{ $nombre['statusClass'] }} {{ $inputClass }} px-2 py-2 text-sm {{ $focusClass }}" />
         @error($nombre['name']) <small class="pl-0.5 text-danger">{{ $message }}</small> @enderror
     </div>
 
@@ -44,7 +48,7 @@
             Apellidos
         </label>
         <input wire:model="{{ $apellidos['name'] }}" type="text" autocomplete="off" placeholder="Ej: Pérez Zambrano"
-            class="w-full rounded-radius border {{ $apellidos['statusClass'] }} bg-surface-alt px-2 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" />
+            class="w-full rounded-radius border {{ $apellidos['statusClass'] }} {{ $inputClass }} px-2 py-2 text-sm {{ $focusClass }}" />
         @error($apellidos['name']) <small class="pl-0.5 text-danger">{{ $message }}</small> @enderror
     </div>
 
@@ -58,7 +62,7 @@
             Cédula
         </label>
         <input wire:model="{{ $cedula['name'] }}" type="text" maxlength="10" inputmode="numeric" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="060xxxxxxx"
-            class="w-full rounded-radius border {{ $cedula['statusClass'] }} bg-surface-alt px-2 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" />
+            class="w-full rounded-radius border {{ $cedula['statusClass'] }} {{ $inputClass }} px-2 py-2 text-sm {{ $focusClass }}" />
         @error($cedula['name']) <small class="pl-0.5 text-danger">{{ $message }}</small> @enderror
     </div>
 
@@ -72,7 +76,7 @@
             Edad
         </label>
         <input wire:model="{{ $edad['name'] }}" type="number" min="18" max="99" autocomplete="off" placeholder="Ej: 25"
-            class="w-full rounded-radius border {{ $edad['statusClass'] }} bg-surface-alt px-2 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" />
+            class="w-full rounded-radius border {{ $edad['statusClass'] }} {{ $inputClass }} px-2 py-2 text-sm {{ $focusClass }}" />
         @error($edad['name']) <small class="pl-0.5 text-danger">{{ $message }}</small> @enderror
     </div>
 
@@ -101,13 +105,13 @@
                 getFilteredOptions(query) { this.options = this.allOptions.filter(o => o.label.toLowerCase().includes(query.toLowerCase()) || o.phoneCode.includes(query)) }
             }" class="relative flex w-full">
             
-            <button type="button" @click="isOpen = !isOpen" class="inline-flex items-center gap-2 rounded-l-radius border {{ $telefono['statusClass'] }} border-r-0 bg-surface-alt px-3 text-sm">
+            <button type="button" @click="isOpen = !isOpen" class="inline-flex items-center gap-2 rounded-l-radius border {{ $telefono['statusClass'] }} border-r-0 {{ $controlClass }} px-3 text-sm {{ $focusClass }}">
                 <img class="h-3 w-5" :src="'https://flagcdn.com/' + selectedOption?.iso + '.svg'" />
                 <span x-text="selectedOption?.phoneCode" class="text-xs font-bold"></span>
             </button>
 
-            <input wire:model="{{ $telefono['name'] }}" type="tel" maxlength="10"autocomplete="off" placeholder="0999999999"
-                class="w-full rounded-r-radius border {{ $telefono['statusClass'] }} bg-surface-alt px-2.5 py-2 text-sm focus:outline-hidden" />
+            <input wire:model="{{ $telefono['name'] }}" type="tel" maxlength="10" autocomplete="off" placeholder="0999999999"
+                class="w-full rounded-r-radius border {{ $telefono['statusClass'] }} {{ $inputClass }} px-2.5 py-2 text-sm focus:outline-hidden" />
         </div>
         @error($telefono['name']) <small class="text-danger">{{ $message }}</small> @enderror
     </div>
@@ -122,7 +126,7 @@
             Correo electrónico
         </label>
         <input wire:model="{{ $email['name'] }}" type="email" autocomplete="off" placeholder="usuario@ejemplo.com"
-            class="w-full rounded-radius border {{ $email['statusClass'] }} bg-surface-alt px-2 py-2 text-sm" />
+            class="w-full rounded-radius border {{ $email['statusClass'] }} {{ $inputClass }} px-2 py-2 text-sm {{ $focusClass }}" />
         @error($email['name']) <small class="pl-0.5 text-danger">{{ $message }}</small> @enderror
     </div>
 
@@ -132,7 +136,7 @@
         <label class="flex w-fit items-center gap-1 pl-0.5 text-sm {{ $pass['labelClass'] }}">Contraseña</label>
         <div class="relative">
             <input :type="showPassword ? 'text' : 'password'" wire:model="{{ $pass['name'] }}" autocomplete="off" placeholder="Mínimo 8 caracteres"
-                class="w-full rounded-radius border {{ $pass['statusClass'] }} bg-surface-alt px-2 py-2 text-sm" />
+                class="w-full rounded-radius border {{ $pass['statusClass'] }} {{ $inputClass }} px-2 py-2 pr-10 text-sm {{ $focusClass }}" />
             <button type="button" @click="showPassword = !showPassword" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400">
                 <svg x-show="!showPassword" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
                 <svg x-show="showPassword" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>
@@ -142,10 +146,10 @@
 
     {{-- 8. CONFIRMAR CONTRASEÑA --}}
     <div class="flex flex-col gap-1" x-data="{ showConfirm: false }">
-        <label class="pl-0.5 text-sm">Confirmar Contraseña</label>
+        <label class="pl-0.5 text-sm text-on-surface dark:text-on-surface-dark">Confirmar Contraseña</label>
         <div class="relative">
             <input :type="showConfirm ? 'text' : 'password'" wire:model="{{ $prefix }}password_confirmation" autocomplete="off" placeholder="Repite la contraseña"
-                class="w-full rounded-radius border border-outline bg-surface-alt px-2 py-2 text-sm focus:outline-none" />
+                class="w-full rounded-radius border border-outline dark:border-zinc-700 {{ $inputClass }} px-2 py-2 pr-10 text-sm focus:outline-none" />
             <button type="button" @click="showConfirm = !showConfirm" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400">
                 <svg x-show="!showConfirm" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /></svg>
                 <svg x-show="showConfirm" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12" /></svg>

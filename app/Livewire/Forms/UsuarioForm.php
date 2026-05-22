@@ -5,6 +5,7 @@ namespace App\Livewire\Forms;
 use Livewire\Form;
 use App\Rules\CedulaEcuatoriana;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Rule; // <--- Añade esta línea
 
 class UsuarioForm extends Form
 {
@@ -22,11 +23,27 @@ class UsuarioForm extends Form
         return [
             'nombre'    => 'required|string|min:3|max:50|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
             'apellidos' => 'required|string|min:3|max:50|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
-            // Mantenemos 'unique' aquí para que Laravel use su motor interno de BD, es más rápido
-            'cedula'    => ['required', 'numeric', 'digits:10', 'unique:users,cedula', new CedulaEcuatoriana()],
+            
+            // Cambiamos la validación 'unique' por esta estructura:
+            'cedula'    => [
+                'required', 
+                'numeric', 
+                'digits:10', 
+                Rule::unique('users', 'cedula')->whereNull('deleted_at'), 
+                new CedulaEcuatoriana()
+            ],
+            
             'edad'      => 'required|numeric|min:18|max:99',
             'telefono'  => 'required|numeric|digits:10',
-            'email'     => 'required|email|max:255|unique:users,email',
+            
+            // Lo mismo para el email:
+            'email'     => [
+                'required', 
+                'email', 
+                'max:255', 
+                Rule::unique('users', 'email')->whereNull('deleted_at')
+            ],
+            
             'password'  => ['required', 'confirmed', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
         ];
     }

@@ -30,7 +30,6 @@ class CrearPaqueteTuristico extends Component
     public ?string $mensaje_pago = null;
     
     public ?UploadedFile $documento = null; // Archivo PDF del itinerario
-    public array $imagenes = [];
 
     public function mount(int $pivotId): void
     {
@@ -52,16 +51,7 @@ class CrearPaqueteTuristico extends Component
             'duracion_dias'       => 'required|integer|min:1',
             'mensaje_pago'        => 'nullable|string|max:255',
             'documento'           => 'nullable|file|mimes:pdf|max:5120',
-            'imagenes.*'          => 'image|mimes:jpeg,png,jpg,webp|max:2048', 
         ];
-    }
-
-    public function eliminarImagen(int $index): void
-    {
-        if (isset($this->imagenes[$index])) {
-            unset($this->imagenes[$index]);
-            $this->imagenes = array_values($this->imagenes);
-        }
     }
 
     // 🔥 2. INYECTAMOS EL SERVICIO CORRECTO AQUÍ
@@ -77,7 +67,7 @@ class CrearPaqueteTuristico extends Component
             ]);
 
             // 🔥 3. USAMOS EL MÉTODO ESTANDARIZADO "crear" (Pasando el documento al final)
-            $service->crear($this->pivotId, $datosBase, $datosDetalle, $this->imagenes, $this->documento);
+            $service->crear($this->pivotId, $datosBase, $datosDetalle, [], $this->documento);
 
             session()->flash('success', '¡Paquete Turístico creado con éxito!');
             

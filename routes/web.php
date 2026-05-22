@@ -21,6 +21,10 @@ use App\Livewire\Emprendimiento\GestionServicios\CrearPaqueteTuristico;
 use App\Livewire\Emprendimiento\GestionServicios\CrearAlquilerEquipo;
 use App\Livewire\Emprendimiento\GestorReservas;
 use App\Livewire\Emprendimiento\Reserva\CrearReserva;
+use App\Livewire\Admin\GestionFestividades;
+use App\Livewire\Admin\GestionSitiosTuristicos;
+use App\Livewire\Admin\GestionActividadesTuristicas;
+
 // 1. PÁGINA PÚBLICA (Lo que ve todo el mundo al entrar)
 //Route::view('/', 'welcome')->name('home');
     Route::get('/', [LandingController::class, 'index'])->name('home');
