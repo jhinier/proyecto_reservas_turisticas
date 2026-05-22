@@ -6,24 +6,36 @@ use Illuminate\Database\Eloquent\Model;
 
 class Festividad extends Model
 {
-    protected $table = 'festividades'; // 🔥 ESTA ES LA CLAVE    
+    protected $table = 'festividades';
+
     protected $primaryKey = 'publicacion_id';
-    public $incrementing = true;
+
+    public $incrementing = false;
+
     protected $keyType = 'int';
 
     protected $fillable = [
         'publicacion_id',
-        'nombre',
         'fecha_inicio',
         'fecha_fin',
-        'lugar',
-        'descripcion',
-        'imagen'
     ];
 
-    public function actividades()
+    // 🔹 PUBLICACIÓN
+    public function publicacion()
     {
-        return $this->hasMany(Actividad::class, 'publicacion_id', 'publicacion_id');
+        return $this->belongsTo(
+            PublicacionTuristica::class,
+            'publicacion_id'
+        );
     }
 
+    // 🔹 ACTIVIDADES
+    public function actividades()
+    {
+        return $this->hasMany(
+            Actividad::class,
+            'publicacion_id',
+            'publicacion_id'
+        );
+    }
 }

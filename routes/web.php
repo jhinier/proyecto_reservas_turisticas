@@ -11,7 +11,7 @@ use App\Livewire\Emprendimiento\Dashboard as EmprendimientoDashboard;
 use App\Livewire\Emprendimiento\SeleccionarTipoServicio;
 use App\Livewire\Emprendimiento\GestorServicios;
 use App\Livewire\Emprendimiento\GestionServicios\CrearHospedaje;
-use App\Livewire\Admin\GestionFestividades;
+use App\Livewire\Admin\Festividades\GestionFestividades;
 use App\Livewire\Admin\GestionSitiosTuristicos;
 use App\Livewire\Admin\GestionActividadesTuristicas;
 
@@ -61,6 +61,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/festividades/gestion', GestionFestividades::class)->name('admin.festividades.gestion');
         Route::get('/admin/sitios', GestionSitiosTuristicos::class)->name('admin.sitios.gestion');
         Route::get('/admin/actividades', GestionActividadesTuristicas::class)->name('admin.actividades');
+        Route::get('/admin/mapa-turistico', function () {return view('Admin.MapaTuristico.turistico');})->name('admin.mapa.turistico');
     });
 
     // --- GRUPO DE EMPRENDIMIENTOS ---

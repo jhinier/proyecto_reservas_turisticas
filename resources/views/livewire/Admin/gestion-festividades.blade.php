@@ -1,246 +1,149 @@
-<div>
+<div class="p-6">
+    @if (session()->has('mensaje'))
+        <div class="mb-4 p-4 bg-green-800 text-white rounded-2xl shadow-lg">
+            {{ session('mensaje') }}
+        </div>
+    @endif
 
-    <!-- 🔔 NOTIFICACIONES (YA LO TIENES ✔) -->
-            <!-- SCRIPT CALENDARIO -->
-        @push('scripts')
-       
-        @push('styles')
-        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-        @endpush
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Festividades</h1>
+            <p class="text-slate-500 mt-1 text-sm">Gestiona eventos turísticos y sus actividades</p>
+        </div>
 
-        @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-        @endpush
-
-        <script>
-        document.addEventListener('livewire:load', function () {
-
-            var calendarEl = document.getElementById('calendar');
-            var calendar;
-
-            function renderCalendar(eventos) {
-
-                if (calendar) {
-                    calendar.destroy();
-                }
-
-                calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGridMonth',
-                    locale: 'es',
-                    events: eventos
-                });
-
-                calendar.render();
-            }
-
-            // ✅ AQUÍ YA NO HAY ERROR
-            renderCalendar(@json($eventos));
-
-            Livewire.on('actualizarCalendario', eventos => {
-                renderCalendar(eventos);
-            });
-
-        });
-        </script>
-        @endpush
-
-    <!-- HEADER -->
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">Gestión de Festividades</h1>
-
-        <button 
-            x-on:click="$flux.modal('modal-festividad').show()"
-            class="bg-green-300 text-white px-4 py-2 rounded-lg flex items-center gap-2">
-            
-            ➕ Nueva Festividad
+        <button x-on:click="$flux.modal('modal-festividad').show()"
+            class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-3 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 font-semibold">
+            <span class="text-lg">➕</span> Nueva Festividad
         </button>
     </div>
 
-    <!-- 📊 TABLA -->
-    <div class="w-full overflow-x-auto rounded-xl border bg-[#0f172a] border-gray-700 shadow">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
-        <table class="w-full text-sm">
-            <thead class="bg-[#1e293b] text-gray-300">
-                <tr class="border-t border-gray-700 hover:bg-[#1e293b]">
+        @forelse($festividades as $festividad)
+            @php $imagen = $festividad->publicacion->imagenes->first(); @endphp
 
-                    <th class="p-4 text-left">Nombre</th>
-                    <th class="p-4 text-left">Fecha</th>
-                    <th class="p-4 text-left">Lugar</th>
-                    <th class="p-4 text-left">Estado</th>
-                    <th class="p-4 text-right">Acciones</th>
-                </tr>
-            </thead>
+                <div class="relative bg-white border border-emerald-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1 transition-all duration-300 flex flex-col">
 
-            <tbody>
-                @forelse($festividades as $festividad)
+                    <div class="relative">
+                        @if($imagen)
+                            <img src="{{ asset('storage/' . $imagen->imagen) }}"
+                                 class="w-full h-52 object-cover">
+                        @else
+                            <div class="w-full h-52 bg-emerald-50 flex items-center justify-center text-emerald-600/40 font-medium">
+                                🖼 Sin imagen configurada
+                            </div>
+                        @endif
 
-                <tr class="border-t border-gray-700 hover:bg-[#1e293b]">
-
-                    <td class="p-4 font-medium">
-                        {{ $festividad->nombre }}
-                    </td>
-
-                    <td class="p-4 text-gray-300">
-                        {{ $festividad->fecha_inicio }} - {{ $festividad->fecha_fin }}
-                    </td>
-
-                    <td class="p-4 text-gray-300">
-                        {{ $festividad->lugar }}
-                    </td>
-
-                    <td class="p-4">
-                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">
-                            Activo
-                        </span>
-                    </td>
-
-                    <td class="p-4 text-right">
-                        <div class="flex justify-end gap-2">
-
-                            <!-- ACTIVIDADES -->
-                            <button 
-                                wire:click="seleccionarFestividad({{ $festividad->publicacion_id }})"
-                                x-on:click="$flux.modal('modal-actividad').show()"
-                                class="bg-blue-600 text-white px-3 py-1 rounded text-xs">
-                                Actividades
-                            </button>
-
-                            <!-- ELIMINAR -->
-                            <button 
-                                wire:click="eliminar({{ $festividad->publicacion_id }})"
-                                class="text-red-600">
-                                🗑
-                            </button>
-
+                        <div class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-xs text-white font-medium">
+                            {{ \Carbon\Carbon::parse($festividad->fecha_inicio)->format('d M') }}
+                            -
+                            {{ \Carbon\Carbon::parse($festividad->fecha_fin)->format('d M') }}
                         </div>
-                    </td>
+                    </div>
 
-                </tr>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800 tracking-tight line-clamp-1">
+                                {{ $festividad->publicacion->nombre }}
+                            </h2>
 
-                @empty
-                <tr>
-                    <td colspan="5" class="text-center p-6 text-gray-500">
-                        No hay festividades registradas
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
+                            <p class="text-slate-500 text-sm mt-2 line-clamp-2 leading-relaxed">
+                                {{ $festividad->publicacion->descripcion }}
+                            </p>
+                        </div>
 
-        </table>
+                        <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-xs">
+                            <span class="text-emerald-600 font-semibold flex items-center gap-1.5">
+                                📅 {{ $festividad->actividades->count() }} actividades
+                            </span>
+
+                            <span class="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full border border-emerald-200/60 font-bold tracking-wide text-[10px] uppercase">
+                                Activo
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 grid grid-cols-3 gap-2 bg-emerald-50/40 border-t border-emerald-100/60">
+
+                        <button x-on:click="$flux.modal('detalle-{{ $festividad->publicacion_id }}').show()"
+                            title="Ver detalles"
+                            class="bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 py-2.5 rounded-xl transition flex items-center justify-center text-lg shadow-sm">
+                            👁
+                        </button>
+
+                        <button wire:click="seleccionarFestividad({{ $festividad->publicacion_id }})"
+                            x-on:click="$flux.modal('modal-actividad').show()"
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl transition font-semibold text-sm flex items-center justify-center gap-1 shadow-sm shadow-emerald-600/10">
+                            <span>+</span> Actividad
+                        </button>
+
+                        <button wire:click="eliminar({{ $festividad->publicacion_id }})"
+                            wire:confirm="¿Eliminar festividad?"
+                            class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200/60 py-2.5 rounded-xl transition font-medium text-sm flex items-center justify-center gap-1">
+                            🗑 Eliminar
+                        </button>
+
+                    </div>
+                </div>
+
+            @empty
+            <div class="col-span-full bg-white rounded-3xl border border-slate-200 p-12 text-center shadow-sm">
+                <div class="text-6xl mb-4">🎉</div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">No hay festividades</h2>
+                <p class="text-slate-500">Agrega tu primera festividad turística</p>
+            </div>
+        @endforelse
     </div>
 
-    <div class="mt-8 bg-[#0f172a] p-5 rounded-xl shadow border border-gray-700">
-    <h2 class="text-lg font-bold mb-4">Calendario de Festividades</h2>
+    <flux:modal name="modal-festividad" class="md:w-2/4">
+        <div class="p-6 bg-white rounded-3xl text-slate-800">
+            <h2 class="text-2xl font-bold mb-6 text-slate-800">Nueva Festividad</h2>
+            <form wire:submit.prevent="guardarFestividad" class="space-y-4">
+                <input type="text" wire:model="nombre" placeholder="Nombre de la festividad" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+                <textarea wire:model="descripcion" placeholder="Descripción" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 h-24"></textarea>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="date" wire:model="fecha_inicio" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800">
+                    <input type="date" wire:model="fecha_fin" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800">
+                </div>
 
-    <div id="calendar" style="min-height: 500px;"></div>
-    </div>
-    
-            <style>
-        #calendar {
-            color: white;
-        }
+                <input type="file" wire:model="imagenes" multiple class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800">
+                <div wire:loading wire:target="imagenes" class="text-sm text-amber-600 font-medium">Cargando imágenes...</div>
 
-        .fc {
-            background-color: #0f172a;
-            color: white;
-        }
-
-        .fc-toolbar-title {
-            color: white;
-        }
-    
-        #calendar {
-            min-height: 500px;
-        }
-
-        .fc {
-            background-color: #0f172a;
-            color: white;
-        }
-
-        .fc-toolbar-title {
-            color: white;
-        }
-
-        .fc-button {
-            background-color: #1e293b !important;
-            border: none !important;
-        }
-        </style>
-        <style>
-        .fc-theme-standard td, 
-        .fc-theme-standard th {
-            border-color: #374151;
-        }
-
-        .fc-daygrid-day-number {
-            color: white;
-        }
-        </style>
-
-    <!-- 🟢 MODAL FESTIVIDAD -->
-    <flux:modal name="modal-festividad" class="md:w-96">
-
-        <div class="p-6">
-            <h2 class="text-lg font-bold mb-4">Nueva Festividad</h2>
-
-            <input type="text" wire:model="nombre"
-                placeholder="Nombre"
-                class="w-full mb-2 border rounded p-2">
-
-            <input type="date" wire:model="fecha_inicio"
-                class="w-full mb-2 border rounded p-2">
-
-            <input type="date" wire:model="fecha_fin"
-                class="w-full mb-2 border rounded p-2">
-
-            <input type="text" wire:model="lugar_festividad"
-                placeholder="Lugar"
-                class="w-full mb-2 border rounded p-2">
-
-            <textarea wire:model="descripcion_festividad"
-                placeholder="Descripción"
-                class="w-full mb-2 border rounded p-2"></textarea>
-
-            <button wire:click="guardarFestividad"
-                class="bg-green-600 text-white w-full py-2 rounded">
-                Guardar
-            </button>
+                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-2xl font-bold transition shadow-lg">
+                    Guardar Festividad
+                </button>
+            </form>
         </div>
-
     </flux:modal>
 
-    <!-- 🔵 MODAL ACTIVIDADES -->
-    <flux:modal name="modal-actividad" class="md:w-96">
+    <flux:modal name="modal-actividad" class="md:w-2/4">
+        <div class="p-6 bg-white rounded-3xl text-slate-800">
+            <h2 class="text-2xl font-bold mb-6 text-slate-800">Nueva Actividad</h2>
+            <form wire:submit.prevent="guardarActividad" class="space-y-4">
+                <input type="text" wire:model="actividad_nombre" placeholder="Nombre de la actividad" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="date" wire:model="fecha" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800">
+                    <input type="time" wire:model="hora" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800">
+                </div>
 
-        <div class="p-6">
-            <h2 class="text-lg font-bold mb-4">Nueva Actividad</h2>
+                <input type="text" wire:model="lugar" placeholder="Lugar" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800">
+                <textarea wire:model="descripcion_actividad" placeholder="Descripción de la actividad" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800 h-20"></textarea>
+                <input type="file" wire:model="imagen_actividad" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800">
 
-            <input type="text" wire:model="actividad_nombre"
-                placeholder="Nombre"
-                class="w-full mb-2 border rounded p-2">
-
-            <input type="date" wire:model="fecha"
-                class="w-full mb-2 border rounded p-2">
-
-            <input type="time" wire:model="hora"
-                class="w-full mb-2 border rounded p-2">
-
-            <input type="text" wire:model="lugar_actividad"
-                placeholder="Lugar"
-                class="w-full mb-2 border rounded p-2">
-
-            <textarea wire:model="descripcion_actividad"
-                placeholder="Descripción"
-                class="w-full mb-2 border rounded p-2"></textarea>
-
-            <button wire:click="guardarActividad"
-                class="bg-blue-600 text-white w-full py-2 rounded">
-                Guardar
-            </button>
-
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-bold transition shadow-lg">
+                    Guardar Actividad
+                </button>
+            </form>
         </div>
-
     </flux:modal>
 
+    <button type="button" 
+            wire:click="$dispatch('abrirCalendario')"
+            class="fixed bottom-8 right-8 z-40 bg-emerald-700 hover:bg-emerald-800 text-white shadow-2xl rounded-full px-6 py-3.5 font-bold text-base transition-all duration-300 hover:scale-105 flex items-center gap-2">
+        📅 Calendario
+    </button>
+
+   @livewire('admin.festividades.calendario-festividades')
 </div>

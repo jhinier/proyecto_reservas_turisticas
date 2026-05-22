@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Actividad extends Model
 {
-    protected $table = 'actividades';
+    protected $table = 'actividades_festividades';
 
     protected $fillable = [
         'publicacion_id',
@@ -14,6 +14,16 @@ class Actividad extends Model
         'fecha',
         'hora',
         'lugar',
-        'descripcion'
+        'descripcion',
+        'imagen'
     ];
+
+    protected $casts = [
+    'fecha' => 'date',
+    ];
+
+    public function publicacion()
+    {
+        return $this->belongsTo(PublicacionTuristica::class, 'publicacion_id');
+    }
 }

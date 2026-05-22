@@ -39,4 +39,5 @@ class PublicacionTuristica extends Model
     {
         return $this->hasOne(ActividadTuristica ::class, 'publicacion_id');
     }
+
 }
