@@ -17,6 +17,12 @@ use Symfony\Component\HttpFoundation\Response;
 #[Title('Two-factor authentication')]
 class TwoFactor extends Component
 {
+    public function render()
+{
+    $layout = auth()->user()->hasRole('emprendimiento') ? 'layouts.app.sidebar_emprendimiento' : 'layouts.app';
+    return view('livewire.settings.two-factor')->layout($layout);
+}
+    
     #[Locked]
     public bool $twoFactorEnabled;
 

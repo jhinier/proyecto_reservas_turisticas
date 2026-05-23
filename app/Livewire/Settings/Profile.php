@@ -14,6 +14,11 @@ use Livewire\Component;
 class Profile extends Component
 {
     use ProfileValidationRules;
+    public function render()
+{
+    $layout = auth()->user()->hasRole('emprendimiento') ? 'layouts.app.sidebar_emprendimiento' : 'layouts.app';
+    return view('livewire.settings.profile')->layout($layout);
+}
 
     public string $name = '';
 
