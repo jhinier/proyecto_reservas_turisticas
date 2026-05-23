@@ -112,22 +112,22 @@
                 x-on:keydown.down.prevent="$focus.wrap().next()"
                 x-on:keydown.up.prevent="$focus.wrap().previous()"
                 id="serviciosMenu"
-                class="absolute left-0 top-12 flex w-fit min-w-60 flex-col overflow-hidden rounded-radius border border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt"
+                class="absolute left-0 top-12 z-50 flex w-fit min-w-60 flex-col overflow-hidden rounded-radius border border-outline bg-white py-1.5 shadow-lg dark:border-outline-dark dark:bg-surface-dark-alt"
             >
                 <li>
-                    <a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-strong">Hospedaje</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:text-gray-800 focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-white dark:hover:bg-surface-alt/5 dark:hover:text-white">Hospedaje</a>
                 </li>
                 <li>
-                    <a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-strong">Alimentación</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:text-gray-800 focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-white dark:hover:bg-surface-alt/5 dark:hover:text-white">Alimentación</a>
                 </li>
                 <li>
-                    <a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-strong">Guianza</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:text-gray-800 focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-white dark:hover:bg-surface-alt/5 dark:hover:text-white">Guianza</a>
                 </li>
                 <li>
-                    <a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-strong">Equipos turisticos</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:text-gray-800 focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-white dark:hover:bg-surface-alt/5 dark:hover:text-white">Equipos turisticos</a>
                 </li>
                 <li>
-                    <a href="#" class="block bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/10 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-strong">Paquetes turisticos</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:text-gray-800 focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-white dark:hover:bg-surface-alt/5 dark:hover:text-white">Paquetes turisticos</a>
                 </li>
             </ul>
         </li>
@@ -213,14 +213,14 @@
         </li>
 
         <li class="p-2"><a href="#" class="w-full text-lg font-bold text-primary focus:underline dark:text-primary-dark" aria-current="page">Inicio</a></li>
-        <li class="p-2"><a href="#" class="w-full text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark">Sitios Turísticos</a></li>
-        <li class="p-2"><a href="#" class="w-full text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark">Actividades</a></li>
-        <li class="p-2"><a href="#" class="w-full text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark">Eventos</a></li>
+        <li class="p-2"><a href="#" class="w-full text-lg font-medium text-gray-800 focus:underline dark:text-on-surface-dark">Sitios Turísticos</a></li>
+        <li class="p-2"><a href="#" class="w-full text-lg font-medium text-gray-800 focus:underline dark:text-on-surface-dark">Actividades</a></li>
+        <li class="p-2"><a href="#" class="w-full text-lg font-medium text-gray-800 focus:underline dark:text-on-surface-dark">Eventos</a></li>
 
         <li class="p-2" x-data="{ serviciosDropDownIsOpenMobile: false }">
             <button
                 x-on:click="serviciosDropDownIsOpenMobile = !serviciosDropDownIsOpenMobile"
-                class="w-full text-left text-lg font-medium text-on-surface focus:underline dark:text-on-surface-dark"
+                class="w-full text-left text-lg font-medium text-gray-800 focus:underline dark:text-on-surface-dark"
                 type="button"
                 aria-controls="serviciosMenuMobile"
                 x-bind:aria-expanded="serviciosDropDownIsOpenMobile"
@@ -234,18 +234,18 @@
                 x-show="serviciosDropDownIsOpenMobile"
                 class="mt-2 flex flex-col gap-2 pl-2"
             >
-                <li><a href="#" class="w-full text-base font-medium text-on-surface hover:text-primary focus:underline dark:text-on-surface-dark">Hospedaje</a></li>
-                <li><a href="#" class="w-full text-base font-medium text-on-surface hover:text-primary focus:underline dark:text-on-surface-dark">Alimentación</a></li>
-                <li><a href="#" class="w-full text-base font-medium text-on-surface hover:text-primary focus:underline dark:text-on-surface-dark">Guianza</a></li>
-                <li><a href="#" class="w-full text-base font-medium text-on-surface hover:text-primary focus:underline dark:text-on-surface-dark">Equipos turisticos</a></li>
-                <li><a href="#" class="w-full text-base font-medium text-on-surface hover:text-primary focus:underline dark:text-on-surface-dark">Paquetes turisticos</a></li>
+                <li><a href="#" class="w-full text-base font-medium text-zinc-900 hover:text-primary focus:underline dark:text-white">Hospedaje</a></li>
+                <li><a href="#" class="w-full text-base font-medium text-zinc-900 hover:text-primary focus:underline dark:text-white">Alimentación</a></li>
+                <li><a href="#" class="w-full text-base font-medium text-zinc-900 hover:text-primary focus:underline dark:text-white">Guianza</a></li>
+                <li><a href="#" class="w-full text-base font-medium text-zinc-900 hover:text-primary focus:underline dark:text-white">Equipos turisticos</a></li>
+                <li><a href="#" class="w-full text-base font-medium text-zinc-900 hover:text-primary focus:underline dark:text-white">Paquetes turisticos</a></li>
             </ul>
         </li>
 
         <hr role="none" class="my-4 border-outline dark:border-outline-dark">
         
         <li class="mt-2 w-full border-none">
-            <a href="{{ route('login') }}" class="rounded-radius bg-surface-alt border border-outline px-4 py-2 block text-center font-medium tracking-wide text-on-surface hover:bg-surface-dark-alt/5 focus-visible:outline-2 dark:bg-surface-dark-alt dark:border-outline-dark dark:text-on-surface-dark">
+            <a href="{{ route('login') }}" class="rounded-radius bg-surface-alt border border-outline px-4 py-2 block text-center font-medium tracking-wide text-gray-800 hover:bg-surface-dark-alt/5 focus-visible:outline-2 dark:bg-surface-dark-alt dark:border-outline-dark dark:text-on-surface-dark">
                 Iniciar Sesión
             </a>
         </li>
@@ -371,3 +371,4 @@
 
 </body>
 </html>
+
