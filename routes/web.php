@@ -6,7 +6,7 @@ use App\Http\Controllers\LandingController;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\GestionEmprendimientos; 
 use App\Livewire\Admin\CrearEmprendimiento;
-use App\Livewire\Admin\GestionUsuarios; // Importamos tu nuevo componente
+use App\Livewire\Admin\GestionUsuarios; 
 use App\Livewire\Emprendimiento\Dashboard as EmprendimientoDashboard;
 use App\Livewire\Emprendimiento\SeleccionarTipoServicio;
 use App\Livewire\Emprendimiento\GestorServicios;
@@ -22,10 +22,19 @@ use App\Livewire\Emprendimiento\GestionServicios\CrearAlquilerEquipo;
 use App\Livewire\Emprendimiento\GestorReservas;
 use App\Livewire\Emprendimiento\Reserva\CrearReserva;
 
+<<<<<<< HEAD
+=======
+// Importamos los componentes del turista
+use App\Livewire\Turista\Servicios\BuscadorServicios;
+use App\Livewire\Turista\Reserva\CrearReserva as TuristaCrearReserva;
+>>>>>>> origin/Rama_jhinier
 
 // 1. PÁGINA PÚBLICA (Lo que ve todo el mundo al entrar)
-//Route::view('/', 'welcome')->name('home');
-    Route::get('/', [LandingController::class, 'index'])->name('home');
+Route::get('/', [LandingController::class, 'index'])->name('home');
+
+// Ruta pública del buscador de servicios
+Route::get('/servicios', BuscadorServicios::class)->name('turista.servicios.index');
+
 // 2. RUTAS PROTEGIDAS (Solo usuarios logueados)
 Route::middleware(['auth', 'verified'])->group(function () {
     
@@ -46,19 +55,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->route('emprendimiento.panel');
         }
 
-        // Si es Turista -> Se queda en el dashboard original
-        return view('dashboard'); 
+        // Si es Turista -> Lo enviamos de regreso al inicio
+        return redirect()->route('home'); 
     })->name('dashboard');
 
     // --- GRUPO DEL GAD ---
     // Solo entran SuperAdmin y Admin del GAD
     Route::prefix('admin')->middleware(['role:superAdministrador|administrador_gad'])->group(function () {
-        
-        // Esta es la ruta de tu módulo limpio y ordenado
         Route::get('/panel', AdminDashboard::class)->name('admin.dashboard');
         Route::get('/emprendimientos/gestion', GestionEmprendimientos::class)->name('admin.emprendimientos.gestion');
         Route::get('/emprendimientos/gestion/crear', CrearEmprendimiento::class)->name('admin.emprendimientos.crear');
-
         Route::get('/usuarios', GestionUsuarios::class)->name('admin.usuarios');
         Route::get('/festividades/gestion', GestionFestividades::class)->name('admin.festividades.gestion');
         Route::get('/admin/sitios', GestionSitiosTuristicos::class)->name('admin.sitios.gestion');
@@ -67,18 +73,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // --- GRUPO DE EMPRENDIMIENTOS ---
-    Route::prefix('emprendimiento')->middleware(['role:emprendimiento', 'emprendimiento.activo']) ->group(function () {
-    Route::get('/panel', EmprendimientoDashboard::class)->name('emprendimiento.panel');
-    Route::get('/mis-servicios/nuevo', SeleccionarTipoServicio::class)->name('emprendimiento.servicios.seleccion');
-    Route::get('/mis-servicios/servicios', GestorServicios::class)->name('emprendimiento.servicios.index');
-    Route::get('/mis-servicios/servicios/nuevo-hospedaje/{pivotId}', CrearHospedaje::class)->name('emprendimiento.hospedaje.crear');
-    Route::get('/mis-servicios/servicios/nuevo-guianza/{pivotId}', CrearGuianza::class)->name('emprendimiento.guianza.crear');
-    Route::get('/mis-servicios/servicios/nuevo-alimentacion/{pivotId}', CrearAlimentacion::class)->name('emprendimiento.alimentacion.crear');
-    Route::get('/mis-servicios/servicios/nuevo-paquete/{pivotId}', CrearPaqueteTuristico::class)->name('emprendimiento.paquete.crear');
-    Route::get('/mis-servicios/servicios/nuevo-alquiler/{pivotId}', CrearAlquilerEquipo::class)->name('emprendimiento.alquiler.crear');
+    Route::prefix('emprendimiento')->middleware(['role:emprendimiento', 'emprendimiento.activo'])->group(function () {
+        Route::get('/panel', EmprendimientoDashboard::class)->name('emprendimiento.panel');
+        Route::get('/mis-servicios/nuevo', SeleccionarTipoServicio::class)->name('emprendimiento.servicios.seleccion');
+        Route::get('/mis-servicios/servicios', GestorServicios::class)->name('emprendimiento.servicios.index');
+        Route::get('/mis-servicios/servicios/nuevo-hospedaje/{pivotId}', CrearHospedaje::class)->name('emprendimiento.hospedaje.crear');
+        Route::get('/mis-servicios/servicios/nuevo-guianza/{pivotId}', CrearGuianza::class)->name('emprendimiento.guianza.crear');
+        Route::get('/mis-servicios/servicios/nuevo-alimentacion/{pivotId}', CrearAlimentacion::class)->name('emprendimiento.alimentacion.crear');
+        Route::get('/mis-servicios/servicios/nuevo-paquete/{pivotId}', CrearPaqueteTuristico::class)->name('emprendimiento.paquete.crear');
+        Route::get('/mis-servicios/servicios/nuevo-alquiler/{pivotId}', CrearAlquilerEquipo::class)->name('emprendimiento.alquiler.crear');
 
-    Route::get('/reservas', GestorReservas::class)->name('emprendimiento.reservas');
-    Route::get('/reservas/nueva', CrearReserva::class)->name('emprendimiento.reservas.crear');
+        Route::get('/reservas', GestorReservas::class)->name('emprendimiento.reservas');
+        Route::get('/reservas/nueva', CrearReserva::class)->name('emprendimiento.reservas.crear');
+    });
+
+    // --- GRUPO DEL TURISTA ---
+    Route::prefix('turista')->group(function () {
+        //Route::get('/reservar/{servicioId}', TuristaCrearReserva::class)->name('turista.reservas.crear');
     });
 
 });

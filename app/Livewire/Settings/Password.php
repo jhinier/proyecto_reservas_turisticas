@@ -13,6 +13,20 @@ class Password extends Component
 {
     use PasswordValidationRules;
 
+    public function render()
+    {
+        /** @var \App\Models\User|null $user */
+        $user = auth()->user();
+
+        $layout = $user?->hasRole('emprendimiento') ? 'layouts.app.sidebar_emprendimiento' : 'layouts.app';
+
+        /** @var \Illuminate\View\View $view */
+        $view = view('livewire.settings.password');
+        $view->layout($layout);
+
+        return $view;
+    }
+
     public string $current_password = '';
 
     public string $password = '';
@@ -35,7 +49,10 @@ class Password extends Component
             throw $e;
         }
 
-        Auth::user()->update([
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+
+        $user?->update([
             'password' => $validated['password'],
         ]);
 
