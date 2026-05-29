@@ -117,4 +117,9 @@ class Servicio extends Model
     {
         return new \App\Presenters\ServicioPresenter($this);
     }
+
+    public function emprendimientoTipoServicio()
+    {
+        return $this->belongsTo(EmprendimientoTipoServicio::class, 'emprendimiento_tipo_servicio_id');
+    }
 }

@@ -24,13 +24,15 @@ use App\Livewire\Emprendimiento\Reserva\CrearReserva;
 
 // Importamos los componentes del turista
 use App\Livewire\Turista\Servicios\BuscadorServicios;
-use App\Livewire\Turista\Reserva\CrearReserva as TuristaCrearReserva;
+use App\Livewire\Turista\Servicios\VerServicios;
+
 
 // 1. PÁGINA PÚBLICA (Lo que ve todo el mundo al entrar)
 Route::get('/', [LandingController::class, 'index'])->name('home');
 
 // Ruta pública del buscador de servicios
 Route::get('/servicios', BuscadorServicios::class)->name('turista.servicios.index');
+Route::get('/empresa/{emprendimiento}/servicios/{tipo?}', VerServicios::class)->name('turista.empresa.servicios');
 
 // 2. RUTAS PROTEGIDAS (Solo usuarios logueados)
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -84,11 +86,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reservas/nueva', CrearReserva::class)->name('emprendimiento.reservas.crear');
     });
 
-    // --- GRUPO DEL TURISTA ---
+   // --- GRUPO DEL TURISTA ---
     Route::prefix('turista')->group(function () {
-        //Route::get('/reservar/{servicioId}', TuristaCrearReserva::class)->name('turista.reservas.crear');
+        Route::get('/checkout', App\Livewire\Turista\Reservas\Checkout::class)->name('turista.reservas.checkout');
+        Route::get('/mis-reservas', \App\Livewire\Turista\Reservas\HistorialReservas::class)->name('turista.reservas.historial')->middleware('auth');
     });
-
+    
 });
 
 // 3. RUTAS DE PERFIL Y AJUSTES (No tocar, son del sistema)
