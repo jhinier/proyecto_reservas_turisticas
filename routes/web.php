@@ -22,6 +22,9 @@ use App\Livewire\Emprendimiento\GestionServicios\CrearAlquilerEquipo;
 use App\Livewire\Emprendimiento\GestorReservas;
 use App\Livewire\Emprendimiento\Reserva\CrearReserva;
 
+//Turista Publicaciones
+use App\Http\Controllers\Turista\TuristaController;
+
 // Importamos los componentes del turista
 use App\Livewire\Turista\Servicios\BuscadorServicios;
 use App\Livewire\Turista\Servicios\VerServicios;
@@ -33,6 +36,12 @@ Route::get('/', [LandingController::class, 'index'])->name('home');
 // Ruta pública del buscador de servicios
 Route::get('/servicios', BuscadorServicios::class)->name('turista.servicios.index');
 Route::get('/empresa/{emprendimiento}/servicios/{tipo?}', VerServicios::class)->name('turista.empresa.servicios');
+
+// Ruta Visitante un sitio turístico- PUBLICACIONES
+//Route::view('/', 'livewire.Turista.publicacion.inicio');
+Route::get('/sitios', [TuristaController::class, 'sitios'])->name('sitios');
+Route::get('/actividades', [TuristaController::class, 'actividades'])->name('actividades');
+Route::get('/festividades', [TuristaController::class, 'festividades'])->name('festividades');
 
 // 2. RUTAS PROTEGIDAS (Solo usuarios logueados)
 Route::middleware(['auth', 'verified'])->group(function () {

@@ -56,6 +56,7 @@
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
+<<<<<<< HEAD
 
    <nav 
         x-data="{ mobileMenuIsOpen: false }"
@@ -274,6 +275,9 @@
         @endauth
     </ul>
 </nav>
+=======
+@extends('partials.banner')
+>>>>>>> origin/Rama-Daniela
 
 <!-- DISEÑO  -->
 <!-- HERO PRINCIPAL -->

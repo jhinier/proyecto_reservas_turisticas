@@ -9,21 +9,28 @@ use App\Models\Actividad;
 use App\Models\PublicacionTuristica;
 use App\Models\ImagenPublicacion;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class GestionFestividades extends Component
 {
     use WithFileUploads;
 
-    // FESTIVIDAD
+    // CONTROL DE INTERFAZ Y MODALES
+    public $modoEditar = false;
+    public $publicacion_id;
+    public $abierto = false; 
+    public $festividadSeleccionada = null; 
+
+    // PROPIEDADES DEL FORMULARIO PRINCIPAL
     public $nombre;
     public $descripcion;
     public $fecha_inicio;
     public $fecha_fin;
 
-    // IMÁGENES
-    public $imagenes = [];
+    // GESTOR DE GALERÍA INDEPENDIENTE
+    public $nuevasImagenes = []; 
 
-    // ACTIVIDADES
+    // PROPIEDADES DE ACTIVIDADES
     public $actividad_nombre;
     public $fecha;
     public $hora;
@@ -31,9 +38,63 @@ class GestionFestividades extends Component
     public $descripcion_actividad;
     public $imagen_actividad;
 
-    public $publicacion_id;
+    // ====================================================
+    // MÉTODOS DEL GESTOR DE GALERÍA (MODAL FLOTANTE)
+    // ====================================================
 
-    // GUARDAR FESTIVIDAD
+    public function abrirGaleria($id)
+    {
+        $this->publicacion_id = $id;
+        $this->festividadSeleccionada = Festividad::with('publicacion.imagenes')->where('publicacion_id', $id)->first();
+        $this->nuevasImagenes = []; 
+        $this->abierto = true; 
+    }
+
+    public function subirFotos()
+    {
+        $this->validate([
+            'nuevasImagenes.*' => 'image|max:5120', 
+        ]);
+
+        if (count($this->nuevasImagenes) > 0) {
+            foreach ($this->nuevasImagenes as $img) {
+                $ruta = $img->store('publicaciones', 'public');
+
+                ImagenPublicacion::create([
+                    'publicacion_id' => $this->publicacion_id,
+                    'imagen' => $ruta
+                ]);
+            }
+        }
+
+        $this->nuevasImagenes = []; 
+        $this->festividadSeleccionada = Festividad::with('publicacion.imagenes')->where('publicacion_id', $this->publicacion_id)->first();
+        session()->flash('mensaje_galeria', 'Imágenes guardadas e indexadas con éxito');
+    }
+
+    public function eliminarImagen($imagenId)
+    {
+        $imagen = ImagenPublicacion::find($imagenId);
+        if ($imagen) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $imagen->imagen));
+            $imagen->delete();
+        }
+
+        if ($this->publicacion_id) {
+            $this->festividadSeleccionada = Festividad::with('publicacion.imagenes')->where('publicacion_id', $this->publicacion_id)->first();
+        }
+        session()->flash('mensaje_galeria', 'Fotografía removida del servidor');
+    }
+
+    public function removerTemporal($index)
+    {
+        array_splice($this->nuevasImagenes, $index, 1);
+    }
+
+    // ====================================================
+    // MÉTODOS DEL FORMULARIO PRINCIPAL
+    // ====================================================
+
     public function guardarFestividad()
     {
         $this->validate([
@@ -41,56 +102,82 @@ class GestionFestividades extends Component
             'descripcion' => 'required',
             'fecha_inicio' => 'required',
             'fecha_fin' => 'required',
-            'imagenes.*' => 'nullable|image|max:2048',
         ]);
 
-        // PUBLICACIÓN
-        $publicacion = PublicacionTuristica::create([
-            'user_id' => Auth::id(),
-            'tipo_publicacion_id' => 1,
-            'nombre' => $this->nombre,
-            'descripcion' => $this->descripcion
-        ]);
-
-        // FESTIVIDAD
-        Festividad::create([
-            'publicacion_id' => $publicacion->id,
-            'fecha_inicio' => $this->fecha_inicio,
-            'fecha_fin' => $this->fecha_fin,
-        ]);
-
-        // IMÁGENES
-        if (count($this->imagenes) > 0) {
-            foreach ($this->imagenes as $img) {
-                $ruta = $img->store('publicaciones', 'public');
-
-                ImagenPublicacion::create([
-                    'publicacion_id' => $publicacion->id,
-                    'imagen' => $ruta
+        if ($this->modoEditar) {
+            $publicacion = PublicacionTuristica::find($this->publicacion_id);
+            if ($publicacion) {
+                $publicacion->update([
+                    'nombre' => $this->nombre,
+                    'descripcion' => $this->descripcion
                 ]);
+
+                $festividad = Festividad::where('publicacion_id', $this->publicacion_id)->first();
+                if ($festividad) {
+                    $festividad->update([
+                        'fecha_inicio' => $this->fecha_inicio,
+                        'fecha_fin' => $this->fecha_fin,
+                    ]);
+                }
             }
+            $mensajeOk = 'Festividad modificada correctamente';
+        } else {
+            $publicacion = PublicacionTuristica::create([
+                'user_id' => Auth::id(),
+                'tipo_publicacion_id' => 1,
+                'nombre' => $this->nombre,
+                'descripcion' => $this->descripcion
+            ]);
+
+            Festividad::create([
+                'publicacion_id' => $publicacion->id,
+                'fecha_inicio' => $this->fecha_inicio,
+                'fecha_fin' => $this->fecha_fin,
+            ]);
+            $mensajeOk = 'Festividad creada con éxito';
         }
 
-        $this->reset([
-            'nombre',
-            'descripcion',
-            'fecha_inicio',
-            'fecha_fin',
-            'imagenes'
-        ]);
-
+        $this->limpiarCampos();
+        $this->modoEditar = false;
         $this->emitEventos();
 
-        session()->flash('mensaje', 'Festividad guardada correctamente');
+        session()->flash('mensaje', $mensajeOk);
     }
 
-    // SELECCIONAR FESTIVIDAD
+    public function cargarFestividad($id)
+    {
+        $this->limpiarCampos();
+        $this->modoEditar = true;
+        $this->publicacion_id = $id;
+
+        $festividad = Festividad::with('publicacion')->where('publicacion_id', $id)->first();
+
+        if ($festividad) {
+            $this->nombre = $festividad->publicacion->nombre;
+            $this->descripcion = $festividad->publicacion->descripcion;
+            $this->fecha_inicio = $festividad->fecha_inicio;
+            $this->fecha_fin = $festividad->fecha_fin;
+        }
+    }
+
+    public function eliminar($id)
+    {
+        $festividad = Festividad::where('publicacion_id', $id)->first();
+        if ($festividad) {
+            $festividad->actividades()->delete();
+            $festividad->delete();
+        }
+
+        $this->dispatch('actualizarCalendarioLateral');
+        $this->emitEventos();
+        session()->flash('mensaje', 'Festividad eliminada correctamente');
+    }
+
     public function seleccionarFestividad($id)
     {
         $this->publicacion_id = $id;
     }
 
-    // GUARDAR ACTIVIDAD
     public function guardarActividad()
     {
         $this->validate([
@@ -103,7 +190,6 @@ class GestionFestividades extends Component
         ]);
 
         $ruta = null;
-
         if ($this->imagen_actividad) {
             $ruta = $this->imagen_actividad->store('actividades', 'public');
         }
@@ -118,39 +204,19 @@ class GestionFestividades extends Component
             'imagen' => $ruta
         ]);
 
-        $this->reset([
-            'actividad_nombre',
-            'fecha',
-            'hora',
-            'lugar',
-            'descripcion_actividad',
-            'imagen_actividad'
-        ]);
+        $this->reset(['actividad_nombre', 'fecha', 'hora', 'lugar', 'descripcion_actividad', 'imagen_actividad']);
 
-        // Avisa al componente hermano (Calendario) que está en la carpeta festividades
         $this->dispatch('actualizarCalendarioLateral');
         $this->emitEventos();
 
         session()->flash('mensaje', 'Actividad guardada correctamente');
     }
 
-    // ELIMINAR
-    public function eliminar($id)
+    public function limpiarCampos()
     {
-        $festividad = Festividad::where('publicacion_id', $id)->first();
-
-        if ($festividad) {
-            $festividad->actividades()->delete();
-            $festividad->delete();
-        }
-
-        $this->dispatch('actualizarCalendarioLateral');
-        $this->emitEventos();
-        
-        session()->flash('mensaje', 'Festividad eliminada correctamente');
+        $this->reset(['nombre', 'descripcion', 'fecha_inicio', 'fecha_fin', 'publicacion_id']);
     }
 
-    // EMITIR EVENTOS
     public function emitEventos()
     {
         $eventos = Festividad::with('publicacion')->get()->map(function ($f) {
@@ -160,17 +226,12 @@ class GestionFestividades extends Component
                 'end' => $f->fecha_fin,
             ];
         });
-
         $this->dispatch('actualizarCalendario', eventos: $eventos);
     }
 
     public function render()
     {
-        $festividades = Festividad::with([
-            'publicacion.imagenes',
-            'actividades'
-        ])->latest()->get();
-
+        $festividades = Festividad::with(['publicacion.imagenes', 'actividades'])->latest()->get();
         $eventos = $festividades->map(function ($f) {
             return [
                 'title' => $f->publicacion->nombre,
