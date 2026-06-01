@@ -54,6 +54,19 @@ class ReservaService
         return $query->latest('updated_at')->paginate(10);
     }
 
+    public function obtenerReservasPorTurista(int $turistaId, string $filtroEstado = '')
+    {
+        // Navegamos por las relaciones para extraer el emprendimiento sin sobrecargar la BD
+        $query = Reserva::with(['detalles.servicio.categoriaPivot.emprendimiento'])
+            ->where('user_id', $turistaId);
+
+        if (!empty($filtroEstado)) {
+            $query->where('estado', $filtroEstado);
+        }
+
+        return $query->latest('updated_at')->paginate(10);
+    }
+
     public function obtenerDetalleSeguro(int $reservaId, int $emprendimientoId): ?Reserva
     {
         return Reserva::with([
@@ -66,6 +79,40 @@ class ReservaService
             ->whereHas('detalles.servicio.categoriaPivot', function ($q) use ($emprendimientoId) {
                 $q->where('emprendimiento_id', $emprendimientoId);
             })->first();
+    }
+
+    public function obtenerDetalleSeguroTurista(int $reservaId, int $turistaId): ?Reserva
+    {
+        return Reserva::with([
+            'emprendimiento',
+            'detalles.servicio.tipoServicio',
+            'detalles.servicio.detalleHospedaje',
+            'detalles.servicio.detalleGuianza',
+            'detalles.servicio.detallePaqueteTuristico',
+        ])
+        ->where('id', $reservaId)
+        ->where('user_id', $turistaId)
+        ->first();
+    }
+
+    public function cancelarReservaTurista(int $reservaId, int $turistaId, string $motivo): bool
+    {
+        return DB::transaction(function () use ($reservaId, $turistaId, $motivo) {
+            $reserva = $this->obtenerDetalleSeguroTurista($reservaId, $turistaId);
+
+            // Bloquea si no existe o si no pasa la regla de las 24 horas
+            if (!$reserva || !$this->esCancelablePorTurista($reserva)) {
+                return false;
+            }
+
+            $reserva->estado = 'Cancelada';
+            $reserva->cancelada_en = now();
+            $reserva->cancelada_por_rol = 'Turista';
+            $reserva->motivo_cancelacion = $motivo;
+            $reserva->save();
+
+            return true;
+        });
     }
 
     public function cambiarEstado(int $reservaId, string $nuevoEstado, int $emprendimientoId, ?string $motivo = null): bool
@@ -88,16 +135,12 @@ class ReservaService
             $reserva->save();
 
             // Enviar correo solo después de que la base de datos guarda los cambios
+            // Enviar correo solo después de que la base de datos guarda los cambios
             DB::afterCommit(function () use ($reserva, $nuevoEstado, $motivo) {
-                try {
-                    if (in_array($nuevoEstado, ['Cancelada', 'Rechazada'], true)) {
-                        Mail::to($reserva->turista->email)->send(new ReservaCanceladaMail($reserva, $motivo));
-                    } elseif ($nuevoEstado === 'Confirmada') {
-                        $mensaje = 'Tu reserva ha sido revisada y confirmada por el establecimiento. Te esperamos.';
-                        Mail::to($reserva->turista->email)->send(new ReservaReagendadaMail($reserva, $mensaje));
-                    }
-                } catch (\Exception $e) {
-                    Log::error('Error enviando correo de cambio de estado: ' . $e->getMessage());
+                if (in_array($nuevoEstado, ['Cancelada', 'Rechazada'], true)) {
+                    Mail::to($reserva->turista->email)->send(new ReservaCanceladaMail($reserva, $motivo));
+                } elseif ($nuevoEstado === 'Confirmada') {
+                    Mail::to($reserva->turista->email)->send(new \App\Mail\ReservaAceptadaMail($reserva));
                 }
             });
 
@@ -360,5 +403,64 @@ class ReservaService
         }
 
         return $query->orderBy('hora_llegada', 'asc')->get();
+    }
+
+    /**
+     * Nuevo flujo: Registro para Turistas (Estado Pendiente)
+     */
+    public function registrarReservaTurista(array $carrito, int $userId): Reserva
+    {
+        return DB::transaction(function () use ($carrito, $userId) {
+            
+            // 1. Crear Reserva como Pendiente
+            $reserva = Reserva::create([
+                'user_id'           => $userId,
+                'estado'            => Reserva::ESTADO_PENDIENTE,
+                'precio_total'      => 0, // Se actualizará al procesar detalles
+                'reservada_por_rol' => 'Turista'
+            ]);
+
+            // 2. Procesar detalles (reutilizamos tu método privado existente)
+            $totalCalculado = $this->procesarDetallesCarrito($reserva, $carrito);
+
+            $reserva->update(['precio_total' => $totalCalculado]);
+
+            // 3. Disparar correo de confirmación de recepción
+            DB::afterCommit(function () use ($reserva) {
+                try {
+                    Mail::to($reserva->turista->email)->send(new \App\Mail\ReservaPendienteTuristaMail($reserva));
+                } catch (\Exception $e) {
+                    Log::error("Fallo al enviar correo de reserva pendiente: " . $e->getMessage());
+                }
+            });
+
+            return $reserva;
+        });
+    }
+
+    /**
+     * Regla de negocio: Cancelación (24h antes)
+     * Se puede usar en el Controller o Service
+     */
+    public function esCancelablePorTurista(Reserva $reserva): bool
+    {
+        if (in_array($reserva->estado, ['Completada', 'Cancelada', 'Rechazada'])) {
+            return false;
+        }
+
+        // Ordenamos para encontrar el servicio que inicia primero
+        $primerDetalle = $reserva->detalles->sortBy('fecha_inicio')->first();
+        
+        if (!$primerDetalle) {
+            return false;
+        }
+
+        $fechaString = \Carbon\Carbon::parse($primerDetalle->fecha_inicio)->format('Y-m-d');
+        $horaString = $primerDetalle->hora_llegada ?? '00:00:00';
+        
+        $fechaInicioServicio = \Carbon\Carbon::parse($fechaString . ' ' . $horaString);
+        
+        // Valida si faltan más de 24 horas desde este momento
+        return now()->addHours(24)->isBefore($fechaInicioServicio);
     }
 }

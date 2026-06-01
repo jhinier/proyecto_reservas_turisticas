@@ -126,4 +126,35 @@ class ServicioService
             return $servicio;
         });
     }
+
+    /**
+     * Obtiene el catálogo público de servicios para un emprendimiento con paginación.
+     * Carga todas las relaciones necesarias para mostrar al turista.
+     */
+    public function obtenerCatalogoPublico(int $emprendimientoId, ?int $tipoServicioId, int $porPagina = 12)
+    {
+        $query = Servicio::query()
+            ->with([
+                'imagenes:id,servicio_id,imagen',
+                'tipoServicio',
+                'detalleHospedaje',
+                'detalleGuianza',
+                'detalleAlimentacion',
+                'detallePaqueteTuristico',
+            ])
+            ->whereHas('categoriaPivot', function ($q) use ($emprendimientoId, $tipoServicioId) {
+                $q->where('emprendimiento_id', $emprendimientoId)
+                  ->where('estado', true); // Asegura que la categoría esté activa en la empresa
+                  
+                if ($tipoServicioId) {
+                    $q->where('tipo_servicio_id', $tipoServicioId);
+                }
+            });
+
+        // Si tienes la columna 'estado' directamente en la tabla servicios, 
+        // puedes agregar esto para asegurar que el ítem físico no esté oculto:
+        // ->where('estado', true)
+
+        return $query->paginate($porPagina);
+    }
 }

@@ -163,6 +163,11 @@ class CrearReserva extends Component
             return;
         }
 
+        if ($reservaService === null) {
+            $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Error: Servicio de reservas no disponible']);
+            return;
+        }
+
         try {
             $reservaService->crearReserva($this->datosTurista, $this->carrito, (int)$emprendimientoId);
 

@@ -57,4 +57,9 @@ class Reserva extends Model
     {
         return $this->detalles()->count() > 1;
     }
+
+    public function emprendimiento()
+    {
+        return $this->belongsTo(Emprendimiento::class, 'emprendimiento_id');
+    }
 }

@@ -32,4 +32,9 @@ class EmprendimientoTipoServicio extends Pivot
     {
         return $this->belongsTo(TipoServicio::class, 'tipo_servicio_id'); 
     }
+
+    public function emprendimiento()
+    {
+        return $this->belongsTo(Emprendimiento::class, 'emprendimiento_id');
+    }
 }

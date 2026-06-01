@@ -1,19 +1,11 @@
 @props(['sidebar' => false])
 
 @if($sidebar)
-    <flux:sidebar.brand name="Explora Candelaria" description="Admin Panel" {{ $attributes }}>
-        <x-slot name="logo">
-            <div class="flex items-center justify-center size-10 bg-white rounded-lg overflow-hidden shrink-0">
-                <img src="{{ asset('img/Logo3.png') }}" class="w-full h-full object-contain" alt="Logo" onerror="this.style.display='none'">
-            </div>
-        </x-slot>
-    </flux:sidebar.brand>
+    <a {{ $attributes }} class="w-full h-full flex items-center justify-center">
+        <img src="{{ asset('img/Logo1.png') }}" class="w-full h-full object-contain p-1" alt="Logo">
+    </a>
 @else
-    <flux:brand name="Explora Candelaria" {{ $attributes }}>
-        <x-slot name="logo">
-             <div class="flex items-center justify-center size-10 bg-white rounded-lg overflow-hidden shrink-0">
-                <img src="{{ asset('img/Logo3.png') }}" class="w-full h-full object-contain" alt="Logo" onerror="this.style.display='none'">
-            </div>
-        </x-slot>
-    </flux:brand>
+    <a {{ $attributes }} class="w-10 h-10 flex items-center justify-center">
+        <img src="{{ asset('img/Logo1.png') }}" class="w-full h-full object-contain" alt="Logo">
+    </a>
 @endif

@@ -1,91 +1,102 @@
-<div class="max-w-7xl mx-auto px-4 py-8">
+<div class="max-w-6xl mx-auto px-4 py-8 ">
     
-    <div class="mb-10 flex justify-center">
-        <div class="relative w-full max-w-3xl">
+    <div class="flex justify-center mb-12">
+        <div class="relative w-full max-w-2xl border border-gray-300 bg-white rounded-full p-1.5 flex items-center shadow-sm focus-within:border-gray-400 transition-colors">
+            <span class="pl-4 text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </span>
             <input
                 type="text"
-                wire:model.live.debounce.500ms="busqueda"
-                placeholder="Buscar lugares, servicios o actividades..."
-                class="w-full rounded-full border-gray-300 pl-6 pr-32 py-4 shadow-sm focus:border-green-500 focus:ring-green-500 text-lg"
+                wire:model="busqueda"
+                wire:keydown.enter="$refresh"
+                placeholder="Buscar..."
+                class="w-full py-3 px-4 outline-none text-lg text-gray-700 bg-transparent border-0 focus:ring-0"
             >
-            <button class="absolute inset-y-1.5 right-2 bg-[#00D65B] hover:bg-green-600 text-black font-semibold rounded-full px-8 transition-colors">
+            <button wire:click="$refresh" class="bg-[#00D65B] text-black font-bold px-8 py-3 rounded-full border border-black hover:bg-green-500 transition-colors shrink-0">
                 Buscar
             </button>
         </div>
     </div>
 
-    <div class="flex flex-col md:flex-row gap-8">
+    <div class="flex flex-col md:flex-row gap-8" >
         
         <div class="w-full md:w-64 shrink-0">
-            <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
-                <h3 class="font-bold text-gray-900 mb-5 text-lg">Filtrar resultados</h3>
-                <ul class="space-y-4">
-                    <li>
-                        <button
-                            wire:click="$set('tipoServicioSeleccionado', null)"
-                            class="w-full text-left {{ is_null($tipoServicioSeleccionado) ? 'text-green-700 font-semibold' : 'text-gray-600 hover:text-green-600' }}"
+            <h3 class="font-bold text-[#06281E] mb-4 text-lg hidden md:block">Filtrar resultados</h3>
+            
+            <ul class="flex md:flex-col overflow-x-auto md:overflow-visible border-b border-gray-200 md:border-b-0 space-x-2 md:space-x-0 md:space-y-1 pb-px md:pb-0 hide-scrollbar">
+                @foreach($tiposServicio as $tipo)
+                    <li class="shrink-0">
+                        <button 
+                            wire:click="$set('tipoServicioSeleccionado', {{ $tipo->id }})" 
+                            class="w-full text-left px-4 py-3 transition flex items-center whitespace-nowrap 
+                            border-b-4 md:border-b-0 md:border-l-4 
+                            {{ $tipoServicioSeleccionado == $tipo->id ? 'bg-transparent font-bold text-[#06281E] border-[#00D65B]' : 'text-gray-600 hover:bg-gray-50 border-transparent hover:text-gray-900' }}"
                         >
-                            Todos los resultados
+                            {{ $tipo->nombre }}
                         </button>
                     </li>
-                    @foreach($tiposServicio as $tipo)
-                        <li>
-                            <button
-                                wire:click="$set('tipoServicioSeleccionado', {{ $tipo->id }})"
-                                class="w-full text-left {{ $tipoServicioSeleccionado === $tipo->id ? 'text-green-700 font-semibold underline decoration-2 underline-offset-4' : 'text-gray-600 hover:text-green-600' }}"
-                            >
-                                {{ $tipo->nombre }}
-                            </button>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+                @endforeach
+            </ul>
         </div>
 
         <div class="flex-1">
-            @if($busqueda)
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">
-                    Resultados para "{{ $busqueda }}"
-                </h2>
-            @endif
+            <h2 class="text-[26px] font-bold text-[#06281E] mb-6 tracking-tight">
+                @if($busqueda)
+                    {{ $nombreCategoria }} que coinciden con "{{ $busqueda }}"
+                @else
+                    Resultados de {{ $nombreCategoria }}
+                @endif
+            </h2>
 
-            <div class="space-y-5">
-                @forelse($resultados as $servicio)
-                    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden flex flex-col sm:flex-row">
+            <div class="space-y-6">
+                @forelse($resultados as $emprendimiento)
+                    
+                    <a href="{{ route('turista.empresa.servicios', ['emprendimiento' => $emprendimiento->id, 'tipo' => $tipoServicioSeleccionado]) }}" 
+                       class="bg-white rounded-2xl border border-gray-300 overflow-hidden flex flex-col sm:flex-row shadow-sm hover:shadow-md transition-shadow min-h-[200px] group block no-underline">
                         
-                        <div class="w-full sm:w-72 h-48 bg-gray-100 shrink-0">
-                            @if($servicio->imagenes->isNotEmpty())
-                                <img src="{{ asset('storage/' . $servicio->imagenes->first()->imagen) }}" class="w-full h-full object-cover" alt="Imagen de {{ $servicio->nombre }}">
+                        <div class="w-full sm:w-80 h-64 sm:h-auto bg-gray-100 shrink-0 relative overflow-hidden">
+                            @if($emprendimiento->imagen)
+                                <img src="{{ asset('storage/' . $emprendimiento->imagen) }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="{{ $emprendimiento->nombre }}">
                             @else
-                                <div class="w-full h-full flex items-center justify-center text-gray-400">Sin foto</div>
+                                <div class="absolute inset-0 flex items-center justify-center text-gray-400">Sin foto</div>
                             @endif
                         </div>
 
-                        <div class="p-6 flex flex-col justify-center">
-                            <span class="inline-block px-2 py-1 text-xs font-medium uppercase text-gray-600 border border-gray-300 rounded mb-3 w-max">
-                                {{ $servicio->emprendimientoTipoServicio->tipoServicio->nombre ?? 'Servicio' }}
-                            </span>
-                            <h3 class="text-xl font-bold text-gray-900 mb-1">{{ $servicio->nombre }}</h3>
-                            <p class="text-sm text-green-700 font-medium mb-3">
-                                {{ $servicio->emprendimientoTipoServicio->emprendimiento->nombre ?? 'Sin Emprendimiento' }}
-                            </p>
-                            <p class="text-gray-600 line-clamp-2">{{ $servicio->descripcion }}</p>
-                            <div class="mt-3 text-lg font-bold text-gray-900">
-                                ${{ number_format($servicio->precio, 2) }}
+                        <div class="p-6 flex flex-col justify-between w-full">
+                            <div>
+                                <span class="inline-block px-2 py-1 text-xs font-semibold uppercase border border-[#06281E] rounded-md text-[#06281E] mb-2 tracking-wide">
+                                    EMPRENDIMIENTO
+                                </span>
+                                
+                                <h3 class="text-[19px] font-semibold text-[#123524] leading-snug tracking-[-0.3px] group-hover:underline decoration-2 underline-offset-2">
+                                    {{ $emprendimiento->nombre }}
+                                </h3>
+                                
+                                <p class="text-[15px] text-gray-600 mt-1.5 line-clamp-3 leading-relaxed">
+                                    {{ $emprendimiento->descripcion }}
+                                </p>
                             </div>
                         </div>
-
-                    </div>
+                        
+                    </a>
                 @empty
-                    <div class="bg-white p-10 text-center rounded-lg border border-gray-200">
-                        <p class="text-gray-500 text-lg">No hay coincidencias para tu búsqueda.</p>
+                    <div class="bg-white p-12 text-center rounded-2xl border border-gray-200">
+                        <p class="text-lg font-medium text-gray-600">No hay resultados disponibles en esta categoría.</p>
                     </div>
                 @endforelse
             </div>
-
-            <div class="mt-8">
-                {{ $resultados->links() }}
-            </div>
         </div>
     </div>
+
+    <style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 </div>
