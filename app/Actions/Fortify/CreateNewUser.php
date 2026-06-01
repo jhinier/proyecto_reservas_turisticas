@@ -19,19 +19,20 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        if(isset($input['cedula'])) {
-            Validator::make($input, [
-                'cedula' => ['required', new CedulaEcuatoriana],
-            ])->validate();
-        }
-        
+        // Unificamos todas las validaciones en un solo bloque
         Validator::make($input, [
             ...$this->profileRules(),
+            'cedula' => ['required', 'string', new CedulaEcuatoriana],
             'password' => $this->passwordRules(),
+            'edad' => ['required', 'integer', 'min:18'],
+        ], [
+            'edad.min' => 'Debes tener al menos 18 años para registrarte en la plataforma.',
+            'edad.required' => 'La edad es obligatoria.',
+            'edad.integer' => 'La edad debe ser un número válido.'
         ])->validate();
 
-
-        return User::create([
+        // 1. Guardamos el usuario
+        $user = User::create([
             'name' => $input['name'],
             'apellidos' => $input['apellidos'],
             'cedula' => $input['cedula'],
@@ -40,5 +41,11 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $input['password'],
             'edad' => $input['edad'],
         ]);
+
+        // 2. Le asignamos el rol
+        $user->assignRole('turista');
+
+        // 3. Retornamos el usuario
+        return $user;
     }
 }

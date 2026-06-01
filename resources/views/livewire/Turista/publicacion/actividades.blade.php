@@ -1,46 +1,35 @@
-@extends('layouts.app.turista')
+@extends('layouts.turista')
 
 @section('content')
 
-<section class="min-h-screen bg-gray-100 py-24">
+<section class="min-h-screen bg-g<section class="min-h-screen bg-gray-100 pb-24 pt-8">
 
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
 
         {{-- TITULO --}}
         <div class="text-center mb-16">
 
-            <p
-                class="uppercase tracking-[0.3em] text-emerald-600 text-sm font-semibold">
-
+            <p class="uppercase tracking-[0.3em] text-emerald-600 text-sm font-semibold">
                 Aventuras & Experiencias
-
             </p>
 
-            <h1
-                class="text-5xl font-black text-gray-900 mt-4">
-
+            <h1 class="text-5xl font-black text-gray-900 mt-4">
                 Actividades Turísticas
-
             </h1>
 
-            <p
-                class="text-gray-500 mt-6 max-w-3xl mx-auto text-lg leading-relaxed">
-
+            <p class="text-gray-500 mt-6 max-w-3xl mx-auto text-lg leading-relaxed">
                 Vive experiencias inolvidables,
                 explora la naturaleza y disfruta de actividades únicas.
-
             </p>
 
         </div>
 
         {{-- GRID --}}
-        <div
-            class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
 
             @forelse ($actividades as $actividad)
 
-                <div
-                    class="group bg-white rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2">
+                <div class="group bg-white rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2">
 
                     {{-- CARRUSEL --}}
                     <div class="relative h-80 overflow-hidden">
@@ -105,8 +94,7 @@
                                 {{-- BADGE --}}
                                 <div class="absolute top-5 left-5 z-20">
 
-                                    <span
-                                        class="bg-white/20 backdrop-blur-md border border-white/20 text-white text-xs font-bold px-4 py-2 rounded-full">
+                                    <span class="bg-white/20 backdrop-blur-md border border-white/20 text-white text-xs font-bold px-4 py-2 rounded-full">
 
                                         {{ $actividad->dificultad }}
 
@@ -130,18 +118,15 @@
                     {{-- CONTENIDO --}}
                     <div class="p-8">
 
-                        <div
-                            class="flex items-center justify-between gap-4">
+                        <div class="flex items-center justify-between gap-4">
 
-                            <h2
-                                class="text-2xl font-bold text-gray-900 line-clamp-1">
+                            <h2 class="text-2xl font-bold text-gray-900 line-clamp-1">
 
                                 {{ $actividad->publicacion->nombre }}
 
                             </h2>
 
-                            <span
-                                class="text-sm font-semibold text-emerald-700 whitespace-nowrap">
+                            <span class="text-sm font-semibold text-emerald-700 whitespace-nowrap">
 
                                 ⏱ {{ $actividad->duracion_estimada }}
 
@@ -149,19 +134,16 @@
 
                         </div>
 
-                        <p
-                            class="text-gray-500 leading-relaxed mt-5 line-clamp-3">
+                        <p class="text-gray-500 leading-relaxed mt-5 line-clamp-3">
 
                             {{ $actividad->publicacion->descripcion }}
 
                         </p>
 
                         {{-- INFO --}}
-                        <div
-                            class="mt-6 pt-5 border-t border-gray-100">
+                        <div class="mt-6 pt-5 border-t border-gray-100">
 
-                            <p
-                                class="text-sm text-gray-600 line-clamp-2">
+                            <p class="text-sm text-gray-600 line-clamp-2">
 
                                 🎒
                                 <span class="font-semibold">
@@ -181,11 +163,9 @@
 
             @empty
 
-                <div
-                    class="col-span-full text-center py-20">
+                <div class="col-span-full text-center py-20">
 
-                    <h2
-                        class="text-3xl font-bold text-gray-400">
+                    <h2 class="text-3xl font-bold text-gray-400">
 
                         No existen actividades registradas.
 

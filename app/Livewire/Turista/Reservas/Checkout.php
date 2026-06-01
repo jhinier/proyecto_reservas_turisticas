@@ -43,9 +43,19 @@ class Checkout extends Component
     public function volver()
     {
         $emprendimientoId = $this->datosReserva['emprendimiento_id'] ?? null;
+        $categoriaId = $this->datosReserva['categoria_id'] ?? null;
+
+        // Si no está en datosReserva, lo intentamos sacar del primer elemento del carrito
+        if (!$categoriaId && !empty($this->carrito)) {
+            $primerItem = reset($this->carrito);
+            $categoriaId = $primerItem['categoria_id'] ?? null;
+        }
 
         if ($emprendimientoId) {
-            return redirect()->route('turista.empresa.servicios', ['emprendimiento' => $emprendimientoId]);
+            return redirect()->route('turista.empresa.servicios', [
+                'emprendimiento' => $emprendimientoId,
+                'categoria_id' => $categoriaId
+            ]);
         }
 
         return redirect()->route('home');
@@ -61,24 +71,45 @@ class Checkout extends Component
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        if (!$user->hasRole('turista')) {
+        // Corrección de la lectura de rol en minúscula
+        if (!$user->hasAnyRole(['Turista', 'turista'])) {
             $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Acceso denegado. Solo los turistas pueden realizar reservas.']);
             return;
         }
 
         try {
-            // Rescatamos el ID de la empresa antes de limpiar la sesión
+            // Rescatamos el ID de la empresa y de la categoría antes de limpiar la sesión
             $emprendimientoId = $this->datosReserva['emprendimiento_id'] ?? null;
+            $categoriaIdGuardada = $this->datosReserva['categoria_id'] ?? null;
+
+            // Rescatamos las fechas y categoría del primer elemento del carrito
+            $fechaInicioGuardada = null;
+            $fechaFinGuardada = null;
+            if (!empty($this->carrito)) {
+                $primerItem = reset($this->carrito);
+                $fechaInicioGuardada = $primerItem['fecha_inicio'] ?? null;
+                $fechaFinGuardada = $primerItem['fecha_fin'] ?? null;
+                
+                if (!$categoriaIdGuardada) {
+                    $categoriaIdGuardada = $primerItem['categoria_id'] ?? null;
+                }
+            }
 
             $service->registrarReservaTurista($this->carrito, $user->id);
             
             session()->forget(['reserva_turista_carrito', 'reserva_turista_datos']);
             
-            $this->dispatch('notificar', ['tipo' => 'success', 'mensaje' => 'Reserva guardada y pendiente de confirmación.']);
+            // Usamos session()->flash para que el mensaje sobreviva a la redirección
+            session()->flash('mensaje_exito', 'Reserva guardada y pendiente de confirmación.');
             
-            // Redirigimos al catálogo de esa empresa
+            // Redirigimos al catálogo enviando las fechas y la categoría por la URL
             if ($emprendimientoId) {
-                return redirect()->route('turista.empresa.servicios', ['emprendimiento' => $emprendimientoId]);
+                return redirect()->route('turista.empresa.servicios', [
+                    'emprendimiento' => $emprendimientoId,
+                    'categoria_id' => $categoriaIdGuardada,
+                    'fechaInicio' => $fechaInicioGuardada,
+                    'fechaFin' => $fechaFinGuardada
+                ]);
             }
             
             return redirect()->route('home');

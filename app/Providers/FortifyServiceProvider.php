@@ -28,18 +28,24 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         // NIVEL 1: Bloqueo en la puerta (Login)
-        // Solo permite el acceso si el usuario es válido y su emprendimiento está activo.
+        // Solo permite el acceso si el usuario es válido, tiene rol y su emprendimiento está activo (si aplica).
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('email', $request->email)->first();
 
             // 1. Verificamos credenciales básicas
             if ($user && Hash::check($request->password, $user->password)) {
                 
-                // 2. Validación de Arquitectura: Si es emprendedor, su negocio DEBE estar activo
+                // 2. Validación de Roles: El usuario DEBE tener al menos un rol asignado
+                if ($user->roles()->count() === 0) {
+                    throw ValidationException::withMessages([
+                        Fortify::username() => 'Tu cuenta no tiene un rol asignado para acceder al sistema.',
+                    ]);
+                }
+                
+                // 3. Validación de Arquitectura: Si es emprendedor, su negocio DEBE estar activo
                 // Si el admin lo desactivó, el login fallará aquí mismo.
                 if ($user->hasRole('emprendimiento')) {
                     if (!$user->emprendimiento || !$user->emprendimiento->estado) {
-                        //return null;
                         throw ValidationException::withMessages([
                             'email' => 'Tu emprendimiento se encuentra inactivo. Contacta soporte.',
                         ]);

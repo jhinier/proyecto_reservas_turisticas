@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explora Candelaria</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preload" as="image" href="{{ asset('img/fondop.jpeg') }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="min-h-screen overflow-hidden bg-black">
@@ -126,6 +127,7 @@
                             placeholder="correo@ejemplo.com"
                             class="mt-2 w-full rounded-xl border border-white/10 bg-white/10 px-5 py-4 text-white placeholder-gray-400 focus:border-[#7ed957] focus:outline-none"
                         >
+                        @error('email') <span class="mt-2 block text-sm text-red-400">{{ $message }}</span> @enderror
 
                     </div>
 
@@ -158,6 +160,7 @@
                             placeholder="••••••••"
                             class="w-full rounded-xl border border-white/10 bg-white/10 px-5 py-4 text-white placeholder-gray-400 focus:border-[#7ed957] focus:outline-none"
                         >
+                        @error('password') <span class="mt-2 block text-sm text-red-400">{{ $message }}</span> @enderror
 
                     </div>
 

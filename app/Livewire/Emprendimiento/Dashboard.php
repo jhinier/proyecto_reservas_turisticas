@@ -13,11 +13,13 @@ use Illuminate\Support\Facades\Auth;
 #[Layout('layouts.app.sidebar_emprendimiento')] 
 class Dashboard extends Component
 {
-    public string $periodoFiltro = 'este_mes';
+    // 1. Cambiamos el periodo por defecto a 'hoy'
+    public string $periodoFiltro = 'hoy';
 
     public function updatedPeriodoFiltro()
     {
         unset($this->metricas);
+        unset($this->servicioTop);
     }
 
     #[Computed]
@@ -29,8 +31,6 @@ class Dashboard extends Component
             $q->where('emprendimientos.id', $emprendimientoId);
             $q->where('emprendimiento_tipo_servicios.estado', 1);
         })->get()->map(function ($tipo) use ($emprendimientoId) {
-            
-            // EL CAMBIO ESTÁ AQUÍ: Metimos el 'tipo_servicio_id' dentro de la función del pivot
             $tipo->servicios_count = Servicio::whereHas('categoriaPivot', function ($q) use ($emprendimientoId, $tipo) {
                 $q->where('emprendimiento_id', $emprendimientoId)
                   ->where('tipo_servicio_id', $tipo->id);
@@ -52,6 +52,14 @@ class Dashboard extends Component
     {
         $user = Auth::user();
         return app(DashboardEmprendimientoService::class)->obtenerAgendaHoy($user->emprendimiento->id);
+    }
+
+    // 2. Nueva función para capturar el servicio más vendido
+    #[Computed]
+    public function servicioTop()
+    {
+        $user = Auth::user();
+        return app(DashboardEmprendimientoService::class)->obtenerServicioMasVendido($user->emprendimiento->id, $this->periodoFiltro);
     }
 
     public function render()

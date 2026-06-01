@@ -1,8 +1,8 @@
-@extends('layouts.app.turista')
+@extends('layouts.turista')
 
 @section('content')
 
-<section class="py-24 bg-gray-100 min-h-screen">
+<section class="min-h-screen bg-g<section class="min-h-screen bg-gray-100 pb-24 pt-8">
 
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
 
@@ -54,7 +54,7 @@
                                     @click="index = (index === 0)
                                         ? {{ $sitio->publicacion->imagenes->take(5)->count() - 1 }}
                                         : index - 1"
-                                    class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white w-9 h-9 rounded-full backdrop-blur-sm transition">
+                                    class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white w-9 h-9 rounded-full backdrop-blur-sm transition z-20">
 
                                     ‹
 
@@ -65,14 +65,14 @@
                                     @click="index = (index === {{ $sitio->publicacion->imagenes->take(5)->count() - 1 }})
                                         ? 0
                                         : index + 1"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white w-9 h-9 rounded-full backdrop-blur-sm transition">
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white w-9 h-9 rounded-full backdrop-blur-sm transition z-20">
 
                                     ›
 
                                 </button>
 
                                 {{-- INDICADORES --}}
-                                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
 
                                     @foreach($sitio->publicacion->imagenes->take(5) as $i => $img)
 

@@ -53,6 +53,29 @@ class CrearPaqueteTuristico extends Component
             'documento'           => 'nullable|file|mimes:pdf|max:5120',
         ];
     }
+    public function messages()
+    {
+        return [
+            'nombre.required' => 'El nombre del paquete es obligatorio.',
+            'precio.required' => 'Debes indicar el precio del paquete.',
+            'precio.min' => 'El precio no puede ser negativo.',
+            'precio.numeric' => 'El precio debe ser un número válido.',
+            'stock.required' => 'El stock de cupos es obligatorio.',
+            'stock.min' => 'El stock debe ser al menos 1.',
+            'stock.numeric' => 'El stock debe ser un número entero.',
+            'duracion_dias.required' => 'Indica los días de duración.',
+            'duracion_dias.min' => 'La duración debe ser mínimo de 1 día.',
+            'duracion_dias.numeric' => 'La duración debe ser un número.',
+            'lugar_salida.required' => 'El punto de encuentro es obligatorio.',
+            'hora_salida.required' => 'Debes definir la hora de inicio.',
+            'descripcion.required' => 'El resumen general es obligatorio.',
+            'lugares_actividades.required' => 'El itinerario detallado es obligatorio.',
+            'servicios_incluidos.required' => 'Debes detallar qué incluye el paquete.',
+            'recomendaciones.required' => 'Las recomendaciones son obligatorias.',
+            'documento.mimes' => 'El documento debe ser un archivo PDF.',
+            'documento.max' => 'El documento no debe pesar más de 5MB.',
+        ];
+    }
 
     // 🔥 2. INYECTAMOS EL SERVICIO CORRECTO AQUÍ
     public function guardar(PaqueteTuristicoService $service)
