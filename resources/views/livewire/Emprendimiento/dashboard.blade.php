@@ -1,6 +1,15 @@
 <div class="min-h-screen bg-white dark:bg-zinc-900 relative pb-24 text-[#06281E] dark:text-gray-200 font-sans antialiased" wire:key="dashboard-root">
     
-    {{-- CABECERA --}}
+    @php
+        $textoPeriodo = match($periodoFiltro) {
+            'esta_semana' => 'esta semana',
+            'este_mes' => 'este mes',
+            default => 'hoy'
+        };
+        $totalMetricas = array_sum($this->metricas);
+    @endphp
+
+    {{-- Cabecera --}}
     <div class="bg-white dark:bg-zinc-900/95 dark:backdrop-blur-md border-b border-gray-200 dark:border-white/10 px-8 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 transition-colors">
         <div>
             <div class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest flex items-center gap-2">
@@ -10,11 +19,11 @@
             </div>
             <h1 class="text-2xl font-black text-[#06281E] dark:text-white uppercase tracking-wide mt-1">Resumen de actividad</h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium">
-                <span>Bienvenido, <span class="text-[#06281E] dark:text-white font-bold">{{ Auth::user()->name }}</span></span>
+                <span>Bienvenido, <span class="text-[#06281E] dark:text-white font-bold">{{ Auth::user()->name }}</span> <span class="text-gray-400 font-normal mx-1">de</span> <span class="text-[#00A344] font-bold">{{ Auth::user()->emprendimiento->nombre ?? 'Tu Emprendimiento' }}</span></span>
                 <span class="text-gray-300 dark:text-gray-600 hidden sm:inline">|</span>
                 <span class="flex items-center gap-1.5 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full text-[10px] text-[#00A344] dark:text-[#7ed957] font-bold uppercase tracking-widest border border-gray-200 dark:border-white/5">
                     <span class="size-2 rounded-full bg-[#00D65B] dark:bg-[#7ed957] animate-pulse"></span>
-                    {{ count($this->agendaHoy) }} para hoy
+                    {{ $totalMetricas }} reservas registradas {{ $textoPeriodo }}
                 </span>
             </p>
         </div>
@@ -33,74 +42,74 @@
 
     <div class="p-8 max-w-7xl mx-auto space-y-8 relative">
         
-        {{-- CARGANDO --}}
+        {{-- Cargando --}}
         <div wire:loading.flex wire:target="periodoFiltro" class="absolute inset-0 bg-white/70 dark:bg-zinc-900/70 z-30 items-center justify-center backdrop-blur-xs transition-all rounded-3xl">
             <div class="animate-spin size-7 border-3 border-gray-300 dark:border-gray-600 border-t-[#00A344] dark:border-t-[#07b25f] rounded-full"></div>
         </div>
 
-        {{-- TARJETAS SUPERIORES --}}
+        {{-- Tarjetas superiores con colores --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            <div class="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-gray-200 dark:border-white/10 shadow-sm flex flex-col justify-between group transition-all">
+            <div class="bg-green-50/40 dark:bg-green-900/10 rounded-3xl p-6 border border-green-200 dark:border-green-500/20 shadow-sm flex flex-col justify-between group transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Confirmadas</p>
-                        <h3 class="text-3xl font-black text-[#06281E] dark:text-white mt-1">{{ $this->metricas['confirmadas'] ?? 0 }}</h3>
+                        <p class="text-[10px] font-bold text-green-600 dark:text-green-500 uppercase tracking-widest">Confirmadas</p>
+                        <h3 class="text-3xl font-black text-green-900 dark:text-white mt-1">{{ $this->metricas['confirmadas'] ?? 0 }}</h3>
                     </div>
-                    <div class="size-10 rounded-2xl bg-green-50 dark:bg-green-500/10 text-[#00A344] dark:text-[#00D65B] flex items-center justify-center shadow-sm border border-green-100 dark:border-green-500/20">
+                    <div class="size-10 rounded-2xl bg-white dark:bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center shadow-sm border border-green-100 dark:border-green-500/20">
                         <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     </div>
                 </div>
-                <div class="mt-4 pt-4 border-t border-gray-100 dark:border-white/5 flex items-center gap-2 text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
-                    <span class="text-green-800 dark:text-green-400 bg-green-100 dark:bg-green-500/20 px-2 py-0.5 rounded shadow-sm">Listas</span>
+                <div class="mt-4 pt-4 border-t border-green-100 dark:border-green-800/30 flex items-center gap-2 text-[10px] text-green-700 dark:text-green-400 font-bold uppercase tracking-wider">
+                    <span class="text-white bg-green-500 px-2 py-0.5 rounded shadow-sm">Listas</span>
                     <span>Operación agendada</span>
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-gray-200 dark:border-white/10 shadow-sm flex flex-col justify-between group transition-all">
+            <div class="bg-yellow-50/50 dark:bg-yellow-900/10 rounded-3xl p-6 border border-yellow-200 dark:border-yellow-500/20 shadow-sm flex flex-col justify-between group transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Pendientes</p>
-                        <h3 class="text-3xl font-black text-[#06281E] dark:text-white mt-1">{{ $this->metricas['pendientes'] ?? 0 }}</h3>
+                        <p class="text-[10px] font-bold text-yellow-600 dark:text-yellow-500 uppercase tracking-widest">Pendientes</p>
+                        <h3 class="text-3xl font-black text-yellow-900 dark:text-white mt-1">{{ $this->metricas['pendientes'] ?? 0 }}</h3>
                     </div>
-                    <div class="size-10 rounded-2xl bg-yellow-50 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 flex items-center justify-center shadow-sm border border-yellow-100 dark:border-yellow-500/20">
+                    <div class="size-10 rounded-2xl bg-white dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 flex items-center justify-center shadow-sm border border-yellow-100 dark:border-yellow-500/20">
                         <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>
                 </div>
-                <div class="mt-4 pt-4 border-t border-gray-100 dark:border-white/5 flex items-center gap-2 text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
-                    <span class="text-yellow-800 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-500/20 px-2 py-0.5 rounded shadow-sm">Espera</span>
+                <div class="mt-4 pt-4 border-t border-yellow-100 dark:border-yellow-800/30 flex items-center gap-2 text-[10px] text-yellow-700 dark:text-yellow-400 font-bold uppercase tracking-wider">
+                    <span class="text-white bg-yellow-500 px-2 py-0.5 rounded shadow-sm">Espera</span>
                     <span>Por confirmar</span>
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-gray-200 dark:border-white/10 shadow-sm flex flex-col justify-between group transition-all">
+            <div class="bg-blue-50/50 dark:bg-blue-900/10 rounded-3xl p-6 border border-blue-200 dark:border-blue-500/20 shadow-sm flex flex-col justify-between group transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Reagendadas</p>
-                        <h3 class="text-3xl font-black text-[#06281E] dark:text-white mt-1">{{ $this->metricas['reagendadas'] ?? 0 }}</h3>
+                        <p class="text-[10px] font-bold text-blue-600 dark:text-blue-500 uppercase tracking-widest">Reagendadas</p>
+                        <h3 class="text-3xl font-black text-blue-900 dark:text-white mt-1">{{ $this->metricas['reagendadas'] ?? 0 }}</h3>
                     </div>
-                    <div class="size-10 rounded-2xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-500 flex items-center justify-center shadow-sm border border-blue-100 dark:border-blue-500/20">
+                    <div class="size-10 rounded-2xl bg-white dark:bg-blue-500/10 text-blue-600 dark:text-blue-500 flex items-center justify-center shadow-sm border border-blue-100 dark:border-blue-500/20">
                         <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     </div>
                 </div>
-                <div class="mt-4 pt-4 border-t border-gray-100 dark:border-white/5 flex items-center gap-2 text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
-                    <span class="text-blue-800 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/20 px-2 py-0.5 rounded shadow-sm">Cambios</span>
+                <div class="mt-4 pt-4 border-t border-blue-100 dark:border-blue-800/30 flex items-center gap-2 text-[10px] text-blue-700 dark:text-blue-400 font-bold uppercase tracking-wider">
+                    <span class="text-white bg-blue-500 px-2 py-0.5 rounded shadow-sm">Cambios</span>
                     <span>Modificadas</span>
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-gray-200 dark:border-white/10 shadow-sm flex flex-col justify-between group transition-all">
+            <div class="bg-red-50/50 dark:bg-red-900/10 rounded-3xl p-6 border border-red-200 dark:border-red-500/20 shadow-sm flex flex-col justify-between group transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Canceladas</p>
-                        <h3 class="text-3xl font-black text-[#06281E] dark:text-white mt-1">{{ $this->metricas['canceladas'] ?? 0 }}</h3>
+                        <p class="text-[10px] font-bold text-red-600 dark:text-red-500 uppercase tracking-widest">Canceladas</p>
+                        <h3 class="text-3xl font-black text-red-900 dark:text-white mt-1">{{ $this->metricas['canceladas'] ?? 0 }}</h3>
                     </div>
-                    <div class="size-10 rounded-2xl bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-500 flex items-center justify-center shadow-sm border border-red-100 dark:border-red-500/20">
+                    <div class="size-10 rounded-2xl bg-white dark:bg-red-500/10 text-red-600 dark:text-red-500 flex items-center justify-center shadow-sm border border-red-100 dark:border-red-500/20">
                         <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     </div>
                 </div>
-                <div class="mt-4 pt-4 border-t border-gray-100 dark:border-white/5 flex items-center gap-2 text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
-                    <span class="text-red-800 dark:text-red-400 bg-red-100 dark:bg-red-500/20 px-2 py-0.5 rounded shadow-sm">Anuladas</span>
+                <div class="mt-4 pt-4 border-t border-red-100 dark:border-red-800/30 flex items-center gap-2 text-[10px] text-red-700 dark:text-red-400 font-bold uppercase tracking-wider">
+                    <span class="text-white bg-red-500 px-2 py-0.5 rounded shadow-sm">Anuladas</span>
                     <span>Descartadas</span>
                 </div>
             </div>
@@ -110,7 +119,7 @@
             
             <div class="lg:col-span-2 space-y-8">
                 
-                {{-- AGENDA DEL DÍA (TABLA) --}}
+                {{-- Agenda del día (Tabla) --}}
                 <div class="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-white/10 shadow-sm overflow-hidden transition-colors">
                     <div class="border-b border-gray-100 dark:border-white/5 px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div class="flex items-center gap-3">
@@ -179,7 +188,7 @@
                                         <td colspan="4" class="p-10 text-center text-gray-400 dark:text-gray-500 text-sm font-bold">
                                             <div class="flex flex-col items-center justify-center">
                                                 <svg class="w-12 h-12 mb-3 text-gray-200 dark:text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                                                No tienes reservas operativas para este intervalo.
+                                                No tienes reservas operativas agendadas para la vista de hoy.
                                             </div>
                                         </td>
                                     </tr>
@@ -189,7 +198,7 @@
                     </div>
                 </div>
 
-                {{-- CURVA DE RENDIMIENTO --}}
+                {{-- Curva de rendimiento y top servicio --}}
                 <div class="bg-white dark:bg-zinc-900 rounded-3xl shadow-sm border border-gray-200 dark:border-white/10 overflow-hidden transition-colors">
                     <div class="border-b border-gray-100 dark:border-white/5 px-6 py-5 flex items-center justify-between">
                         <div class="flex items-center gap-3">
@@ -197,8 +206,8 @@
                                 <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v16.5M21 19.5H3.75M6.75 12l3-3m0 0l3 3m-3-3v8m4.5-3l3 3m0 0l3-3m-3 3V11"/></svg>
                             </div>
                             <div>
-                                <h2 class="text-lg font-black text-[#06281E] dark:text-white uppercase tracking-wide">Curva de rendimiento</h2>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Volumen histórico de operaciones</p>
+                                <h2 class="text-lg font-black text-[#06281E] dark:text-white uppercase tracking-wide">Rendimiento y Ventas</h2>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Volumen del periodo y servicio estrella</p>
                             </div>
                         </div>
                     </div>
@@ -211,17 +220,33 @@
                             <circle cx="250" cy="25" r="3.5" class="fill-white dark:fill-zinc-900 stroke-[#00A344] dark:stroke-[#07b25f]" stroke-width="2.5"></circle>
                             <circle cx="350" cy="15" r="3.5" class="fill-white dark:fill-zinc-900 stroke-[#00A344] dark:stroke-[#07b25f]" stroke-width="2.5"></circle>
                         </svg>
-                        <div class="absolute top-6 right-6 bg-white dark:bg-zinc-800 border border-gray-100 dark:border-white/10 p-4 rounded-2xl shadow-sm text-center">
-                            <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Flujo total</div>
-                            <div class="text-2xl font-black text-[#00D65B] mt-1">{{ ($this->metricas['confirmadas'] ?? 0) + ($this->metricas['completadas'] ?? 0) }} rsv.</div>
+                        
+                        {{-- Recuadros del gráfico (Top Servicio) --}}
+                        <div class="absolute top-6 right-6 flex flex-col gap-3">
+                            <div class="bg-white dark:bg-zinc-800 border border-gray-100 dark:border-white/10 p-3 rounded-2xl shadow-sm text-right">
+                                <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total en el periodo</div>
+                                <div class="text-xl font-black text-[#06281E] dark:text-white mt-1">{{ array_sum($this->metricas) }} rsv.</div>
+                            </div>
+                            
+                            @if($this->servicioTop)
+                            <div class="bg-[#06281E] dark:bg-zinc-800 border border-[#06281E] dark:border-white/10 p-4 rounded-2xl shadow-md text-right max-w-[220px]">
+                                <div class="text-[10px] font-bold uppercase tracking-widest text-[#00D65B] flex items-center justify-end gap-1.5">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                                    Servicio Top
+                                </div>
+                                <div class="text-sm font-bold text-white mt-1.5 truncate" title="{{ $this->servicioTop->servicio->nombre }}">{{ $this->servicioTop->servicio->nombre }}</div>
+                                <div class="text-[10px] text-gray-300 mt-1 uppercase">{{ $this->servicioTop->total_ventas }} ventas gestionadas</div>
+                            </div>
+                            @endif
                         </div>
+
                     </div>
                 </div>
             </div>
 
             <div class="space-y-6">
                 
-                {{-- BIG CARD COMPLETADAS --}}
+                {{-- Big card completadas --}}
                 <div class="bg-[#06281E] dark:bg-[#163016] rounded-3xl shadow-sm text-white p-6 relative overflow-hidden flex flex-col justify-center h-32 border border-[#06281E] dark:border-white/10 transition-colors">
                     <div class="relative z-10 flex items-center justify-between">
                         <div>
@@ -234,13 +259,16 @@
                     </div>
                 </div>
 
-                {{-- DENSIDAD POR LÍNEA --}}
+                {{-- Catálogo de servicios --}}
                 <div class="bg-white dark:bg-zinc-900 rounded-3xl shadow-sm border border-gray-200 dark:border-white/10 overflow-hidden transition-colors">
-                    <div class="border-b border-gray-100 dark:border-white/5 px-6 py-5 flex items-center gap-3">
-                        <div class="bg-gray-50 dark:bg-zinc-800 p-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-[#00A344] dark:text-[#7ed957] shadow-sm">
-                            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2-2.25V6zM13.5 15.75a2.25 2.25 0 012-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+                    <div class="border-b border-gray-100 dark:border-white/5 px-6 py-5 flex flex-col gap-1">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-gray-50 dark:bg-zinc-800 p-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-[#00A344] dark:text-[#7ed957] shadow-sm">
+                                <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2-2.25V6zM13.5 15.75a2.25 2.25 0 012-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+                            </div>
+                            <h2 class="text-lg font-black text-[#06281E] dark:text-white uppercase tracking-wide">Catálogo de Servicios</h2>
                         </div>
-                        <h2 class="text-lg font-black text-[#06281E] dark:text-white uppercase tracking-wide">Líneas</h2>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 font-medium ml-12">Total de servicios activos publicados por categoría</p>
                     </div>
                     
                     <div class="p-6 space-y-5 max-h-[400px] overflow-y-auto scrollbar-none">
@@ -264,7 +292,7 @@
                     </div>
                 </div>
 
-                {{-- RECOMENDACIÓN --}}
+                {{-- Recomendación --}}
                 <div class="bg-yellow-50 dark:bg-zinc-900 rounded-3xl shadow-sm border border-yellow-200 dark:border-white/10 p-6 flex items-start gap-4 transition-colors">
                     <div class="bg-white dark:bg-zinc-800 p-3 rounded-2xl text-yellow-500 shrink-0 shadow-sm border border-yellow-100 dark:border-white/10">
                         <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M12 2a10 10 0 110 20 10 10 0 010-20zm0 5v6"/></svg>

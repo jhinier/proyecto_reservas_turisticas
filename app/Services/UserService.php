@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UserService
 {
@@ -12,16 +13,16 @@ class UserService
     {
         return DB::transaction(function () use ($datos) {
             $usuario = User::create([
-                'name'      => $datos['nombre'],
-                'apellidos' => $datos['apellidos'],
-                'email'     => $datos['email'],
+                'name'      => strip_tags($datos['name']),
+                'apellidos' => strip_tags($datos['apellidos']),
+                'email'     => filter_var($datos['email'], FILTER_SANITIZE_EMAIL),
                 'password'  => Hash::make($datos['password']),
-                'cedula'    => $datos['cedula'],
-                'telefono'  => $datos['telefono'],
-                'edad'      => $datos['edad'],
+                'cedula'    => strip_tags($datos['cedula']),
+                'telefono'  => strip_tags($datos['telefono']),
+                'edad'      => (int) $datos['edad'],
             ]);
 
-            $usuario->assignRole($datos['role']);
+            $usuario->assignRole('turista');
 
             return $usuario;
         });
@@ -31,14 +32,14 @@ class UserService
     {
         return DB::transaction(function () use ($datos) {
             $usuario = User::firstOrCreate(
-                ['cedula' => $datos['cedula']],
+                ['cedula' => strip_tags($datos['cedula'])],
                 [
-                    'name'      => $datos['name'],
-                    'apellidos' => $datos['apellidos'],
-                    'email'     => $datos['email'],
-                    'telefono'  => $datos['telefono'],
-                    'edad'      => $datos['edad'] ?? 18,
-                    'password'  => Hash::make(\Illuminate\Support\Str::random(16)),
+                    'name'      => strip_tags($datos['name']),
+                    'apellidos' => strip_tags($datos['apellidos']),
+                    'email'     => filter_var($datos['email'], FILTER_SANITIZE_EMAIL),
+                    'telefono'  => strip_tags($datos['telefono']),
+                    'edad'      => (int) ($datos['edad'] ?? 18),
+                    'password'  => Hash::make(Str::random(16)),
                 ]
             );
 
@@ -50,12 +51,10 @@ class UserService
         });
     }
 
-    // Función movida desde TuristaService
     public function buscarPorIdentificacion(string $identificacion): ?User
-{
-    // El scope role('turista') obliga a que el usuario tenga ese rol específico
-    return User::role('turista')
-        ->where('cedula', $identificacion)
-        ->first(['id', 'cedula', 'email', 'name', 'apellidos', 'edad', 'telefono']);
-}
+    {
+        return User::role('turista')
+            ->where('cedula', strip_tags($identificacion))
+            ->first(['id', 'cedula', 'email', 'name', 'apellidos', 'edad', 'telefono']);
+    }
 }

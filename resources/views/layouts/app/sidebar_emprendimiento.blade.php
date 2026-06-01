@@ -294,7 +294,6 @@
                     <x-app-logo
                         :sidebar="true"
                         href="{{ route('emprendimiento.panel') }}"
-                        wire:navigate
                     />
                 </div>
 
@@ -320,8 +319,7 @@
                 <flux:sidebar.item
                     icon="layout-grid"
                     :href="route('emprendimiento.panel')"
-                    :current="request()->routeIs('emprendimiento.panel')"
-                    wire:navigate>
+                    :current="request()->routeIs('emprendimiento.panel')">
                     Panel Principal
                 </flux:sidebar.item>
 
@@ -342,8 +340,7 @@
                 <flux:sidebar.item
                     icon="calendar"
                     href="{{ route('emprendimiento.reservas') }}"
-                    :current="request()->routeIs('emprendimiento.reservas')"
-                    wire:navigate>
+                    :current="request()->routeIs('emprendimiento.reservas')">
                     Reservas
                 </flux:sidebar.item>
 
@@ -356,7 +353,8 @@
 
                 <flux:sidebar.item
                     icon="chart-bar"
-                    href="#">
+                    href="{{ route('emprendimiento.reportes') }}"
+                    current="request()->routeIs('emprendimiento.reportes')">
                     Reportes
                 </flux:sidebar.item>
 

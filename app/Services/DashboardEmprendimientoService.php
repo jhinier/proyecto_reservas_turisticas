@@ -6,10 +6,11 @@ use App\Models\Reserva;
 use App\Models\ReservaDetalle;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class DashboardEmprendimientoService
 {
-    public function obtenerMetricas(int $emprendimientoId, string $periodo = 'este_mes'): array
+    public function obtenerMetricas(int $emprendimientoId, string $periodo = 'hoy'): array
     {
         $fechas = $this->obtenerRangoFechas($periodo);
 
@@ -50,6 +51,25 @@ class DashboardEmprendimientoService
         }
 
         return $query->orderBy('hora_llegada', 'asc')->get();
+    }
+
+    // 1. Nueva función que calcula las ventas por servicio
+    public function obtenerServicioMasVendido(int $emprendimientoId, string $periodo)
+    {
+        $fechas = $this->obtenerRangoFechas($periodo);
+
+        return ReservaDetalle::with('servicio.tipoServicio')
+            ->whereHas('servicio.categoriaPivot', function ($q) use ($emprendimientoId) {
+                $q->where('emprendimiento_id', $emprendimientoId);
+            })
+            ->whereHas('reserva', function ($q) use ($fechas) {
+                $q->whereIn('estado', ['Confirmada', 'Completada', 'Reagendada', 'Pendiente'])
+                  ->whereBetween('created_at', [$fechas['inicio'], $fechas['fin']]);
+            })
+            ->select('servicio_id', DB::raw('count(*) as total_ventas'))
+            ->groupBy('servicio_id')
+            ->orderByDesc('total_ventas')
+            ->first();
     }
 
     private function obtenerRangoFechas(string $periodo): array

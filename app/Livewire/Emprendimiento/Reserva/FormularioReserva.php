@@ -12,7 +12,6 @@ class FormularioReserva extends Component
 
     public string $fecha    = '';
     public string $fechaFin = '';
-    public ?int   $personas = 0; // Cambiado a cero para obligar el ingreso
 
     public function requiereFechaFin(): bool
     {
@@ -23,26 +22,18 @@ class FormularioReserva extends Component
             || str_contains($tipo, 'guianza');
     }
 
-    public function requierePersonas(): bool
-    {
-        $tipo = Str::slug($this->nombreCategoria ?? '', ' ');
-
-        return str_contains($tipo, 'hospedaje')
-            || str_contains($tipo, 'guianza');
-    }
-
-    // NUEVO MÉTODO: Calcula la fecha mínima según la categoría actual
+    // Calcula la fecha mínima para el calendario según la categoría actual
     public function getFechaMinima(): string
     {
         $tipo = Str::slug($this->nombreCategoria ?? '', ' ');
         
         if (str_contains($tipo, 'paquete')) {
-            // Si es paquete, suma 3 días a la fecha actual para bloquear el calendario
+            // Si es paquete, suma 3 días a la fecha actual
             return now()->addDays(3)->toDateString();
         }
 
-        // Si no es paquete, permite desde hoy
-        return now()->toDateString();
+        // Si no es paquete, todos los demás servicios bloquean hoy y mañana (suma 2 días)
+        return now()->addDays(2)->toDateString();
     }
 
     public function buscar(): void
@@ -50,7 +41,7 @@ class FormularioReserva extends Component
         $fechaMinimaPermitida = $this->getFechaMinima();
 
         $reglas = [
-            // Validamos contra la fecha mínima calculada en lugar de "today"
+            // Validamos contra la fecha mínima calculada para que no puedan forzar fechas pasadas
             'fecha' => 'required|date|after_or_equal:' . $fechaMinimaPermitida,
         ];
 
@@ -58,19 +49,15 @@ class FormularioReserva extends Component
             $reglas['fechaFin'] = 'required|date|after_or_equal:fecha';
         }
 
-        if ($this->requierePersonas()) {
-            $reglas['personas'] = 'required|integer|min:1'; // Obliga a ingresar un número mayor a cero
-        }
-
         $this->validate($reglas);
 
         $fechaFinCalculada = $this->requiereFechaFin() ? $this->fechaFin : $this->fecha;
-        $personasCalculadas = $this->requierePersonas() ? $this->personas : null;
 
+        // Emitimos la búsqueda sin el filtro de personas
         $this->dispatch('busqueda-ejecutada', [
             'fecha'    => $this->fecha,
             'fechaFin' => $fechaFinCalculada,
-            'personas' => $personasCalculadas,
+            'personas' => null, 
         ]);
     }
 

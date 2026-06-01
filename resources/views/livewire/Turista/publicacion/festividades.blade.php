@@ -1,8 +1,8 @@
-@extends('layouts.app.turista')
+@extends('layouts.turista')
 
 @section('content')
 
-<section class="py-24 bg-gray-100 min-h-screen">
+<section class="min-h-screen bg-g<section class="min-h-screen bg-gray-100 pb-24 pt-8">
 
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
 

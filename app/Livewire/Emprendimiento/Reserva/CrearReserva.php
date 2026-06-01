@@ -116,36 +116,15 @@ class CrearReserva extends Component
     }
 
     /**
-     * Lógica de negocio para control de meta (Aislamiento por categoría).
+     * Lógica de negocio para control de meta.
+     * Forzamos metaAlcanzada a false para que nunca bloquee los botones.
      */
     private function evaluarMetaCapacidad(): void
     {
-        $cat = $this->nombreCategoriaFiltro;
-        $esHospedaje = str_contains($cat, 'hospedaje');
-        $esGuianza = str_contains($cat, 'guianza');
-
-        if (!$esHospedaje && !$esGuianza) {
-            $this->reset(['metaAlcanzada', 'capacidadActual']);
-            return;
-        }
-
+        $this->metaAlcanzada = false;
         $this->capacidadActual = 0;
-        foreach ($this->carrito as $item) {
-            $itemCat = Str::slug($item['categoria_nombre'] ?? '', ' ');
-            
-            // Solo sumamos capacidad si el ítem coincide con la categoría que el usuario está viendo
-            if (($esHospedaje && str_contains($itemCat, 'hospedaje')) || 
-                ($esGuianza && str_contains($itemCat, 'guianza'))) {
-                $this->capacidadActual += ($item['capacidad_aportada'] ?? 0);
-            }
-        }
-
-        $this->metaAlcanzada = $this->personasBusqueda !== null && $this->capacidadActual >= $this->personasBusqueda;
     }
 
-    /**
-     * Finalización del agendamiento.
-     */
     /**
      * Finalización del agendamiento.
      */

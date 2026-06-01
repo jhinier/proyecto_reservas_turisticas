@@ -21,6 +21,7 @@ use App\Livewire\Emprendimiento\GestionServicios\CrearPaqueteTuristico;
 use App\Livewire\Emprendimiento\GestionServicios\CrearAlquilerEquipo;
 use App\Livewire\Emprendimiento\GestorReservas;
 use App\Livewire\Emprendimiento\Reserva\CrearReserva;
+use App\Http\Controllers\Emprendimiento\ReporteEmprendedorController;
 
 //Turista Publicaciones
 use App\Http\Controllers\Turista\TuristaController;
@@ -45,8 +46,7 @@ Route::get('/festividades', [TuristaController::class, 'festividades'])->name('f
 
 // 2. RUTAS PROTEGIDAS (Solo usuarios logueados)
 Route::middleware(['auth', 'verified'])->group(function () {
-    
-    // --- EL POLICÍA DE TRÁNSITO ---
+
     // Esta ruta decide a qué dashboard ir según el rol
     Route::get('/dashboard', function () {
         
@@ -93,6 +93,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/reservas', GestorReservas::class)->name('emprendimiento.reservas');
         Route::get('/reservas/nueva', CrearReserva::class)->name('emprendimiento.reservas.crear');
+        Route::get('/reportes', \App\Livewire\Emprendimiento\GestionReportes::class)->name('emprendimiento.reportes'); // <--- EL NOMBRE TIENE QUE SER ESTE EXACTO
+        Route::get('/reportes/descargar', [App\Http\Controllers\Emprendimiento\ReporteEmprendedorController::class, 'descargarReporte'])->name('reportes.descargar');
     });
 
    // --- GRUPO DEL TURISTA ---
