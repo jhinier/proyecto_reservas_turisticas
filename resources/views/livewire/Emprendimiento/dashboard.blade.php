@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-white dark:bg-zinc-900 relative pb-24 text-[#06281E] dark:text-gray-200 font-sans antialiased" wire:key="dashboard-root">
+<div class="min-h-screen relative pb-24 text-[#06281E] dark:text-gray-200 font-sans antialiased" wire:key="dashboard-root">
     
     @php
         $textoPeriodo = match($periodoFiltro) {
@@ -48,7 +48,7 @@
         </div>
 
         {{-- Tarjetas superiores con colores --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             
             <div class="bg-green-50/40 dark:bg-green-900/10 rounded-3xl p-6 border border-green-200 dark:border-green-500/20 shadow-sm flex flex-col justify-between group transition-all">
                 <div class="flex justify-between items-start">
@@ -79,22 +79,6 @@
                 <div class="mt-4 pt-4 border-t border-yellow-100 dark:border-yellow-800/30 flex items-center gap-2 text-[10px] text-yellow-700 dark:text-yellow-400 font-bold uppercase tracking-wider">
                     <span class="text-white bg-yellow-500 px-2 py-0.5 rounded shadow-sm">Espera</span>
                     <span>Por confirmar</span>
-                </div>
-            </div>
-
-            <div class="bg-blue-50/50 dark:bg-blue-900/10 rounded-3xl p-6 border border-blue-200 dark:border-blue-500/20 shadow-sm flex flex-col justify-between group transition-all">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-[10px] font-bold text-blue-600 dark:text-blue-500 uppercase tracking-widest">Reagendadas</p>
-                        <h3 class="text-3xl font-black text-blue-900 dark:text-white mt-1">{{ $this->metricas['reagendadas'] ?? 0 }}</h3>
-                    </div>
-                    <div class="size-10 rounded-2xl bg-white dark:bg-blue-500/10 text-blue-600 dark:text-blue-500 flex items-center justify-center shadow-sm border border-blue-100 dark:border-blue-500/20">
-                        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    </div>
-                </div>
-                <div class="mt-4 pt-4 border-t border-blue-100 dark:border-blue-800/30 flex items-center gap-2 text-[10px] text-blue-700 dark:text-blue-400 font-bold uppercase tracking-wider">
-                    <span class="text-white bg-blue-500 px-2 py-0.5 rounded shadow-sm">Cambios</span>
-                    <span>Modificadas</span>
                 </div>
             </div>
 

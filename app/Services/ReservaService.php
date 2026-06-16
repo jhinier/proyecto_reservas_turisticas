@@ -384,8 +384,9 @@ class ReservaService
                 $q->where('estado', $estado);
             });
         } else {
+            // AHORA MOSTRARÁ TODOS LOS ESTADOS POR DEFECTO
             $query->whereHas('reserva', function ($q) {
-                $q->whereIn('estado', ['Confirmada', 'Reagendada']);
+                $q->whereIn('estado', ['Confirmada', 'Reagendada', 'Pendiente', 'Completada', 'Cancelada', 'Rechazada']);
             });
         }
 
@@ -397,10 +398,11 @@ class ReservaService
         }
 
         if (!empty($categoria)) {
-            $query->whereHas('servicio.tipoServicio', function ($q) use ($categoria) {
-                $q->where('id', $categoria);
-            });
-        }
+    $query->whereHas('servicio.tipoServicio', function ($q) use ($categoria) {
+        // Cambiamos 'id' por 'tipo_servicios.id'
+        $q->where('tipo_servicios.id', $categoria);
+    });
+}
 
         return $query->orderBy('hora_llegada', 'asc')->get();
     }

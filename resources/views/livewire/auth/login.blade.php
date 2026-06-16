@@ -110,6 +110,10 @@
                 <form method="POST" action="{{ route('login.store') }}" class="space-y-6">
                     @csrf
 
+                    @if(request()->boolean('reserva') || session()->has('reserva_login_pendiente'))
+                        <input type="hidden" name="reserva" value="1">
+                    @endif
+
                     <!-- EMAIL -->
                     <div>
 

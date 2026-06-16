@@ -30,7 +30,8 @@
                                 if ('{{ $this->requiereFechaFin() }}' && '{{ $fechaFin }}') { defaultDates.push('{{ $fechaFin }}'); }
                                 let fp = flatpickr($refs.dateWrapper, {
                                     mode: '{{ $this->requiereFechaFin() ? 'range' : 'single' }}',
-                                    showMonths: window.innerWidth > 768 ? 2 : 1, locale: 'es', minDate: 'today',
+                                    showMonths: window.innerWidth > 768 ? 2 : 1, locale: 'es', 
+                                    minDate: new Date().fp_incr(2), // AQUI SE BLOQUEAN LOS DOS DIAS
                                     defaultDate: defaultDates, dateFormat: 'Y-m-d',
                                     onChange: function(selectedDates, dateStr, instance) {
                                         if (selectedDates.length > 0) { inicio = instance.formatDate(selectedDates[0], 'd M Y'); @this.set('fechaInicio', instance.formatDate(selectedDates[0], 'Y-m-d')); }
@@ -444,11 +445,21 @@
                         </div>
                         
                         <div class="shrink-0">
-                            <button wire:click="irAlCheckout" 
-                                    class="px-5 py-2.5 md:px-6 md:py-2.5 rounded-lg uppercase text-[10px] md:text-xs font-bold transition-all flex items-center gap-1.5 md:gap-2 outline-none bg-[#00D65B] text-[#06281E] hover:bg-[#00c052] shadow-sm">
-                                Reservar
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                            </button>
+                            @if(Auth::check())
+                                <button wire:click="irAlCheckout" 
+                                        class="px-5 py-2.5 md:px-6 md:py-2.5 rounded-lg uppercase text-[10px] md:text-xs font-bold transition-all flex items-center gap-1.5 md:gap-2 outline-none bg-[#00D65B] text-[#06281E] hover:bg-[#00c052] shadow-sm">
+                                    Reservar
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                </button>
+                            @else
+                                <button type="button" 
+                                        x-data 
+                                        @click="$wire.guardarReservaInvitado().then(() => { $dispatch('mostrar-alerta-login') })"
+                                        class="px-5 py-2.5 md:px-6 md:py-2.5 rounded-lg uppercase text-[10px] md:text-xs font-bold transition-all flex items-center gap-1.5 md:gap-2 outline-none bg-[#00D65B] text-[#06281E] hover:bg-[#00c052] shadow-sm">
+                                    Reservar
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                </button>
+                            @endif
                         </div>
                     </div>
                     
@@ -457,7 +468,7 @@
         </div>
     @endif
 
-    {{-- SISTEMA DE NOTIFICACIONES FLOTANTES (Mueve las notificaciones justo arriba del carrito) --}}
+    {{-- SISTEMA DE NOTIFICACIONES FLOTANTES --}}
     <div x-data="{
             notifications: [],
             displayDuration: 8000,
@@ -487,14 +498,13 @@
             addNotification({
                 variant: 'auth',
                 title: 'Autenticación Requerida',
-                message: 'Para hacer una reserva debe iniciar sesión o crear una cuenta.'
+                message: 'Para hacer una reserva debe iniciar sesión o registrarse.'
             });
         "
         class="group pointer-events-none fixed inset-x-4 bottom-28 z-[300] flex max-w-full flex-col gap-2 md:left-[unset] md:right-6 md:max-w-md">
         
         <template x-for="(notification, index) in notifications" x-bind:key="notification.id">
             <div>
-                {{-- Alerta de Autenticación (con botones) --}}
                 <template x-if="notification.variant === 'auth'">
                     <div x-data="{ isVisible: false, timeout: null }" x-cloak x-show="isVisible" class="pointer-events-auto relative rounded-xl border border-gray-200 bg-white text-gray-800 shadow-xl" role="alert" x-init="$nextTick(() => { isVisible = true })" x-transition:enter="transition duration-300 ease-out" x-transition:enter-end="translate-y-0 opacity-100" x-transition:enter-start="translate-y-8 opacity-0" x-transition:leave="transition duration-200 ease-in" x-transition:leave-end="translate-x-8 opacity-0" x-transition:leave-start="translate-x-0 opacity-100">
                         <div class="flex w-full rounded-xl items-start gap-4 bg-white p-5 transition-all duration-300">
@@ -505,7 +515,7 @@
                                 <h3 class="text-base font-bold text-gray-900" x-text="notification.title"></h3>
                                 <p class="text-sm text-gray-500 leading-relaxed font-medium" x-text="notification.message"></p>
                                 <div class="flex items-center gap-2 mt-3">
-                                    <a href="{{ route('login') }}" class="bg-[#00D65B] px-5 py-2 rounded text-xs font-bold uppercase text-[#06281E] hover:bg-[#00c052] transition shadow-sm">Iniciar Sesión</a>
+                                    <a href="{{ route('login', ['reserva' => 1]) }}" class="bg-[#00D65B] px-5 py-2 rounded text-xs font-bold uppercase text-[#06281E] hover:bg-[#00c052] transition shadow-sm">Aceptar</a>
                                     <button type="button" class="text-xs font-semibold text-gray-400 hover:text-gray-600 transition uppercase tracking-wide px-2" x-on:click="(isVisible = false), setTimeout(() => { removeNotification(notification.id) }, 400)">Cancelar</button>
                                 </div>
                             </div>
@@ -516,7 +526,6 @@
                     </div>
                 </template>
 
-                {{-- Alertas Estándar --}}
                 <template x-if="notification.variant !== 'auth'">
                     <div x-data="{ isVisible: false, timeout: null }" x-cloak x-show="isVisible" class="pointer-events-auto relative rounded-xl border bg-white shadow-lg" :class="{'border-red-400': notification.variant === 'danger', 'border-[#00D65B]': notification.variant === 'success', 'border-yellow-400': notification.variant === 'warning', 'border-blue-400': notification.variant === 'info'}" role="alert" x-on:pause-auto-dismiss.window="clearTimeout(timeout)" x-on:resume-auto-dismiss.window=" timeout = setTimeout(() => {(isVisible = false), removeNotification(notification.id) }, displayDuration)" x-init="$nextTick(() => { isVisible = true }), (timeout = setTimeout(() => { isVisible = false, removeNotification(notification.id)}, displayDuration))" x-transition:enter="transition duration-300 ease-out" x-transition:enter-end="translate-y-0 opacity-100" x-transition:enter-start="translate-y-8 opacity-0" x-transition:leave="transition duration-200 ease-in" x-transition:leave-end="translate-x-8 opacity-0" x-transition:leave-start="translate-x-0 opacity-100">
                         <div class="flex w-full items-center gap-3.5 rounded-xl p-4 transition-all duration-300" :class="{'bg-red-50/50': notification.variant === 'danger', 'bg-green-50/50': notification.variant === 'success', 'bg-yellow-50/50': notification.variant === 'warning', 'bg-blue-50/50': notification.variant === 'info'}">
@@ -545,7 +554,6 @@
         </template>
     </div>
 
-    {{-- LÓGICA PARA DISPARAR MENSAJES GUARDADOS EN SESIÓN --}}
     @if(session()->has('mensaje_exito'))
         <div x-data x-init="
             $nextTick(() => {
@@ -570,7 +578,7 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
+        input[type=number] { -moz-appearance: textfield; appearance: textfield; }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

@@ -40,7 +40,7 @@ class CrearAlimentacion extends Component
         try {
             // Agregamos stock automáticamente a 999 para permitir reservas ilimitadas
             $datosBase = $this->only(['nombre', 'descripcion', 'precio']);
-            $datosBase['stock'] = 999;
+            $datosBase['stock'] = 500;
             
             $datosDetalle = $this->only(['tipo_alimentacion', 'lugar_alimentacion']);
 

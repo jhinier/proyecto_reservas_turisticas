@@ -10,9 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\Fortify;
 use Illuminate\Validation\ValidationException;
+use Laravel\Fortify\Contracts\LoginResponse; // Agrega esta línea
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -28,7 +30,6 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         // NIVEL 1: Bloqueo en la puerta (Login)
-        // Solo permite el acceso si el usuario es válido, tiene rol y su emprendimiento está activo (si aplica).
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('email', $request->email)->first();
 
@@ -43,7 +44,14 @@ class FortifyServiceProvider extends ServiceProvider
                 }
                 
                 // 3. Validación de Arquitectura: Si es emprendedor, su negocio DEBE estar activo
-                // Si el admin lo desactivó, el login fallará aquí mismo.
+                if ($this->loginEsParaReserva($request) && !$user->hasRole('turista')) {
+                    $request->session()->forget(['url.intended', 'reserva_login_pendiente']);
+
+                    throw ValidationException::withMessages([
+                        Fortify::username() => 'Solo los usuarios con rol turista pueden realizar reservas.',
+                    ]);
+                }
+
                 if ($user->hasRole('emprendimiento')) {
                     if (!$user->emprendimiento || !$user->emprendimiento->estado) {
                         throw ValidationException::withMessages([
@@ -56,6 +64,47 @@ class FortifyServiceProvider extends ServiceProvider
             }
 
             return null;
+        });
+
+        // Redirección dinámica según el rol del usuario
+        $this->app->singleton(LoginResponse::class, function () {
+            return new class implements LoginResponse {
+                public function toResponse($request)
+                {
+                    /** @var User $user */
+                    $user = Auth::user();
+
+                    if ($user->hasRole('admin')) {
+                        return redirect()->intended('/admin');
+                    } elseif ($user->hasRole('emprendimiento')) {
+                        return redirect()->intended(route('emprendimiento.panel'));
+                    }
+
+                    // Redirección por defecto para el turista
+                    if ($this->loginTuristaDebeVolverAReserva($request)) {
+                        $request->session()->forget(['url.intended', 'reserva_login_pendiente']);
+
+                        return redirect()->route('turista.reservas.checkout');
+                    }
+
+                    return redirect()->intended(route('home'));
+                }
+
+                private function loginTuristaDebeVolverAReserva($request): bool
+                {
+                    $intendedUrl = (string) $request->session()->get('url.intended', '');
+                    $intendedPath = (string) parse_url($intendedUrl, PHP_URL_PATH);
+
+                    return $request->boolean('reserva')
+                        || $request->session()->has('reserva_login_pendiente')
+                        || Str::contains($intendedPath, [
+                            '/checkout',
+                            '/reserva',
+                            '/reservas',
+                            '/reservar',
+                        ]);
+                }
+            };
         });
     }
 
@@ -87,5 +136,25 @@ class FortifyServiceProvider extends ServiceProvider
 
             return Limit::perMinute(5)->by($throttleKey);
         });
+    }
+
+    private function loginEsParaReserva(Request $request): bool
+    {
+        $intendedUrl = (string) $request->session()->get('url.intended', '');
+        $intendedPath = (string) parse_url($intendedUrl, PHP_URL_PATH);
+
+        if (Str::startsWith($intendedPath, ['/admin', '/emprendimiento'])) {
+            return false;
+        }
+
+        return $request->boolean('reserva')
+            || $request->boolean('solo_turista')
+            || $request->session()->has('reserva_login_pendiente')
+            || Str::contains($intendedPath, [
+                '/checkout',
+                '/reserva',
+                '/reservas',
+                '/reservar',
+            ]);
     }
 }
