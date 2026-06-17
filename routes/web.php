@@ -37,8 +37,8 @@ Route::get('/', function () {
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        if ($user->hasRole('admin')) {
-            return redirect('/admin/panel'); // Ajustado a tu ruta real de admin
+        if ($user->hasAnyRole(['admin', 'superAdministrador', 'administrador_gad'])) {
+            return redirect()->route('admin.dashboard');
         }
         
         if ($user->hasRole('emprendimiento')) {

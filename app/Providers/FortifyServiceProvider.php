@@ -74,8 +74,8 @@ class FortifyServiceProvider extends ServiceProvider
                     /** @var User $user */
                     $user = Auth::user();
 
-                    if ($user->hasRole('admin')) {
-                        return redirect()->intended('/admin');
+                    if ($user->hasAnyRole(['admin', 'superAdministrador', 'administrador_gad'])) {
+                        return redirect()->intended(route('admin.dashboard'));
                     } elseif ($user->hasRole('emprendimiento')) {
                         return redirect()->intended(route('emprendimiento.panel'));
                     }
