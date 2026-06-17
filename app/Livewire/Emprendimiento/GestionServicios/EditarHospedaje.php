@@ -6,7 +6,10 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\Servicio;
 use App\Services\HospedajeService;
+use App\Rules\NoHtmlTags;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class EditarHospedaje extends Component
 {
@@ -26,10 +29,10 @@ class EditarHospedaje extends Component
     protected function rules()
     {
         return [
-            'nombre'      => 'required|string|min:3|max:100',
-            'descripcion' => 'required|string|min:10|max:500',
-            'precio'      => 'required|numeric|min:0.01',
-            'stock'       => 'required|integer|min:1',
+            'nombre'      => ['required', 'string', 'min:3', 'max:100', new NoHtmlTags()],
+            'descripcion' => ['required', 'string', 'min:10', 'max:500', new NoHtmlTags()],
+            'precio'      => 'required|numeric|min:0.01|max:1000|regex:/^\d+(\.\d{1,2})?$/',
+            'stock'       => 'required|integer|min:1|max:1000',
             'capacidad'   => 'required|integer|min:1',
         ];
     }
@@ -65,6 +68,13 @@ class EditarHospedaje extends Component
      */
     public function actualizar(HospedajeService $service)
     {
+        // Verificar rol de seguridad
+        $user = Auth::user();
+        if (!$user instanceof User || !$user->hasRole('emprendimiento')) {
+            $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'No tienes permiso para realizar esta acción.']);
+            return;
+        }
+
         $this->validate();
 
         try {

@@ -6,6 +6,8 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\Servicio;
 use App\Services\AlimentacionService;
+use App\Rules\NoHtmlTags;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,11 +27,11 @@ class EditarAlimentacion extends Component
     protected function rules()
     {
         return [
-            'nombre' => 'required|string|max:150',
-            'descripcion' => 'required|string|max:300',
-            'precio' => 'required|numeric|min:0.01',
-            'tipo_alimentacion' => 'required|string|max:100',
-            'lugar_alimentacion' => 'required|string|max:150',
+            'nombre' => ['required', 'string', 'max:150', new NoHtmlTags()],
+            'descripcion' => ['required', 'string', 'max:300', new NoHtmlTags()],
+            'precio' => 'required|numeric|min:0.01|max:100|regex:/^\d+(\.\d{1,2})?$/',
+            'tipo_alimentacion' => ['required', 'string', 'max:100', new NoHtmlTags()],
+            'lugar_alimentacion' => ['required', 'string', 'max:150', new NoHtmlTags()],
         ];
     }
 
@@ -56,6 +58,13 @@ class EditarAlimentacion extends Component
 
     public function actualizar(AlimentacionService $service)
     {
+        // Verificar rol de seguridad
+        $user = Auth::user();
+        if (!$user instanceof User || !$user->hasRole('emprendimiento')) {
+            $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'No tienes permiso para realizar esta acción.']);
+            return;
+        }
+
         $this->validate();
 
         try {

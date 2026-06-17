@@ -5,7 +5,10 @@ namespace App\Livewire\Emprendimiento\GestionServicios;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use App\Services\AlquilerEquipoService;
+use App\Rules\NoHtmlTags;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 #[Layout('layouts.app.sidebar_emprendimiento')]
 class CrearAlquilerEquipo extends Component
@@ -23,15 +26,25 @@ class CrearAlquilerEquipo extends Component
         $this->pivotId = $pivotId;
     }
 
-    protected array $rules = [
-        'nombre'      => 'required|string|max:255',
-        'descripcion' => 'required|string|max:1000',
-        'precio'      => 'required|numeric|min:0',
-        'stock'       => 'required|integer|min:1', 
-    ];
+    protected function rules()
+    {
+        return [
+            'nombre'      => ['required', 'string', 'min:3', 'max:255', new NoHtmlTags()],
+            'descripcion' => ['required', 'string', 'min:5', 'max:1000', new NoHtmlTags()],
+            'precio'      => 'required|numeric|min:0.01|max:1000|regex:/^\d+(\.\d{1,2})?$/',
+            'stock'       => 'required|integer|min:1|max:1000', 
+        ];
+    }
 
     public function guardar(AlquilerEquipoService $alquilerService)
     {
+        // Verificar rol de seguridad
+        $user = Auth::user();
+        if (!$user instanceof User || !$user->hasRole('emprendimiento')) {
+            session()->flash('error', 'No tienes permiso para realizar esta acción.');
+            return;
+        }
+
         $this->validate();
 
         try {
