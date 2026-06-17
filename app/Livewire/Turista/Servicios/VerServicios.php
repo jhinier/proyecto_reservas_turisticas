@@ -45,10 +45,10 @@ class VerServicios extends Component
             ? TipoServicio::findOrFail($this->tipoServicioSeleccionado)
             : TipoServicio::first();
 
-        // 1. Establecemos las fechas por defecto
+        // 1. Establecemos las fechas por defecto (CAMBIO AQUÍ: 2 días de anticipación o 3 para paquetes)
         $this->fechaInicio = $this->esPaquete()
             ? now()->addDays(3)->toDateString()
-            : now()->toDateString();
+            : now()->addDays(2)->toDateString();
 
         if ($this->requiereFechaFin()) {
             $this->fechaFin = now()->addDay()->toDateString();
@@ -94,33 +94,34 @@ class VerServicios extends Component
     public function requiereHora(): bool     { return $this->esHospedaje() || $this->esGuianza() || $this->esAlquiler(); }
 
     public function buscar(CatalogoReservaService $catalogoService, InventarioService $inventarioService): void
-{
-    // 1. Definimos las reglas de validación base
-    $reglas = [
-        'fechaInicio' => 'required|date|after_or_equal:today'
-    ];
+    {
+        // 1. Definimos las reglas de validación base (CAMBIO AQUÍ: Mínimo 2 días)
+        $minDate = now()->addDays(2)->toDateString();
+        $reglas = [
+            'fechaInicio' => 'required|date|after_or_equal:' . $minDate
+        ];
 
-    // 2. Ajustamos la regla de fechaInicio si es un paquete
-    if ($this->esPaquete()) {
-        $reglas['fechaInicio'] = 'required|date|after_or_equal:' . now()->addDays(3)->toDateString();
+        // 2. Ajustamos la regla de fechaInicio si es un paquete
+        if ($this->esPaquete()) {
+            $reglas['fechaInicio'] = 'required|date|after_or_equal:' . now()->addDays(3)->toDateString();
+        }
+
+        // 3. Regla para fecha fin (solo si el servicio lo requiere)
+        if ($this->requiereFechaFin()) {
+            $reglas['fechaFin'] = 'required|date|after_or_equal:fechaInicio';
+        }
+
+        // 4. Regla para hora (solo si el servicio lo requiere)
+        if ($this->requiereHora()) {
+            $reglas['horaLlegada'] = 'required|date_format:H:i';
+        }
+
+        // 5. Validamos los datos actuales del componente
+        $this->validate($reglas);
+
+        // 6. Ejecutamos la búsqueda con los datos que ya están en $this->fechaInicio, etc.
+        $this->ejecutarBusqueda($catalogoService, $inventarioService);
     }
-
-    // 3. Regla para fecha fin (solo si el servicio lo requiere)
-    if ($this->requiereFechaFin()) {
-        $reglas['fechaFin'] = 'required|date|after_or_equal:fechaInicio';
-    }
-
-    // 4. Regla para hora (solo si el servicio lo requiere)
-    if ($this->requiereHora()) {
-        $reglas['horaLlegada'] = 'required|date_format:H:i';
-    }
-
-    // 5. Validamos los datos actuales del componente
-    $this->validate($reglas);
-
-    // 6. Ejecutamos la búsqueda con los datos que ya están en $this->fechaInicio, etc.
-    $this->ejecutarBusqueda($catalogoService, $inventarioService);
-}
 
     private function ejecutarBusqueda(CatalogoReservaService $catalogoService, InventarioService $inventarioService): void
     {
@@ -254,6 +255,8 @@ class VerServicios extends Component
 
             } else {
                 $subtotal = $servicio->precio * $cantidadElegida;
+                // --- CAMBIO AÑADIDO AQUÍ: Guardamos la hora para alimentación u otros ---
+                $horaFinal = $this->horaLlegada; 
             }
 
             $this->carrito[] = [
@@ -297,30 +300,47 @@ class VerServicios extends Component
         }
     }
 
-    public function irAlCheckout(): void
-{
-    // 1. Guardamos el carrito primero para no perder los datos
-    session()->put('reserva_turista_carrito', $this->carrito);
-    session()->put('reserva_turista_datos', [
-        'fechaInicio'       => $this->fechaInicio,
-        'fechaFin'          => $this->fechaFin,
-        'horaLlegada'       => $this->horaLlegada,
-        'emprendimiento_id' => $this->emprendimiento->id,
-        'categoria_id'      => $this->tipoServicio->id,
-        'total'             => collect($this->carrito)->sum('subtotal'),
-    ]);
+    public function guardarReservaInvitado(): void
+    {
+        session()->put('reserva_turista_carrito', $this->carrito);
+        session()->put('reserva_turista_datos', [
+            'fechaInicio'       => $this->fechaInicio,
+            'fechaFin'          => $this->fechaFin,
+            'horaLlegada'       => $this->horaLlegada,
+            'emprendimiento_id' => $this->emprendimiento->id,
+            'categoria_id'      => $this->tipoServicio->id,
+            'total'             => collect($this->carrito)->sum('subtotal'),
+        ]);
 
-    // 2. Verificamos la sesión
-    if (!Auth::check()) {
-        // Le decimos a Laravel que luego del login o registro venga al checkout
         session()->put('url.intended', route('turista.reservas.checkout'));
-        
-        $this->dispatch('mostrar-alerta-login');
-        return;
+        session()->put('reserva_login_pendiente', true);
     }
 
-    $this->redirect(route('turista.reservas.checkout'), navigate: true);
-}
+    public function irAlCheckout(): void
+    {
+        // 1. Guardamos el carrito primero para no perder los datos
+        session()->put('reserva_turista_carrito', $this->carrito);
+        session()->put('reserva_turista_datos', [
+            'fechaInicio'       => $this->fechaInicio,
+            'fechaFin'          => $this->fechaFin,
+            'horaLlegada'       => $this->horaLlegada,
+            'emprendimiento_id' => $this->emprendimiento->id,
+            'categoria_id'      => $this->tipoServicio->id,
+            'total'             => collect($this->carrito)->sum('subtotal'),
+        ]);
+
+        // 2. Verificamos la sesión
+        if (!Auth::check()) {
+            // Le decimos a Laravel que luego del login o registro venga al checkout
+            session()->put('url.intended', route('turista.reservas.checkout'));
+            session()->put('reserva_login_pendiente', true);
+            
+            $this->redirectRoute('login', ['reserva' => 1], navigate: false);
+            return;
+        }
+
+        $this->redirect(route('turista.reservas.checkout'), navigate: true);
+    }
 
     #[Layout('layouts.turista')]
     public function render()

@@ -127,42 +127,54 @@
             </li>
 
             @auth
-            <li 
-                x-data="{ userDropDownIsOpen: false }"
-                class="relative flex items-center ml-4">
+                @if(auth()->user()->hasRole('admin'))
+                <li class="flex items-center ml-4">
+                    <a href="{{ url('/admin') }}" class="rounded-full bg-slate-800 px-5 py-2 text-sm font-bold text-white hover:bg-slate-700 transition shadow-lg shrink-0">Ir a Panel Admin</a>
+                </li>
+                @elseif(auth()->user()->hasRole('emprendimiento'))
+                <li class="flex items-center ml-4">
+                    <a href="{{ route('emprendimiento.panel') }}" class="rounded-full bg-slate-800 px-5 py-2 text-sm font-bold text-white hover:bg-slate-700 transition shadow-lg shrink-0">Ir a Gestión</a>
+                </li>
+                @else
+                <li 
+                    x-data="{ userDropDownIsOpen: false }"
+                    class="relative flex items-center ml-4">
 
-                <button x-on:click="userDropDownIsOpen = ! userDropDownIsOpen" class="rounded-full focus:outline-none" aria-controls="userMenu">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-emerald-500 bg-slate-100 text-slate-500 hover:text-emerald-600 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
-                            <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                </button>
-
-                <ul
-                    x-cloak
-                    x-show="userDropDownIsOpen"
-                    x-transition.opacity
-                    x-on:click.outside="userDropDownIsOpen = false"
-                    id="userMenu"
-                    class="absolute right-0 top-14 flex w-56 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl py-2"
-                >
-                    <li class="border-b border-slate-100">
-                        <div class="flex flex-col px-5 py-4">
-                            <span class="text-sm font-bold text-slate-800">{{ Auth::user()->name }}</span>
-                            <p class="text-xs text-slate-500">Turista</p>
+                    <button x-on:click="userDropDownIsOpen = ! userDropDownIsOpen" class="rounded-full focus:outline-none" aria-controls="userMenu">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-emerald-500 bg-slate-100 text-slate-500 hover:text-emerald-600 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+                                <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+                            </svg>
                         </div>
-                    </li>
-                    <li><a href="{{ route('profile.edit') }}" class="block px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600 transition">Mi Perfil</a></li>
-                    <li><a href="{{ route('turista.reservas.historial') ?? '#' }}" class="block px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600 transition">Mis Reservas</a></li>
-                    <li>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="block px-5 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition">Cerrar Sesión</a>
-                        </form>
-                    </li>
-                </ul>
-            </li>
+                    </button>
+
+                    <ul
+                        x-cloak
+                        x-show="userDropDownIsOpen"
+                        x-transition.opacity
+                        x-on:click.outside="userDropDownIsOpen = false"
+                        id="userMenu"
+                        class="absolute right-0 top-14 flex w-56 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl py-2"
+                    >
+                        <li class="border-b border-slate-100">
+                            <div class="flex flex-col px-5 py-4">
+                                <span class="text-sm font-bold text-slate-800">{{ Auth::user()->name }}</span>
+                                <p class="text-xs text-slate-500">Turista</p>
+                            </div>
+                        </li>
+                        
+                        <li><a href="{{ route('profile.edit') }}" class="block px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600 transition">Mi Perfil</a></li>
+                        <li><a href="{{ route('turista.reservas.historial') ?? '#' }}" class="block px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600 transition">Mis Reservas</a></li>
+
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="block px-5 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition">Cerrar Sesión</a>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                @endif
             @endauth
 
             @guest
@@ -187,15 +199,29 @@
 
         <ul x-cloak x-show="mobileMenuIsOpen" x-transition:enter="transition motion-reduce:transition-none ease-out duration-300" x-transition:enter-start="-translate-y-full" x-transition:enter-end="translate-y-0" x-transition:leave="transition motion-reduce:transition-none ease-out duration-300" x-transition:leave-start="translate-y-0" x-transition:leave-end="-translate-y-full" class="fixed max-h-svh overflow-y-auto inset-x-0 top-0 z-10 flex flex-col rounded-b-2xl border-b border-gray-200 bg-white px-8 pb-6 pt-10 shadow-xl lg:hidden">
             @auth
-            <li class="mb-4 border-none">
-                <div class="flex items-center gap-3 py-2">
-                    <img src="https://penguinui.s3.amazonaws.com/component-assets/avatar-8.webp" alt="User Profile" class="size-12 rounded-full object-cover border-2 border-emerald-500"  />
-                    <div>
-                        <span class="font-bold text-slate-800">{{ Auth::user()->name }}</span>
-                        <p class="text-sm text-slate-500">Turista</p>
-                    </div>  
-                </div>
-            </li>
+                @if(auth()->user()->hasRole('admin'))
+                <li class="mt-2 w-full border-none">
+                    <a href="{{ url('/admin') }}" class="rounded-xl bg-slate-800 border border-slate-800 px-4 py-3 block text-center font-bold text-white hover:bg-slate-700 shadow-sm">Ir a Panel Admin</a>
+                </li>
+                @elseif(auth()->user()->hasRole('emprendimiento'))
+                <li class="mt-2 w-full border-none">
+                    <a href="{{ route('emprendimiento.panel') }}" class="rounded-xl bg-slate-800 border border-slate-800 px-4 py-3 block text-center font-bold text-white hover:bg-slate-700 shadow-sm">Ir a Mi Gestión</a>
+                </li>
+                @else
+                <li class="mb-4 border-none">
+                    <div class="flex items-center gap-3 py-2">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-full border-2 border-emerald-500 bg-slate-100 text-slate-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+                                <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="font-bold text-slate-800">{{ Auth::user()->name }}</span>
+                            <p class="text-sm text-slate-500">Turista</p>
+                        </div>  
+                    </div>
+                </li>
+                @endif
             @endauth
 
             <li class="p-2"><a href="{{ route('home') }}" class="w-full text-lg font-bold text-emerald-600 focus:underline">Inicio</a></li>
@@ -240,15 +266,31 @@
             @endguest
 
             @auth
-            <li class="mt-2 w-full border-none">
-                <a href="{{ route('turista.reservas.historial') ?? '#' }}" class="rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 block text-center font-bold text-slate-700 hover:bg-slate-100">Mis Reservas</a>
-            </li>
-            <li class="mt-3 w-full border-none">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="rounded-xl border border-red-500/50 bg-red-50 px-4 py-3 block text-center font-bold text-red-600 hover:bg-red-100">Cerrar Sesión</a>
-                </form>
-            </li>
+                @if(auth()->user()->hasRole('admin'))
+                <li class="mt-3 w-full border-none">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="rounded-xl border border-red-500/50 bg-red-50 px-4 py-3 block text-center font-bold text-red-600 hover:bg-red-100">Cerrar Sesión</a>
+                    </form>
+                </li>
+                @elseif(auth()->user()->hasRole('emprendimiento'))
+                <li class="mt-3 w-full border-none">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="rounded-xl border border-red-500/50 bg-red-50 px-4 py-3 block text-center font-bold text-red-600 hover:bg-red-100">Cerrar Sesión</a>
+                    </form>
+                </li>
+                @else
+                <li class="mt-2 w-full border-none">
+                    <a href="{{ route('turista.reservas.historial') ?? '#' }}" class="rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 block text-center font-bold text-slate-700 hover:bg-slate-100">Mis Reservas</a>
+                </li>
+                <li class="mt-3 w-full border-none">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="rounded-xl border border-red-500/50 bg-red-50 px-4 py-3 block text-center font-bold text-red-600 hover:bg-red-100">Cerrar Sesión</a>
+                    </form>
+                </li>
+                @endif
             @endauth
         </ul>
     </nav>
@@ -257,6 +299,8 @@
         @yield('content')
         {{ $slot ?? '' }}
     </main>
+
+    @include('components.chatbot')
 
     @livewireScripts
 </body>

@@ -30,7 +30,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm whitespace-nowrap">
-                <thead class="bg-gray-50 text-[#00A344] font-bold text-xs  tracking-widest border-b border-gray-200">
+                <thead class="bg-gray-50 text-[#464646] font-bold text-xs  tracking-widest border-b border-gray-200">
                     <tr>
                         <th class="p-4 pl-6">Establecimiento</th>
                         <th class="p-4">Fecha solicitud</th>
@@ -65,8 +65,8 @@
                             <td class="p-4 text-right font-bold text-gray-900">${{ number_format($reserva->precio_total, 2) }}</td>
                             <td class="p-4 pr-6">
                                 <div class="flex items-center justify-center">
-                                    <button type="button" wire:click="verDetalles({{ $reserva->id }})" class="text-xs font-bold text-[#06281E] bg-[#00D65B] hover:bg-[#00c052] px-4 py-2 rounded-lg transition-colors outline-none shadow-sm flex items-center gap-1.5">
-                                        <svg class="w-4 h-4 text-[#06281E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    <button type="button" wire:click="verDetalles({{ $reserva->id }})" class="text-xs font-bold text-[#00A344] bg-white border border-[#00A344] hover:bg-green-50 px-4 py-2 rounded-lg transition-colors outline-none shadow-sm flex items-center gap-1.5">
+                                        <svg class="w-4 h-4 text-[#00A344]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                         Detalles
                                     </button>
                                 </div>
@@ -107,7 +107,7 @@
                         <div>
                             <div class="flex items-center gap-3">
                                 <h3 class="text-xl font-bold text-[#00A344] tracking-tight" id="modal-title">
-                                    Detalles de la reserva #{{ $reservaSeleccionada->id }}
+                                    Detalles de la reserva 
                                 </h3>
                                 
                                 @if($reservaSeleccionada->estado === 'Pendiente')
@@ -186,7 +186,7 @@
                                 <div class="bg-red-50 p-5 rounded-xl border border-red-100 shadow-sm">
                                     <label class="block text-[10px] font-bold text-red-800 uppercase tracking-widest mb-2">Por favor indica el motivo de cancelación</label>
                                     
-                                    <x-textarea-form wire:model="motivoCancelacion" placeholder="Ej: Hubo un cambio en mis planes de viaje..." rows="3" class="bg-white border-red-200 focus:border-red-500 focus:ring-red-500 rounded-lg text-sm" />
+                                    <x-textarea-form label="Motivo de la cancelación" id="motivoCancelacion" wire:model="motivoCancelacion" placeholder="Ej: Hubo un cambio en mis planes de viaje..." rows="3" class="bg-white border-red-200 focus:border-red-500 focus:ring-red-500 rounded-lg text-sm text-gray-900" />
                                     
                                     @error('motivoCancelacion') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                                     

@@ -17,7 +17,11 @@ class DashboardEmprendimientoService
         $baseQuery = Reserva::whereHas('detalles.servicio.categoriaPivot', function ($q) use ($emprendimientoId) {
                 $q->where('emprendimiento_id', $emprendimientoId);
             })
-            ->whereBetween('created_at', [$fechas['inicio'], $fechas['fin']]);
+            // AQUÍ ESTÁ EL CAMBIO: Evaluamos si las fechas del servicio caen dentro del periodo seleccionado
+            ->whereHas('detalles', function ($q) use ($fechas) {
+                $q->whereDate('fecha_inicio', '<=', $fechas['fin'])
+                  ->whereDate('fecha_fin', '>=', $fechas['inicio']);
+            });
 
         return [
             'pendientes'  => (clone $baseQuery)->where('estado', 'Pendiente')->count(),
@@ -62,10 +66,12 @@ class DashboardEmprendimientoService
             ->whereHas('servicio.categoriaPivot', function ($q) use ($emprendimientoId) {
                 $q->where('emprendimiento_id', $emprendimientoId);
             })
-            ->whereHas('reserva', function ($q) use ($fechas) {
-                $q->whereIn('estado', ['Confirmada', 'Completada', 'Reagendada', 'Pendiente'])
-                  ->whereBetween('created_at', [$fechas['inicio'], $fechas['fin']]);
+            ->whereHas('reserva', function ($q) {
+                $q->whereIn('estado', ['Confirmada', 'Completada', 'Reagendada', 'Pendiente']);
             })
+            // AQUÍ TAMBIÉN CAMBIAMOS para que evalúe la fecha operativa en lugar de la creación
+            ->whereDate('fecha_inicio', '<=', $fechas['fin'])
+            ->whereDate('fecha_fin', '>=', $fechas['inicio'])
             ->select('servicio_id', DB::raw('count(*) as total_ventas'))
             ->groupBy('servicio_id')
             ->orderByDesc('total_ventas')

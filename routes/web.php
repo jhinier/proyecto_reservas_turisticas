@@ -34,7 +34,23 @@ use App\Livewire\Turista\Servicios\VerServicios;
 
 
 // 1. PÁGINA PÚBLICA (Lo que ve todo el mundo al entrar)
-Route::get('/', [LandingController::class, 'index'])->name('home');
+Route::get('/', function () {
+    if (Auth::check()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole('admin')) {
+            return redirect('/admin/panel'); // Ajustado a tu ruta real de admin
+        }
+        
+        if ($user->hasRole('emprendimiento')) {
+            return redirect()->route('emprendimiento.panel');
+        }
+    }
+    
+    // Si no tiene sesión activa o es turista, carga el controlador normalmente
+    return app(LandingController::class)->index();
+})->name('home');
 
 // Ruta pública del buscador de servicios
 Route::get('/servicios', BuscadorServicios::class)->name('turista.servicios.index');

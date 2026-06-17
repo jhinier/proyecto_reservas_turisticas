@@ -4,34 +4,54 @@ namespace App\Livewire\Turista\Reservas;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use App\Models\User;
 use App\Services\ReservaService;
 use Illuminate\Support\Facades\Auth;
 
 #[Layout('layouts.turista')]
 class Checkout extends Component
 {
+    public function boot(): void
+    {
+        $user = Auth::user();
+
+        if (!$user instanceof User) {
+            session()->put('url.intended', request()->fullUrl());
+            session()->put('reserva_login_pendiente', true);
+            $this->redirectRoute('login', ['reserva' => 1], navigate: false);
+
+            return;
+        }
+
+        if (!$user->hasRole('turista')) {
+            session()->forget(['url.intended', 'reserva_login_pendiente']);
+            session()->flash('error', 'Solo los usuarios con rol turista pueden realizar reservas.');
+            $this->redirectRoute('home', navigate: false);
+        }
+    }
+
     public array $carrito = [];
     public array $datosReserva = [];
 
     public function mount()
     {
-        // 1. Si no hay sesión, guardamos la ruta actual y pedimos login
         if (!Auth::check()) {
             session()->put('url.intended', route('turista.reservas.checkout'));
-            return redirect()->route('login');
+            session()->put('reserva_login_pendiente', true);
+
+            return redirect()->route('login', ['reserva' => 1]);
         }
 
-        // 2. Validación estricta de rol
         /** @var \App\Models\User $user */
         $user = Auth::user();
         
         if (!$user->hasRole('turista')) {
-            Auth::logout();
-            session()->flash('error', 'Las reservas son exclusivas para turistas. Por favor, inicia sesión con una cuenta de turista.');
-            return redirect()->route('login');
+            session()->forget(['url.intended', 'reserva_login_pendiente']);
+            session()->flash('error', 'Solo los usuarios con rol turista pueden realizar reservas.');
+
+            return redirect()->route('home');
         }
 
-        // 3. Carga normal del carrito
         $this->carrito = session()->get('reserva_turista_carrito', []);
         $this->datosReserva = session()->get('reserva_turista_datos', []);
         
@@ -45,16 +65,23 @@ class Checkout extends Component
         $emprendimientoId = $this->datosReserva['emprendimiento_id'] ?? null;
         $categoriaId = $this->datosReserva['categoria_id'] ?? null;
 
-        // Si no está en datosReserva, lo intentamos sacar del primer elemento del carrito
+        $fechaInicioGuardada = $this->datosReserva['fechaInicio'] ?? null;
+        $fechaFinGuardada = $this->datosReserva['fechaFin'] ?? null;
+
         if (!$categoriaId && !empty($this->carrito)) {
             $primerItem = reset($this->carrito);
             $categoriaId = $primerItem['categoria_id'] ?? null;
+            $fechaInicioGuardada = $fechaInicioGuardada ?: ($primerItem['fecha_inicio'] ?? null);
+            $fechaFinGuardada = $fechaFinGuardada ?: ($primerItem['fecha_fin'] ?? null);
         }
 
         if ($emprendimientoId) {
             return redirect()->route('turista.empresa.servicios', [
                 'emprendimiento' => $emprendimientoId,
-                'categoria_id' => $categoriaId
+                'categoria_id' => $categoriaId,
+                'fechaInicio' => $fechaInicioGuardada,
+                'fechaFin' => $fechaFinGuardada,
+                'restaurarCarrito' => 1
             ]);
         }
 
@@ -65,24 +92,23 @@ class Checkout extends Component
     {
         if (!Auth::check()) {
             session()->put('url.intended', route('turista.reservas.checkout'));
-            return redirect()->route('login');
+            session()->put('reserva_login_pendiente', true);
+
+            return redirect()->route('login', ['reserva' => 1]);
         }
 
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Corrección de la lectura de rol en minúscula
         if (!$user->hasAnyRole(['Turista', 'turista'])) {
             $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Acceso denegado. Solo los turistas pueden realizar reservas.']);
             return;
         }
 
         try {
-            // Rescatamos el ID de la empresa y de la categoría antes de limpiar la sesión
             $emprendimientoId = $this->datosReserva['emprendimiento_id'] ?? null;
             $categoriaIdGuardada = $this->datosReserva['categoria_id'] ?? null;
 
-            // Rescatamos las fechas y categoría del primer elemento del carrito
             $fechaInicioGuardada = null;
             $fechaFinGuardada = null;
             if (!empty($this->carrito)) {
@@ -99,10 +125,8 @@ class Checkout extends Component
             
             session()->forget(['reserva_turista_carrito', 'reserva_turista_datos']);
             
-            // Usamos session()->flash para que el mensaje sobreviva a la redirección
             session()->flash('mensaje_exito', 'Reserva guardada y pendiente de confirmación.');
             
-            // Redirigimos al catálogo enviando las fechas y la categoría por la URL
             if ($emprendimientoId) {
                 return redirect()->route('turista.empresa.servicios', [
                     'emprendimiento' => $emprendimientoId,

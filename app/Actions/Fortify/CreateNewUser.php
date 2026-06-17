@@ -21,11 +21,11 @@ class CreateNewUser implements CreatesNewUsers
     {
         // Unificamos todas las validaciones en un solo bloque
         Validator::make($input, [
-            ...$this->profileRules(),
-            'cedula' => ['required', 'string', new CedulaEcuatoriana],
-            'password' => $this->passwordRules(),
-            'edad' => ['required', 'integer', 'min:18'],
-        ], [
+    ...$this->profileRules(),
+    'cedula' => ['required', 'numeric'], // Aquí quitamos la validación ecuatoriana
+    'password' => $this->passwordRules(),
+    'edad' => ['required', 'integer', 'min:18'],
+], [
             'edad.min' => 'Debes tener al menos 18 años para registrarte en la plataforma.',
             'edad.required' => 'La edad es obligatoria.',
             'edad.integer' => 'La edad debe ser un número válido.'

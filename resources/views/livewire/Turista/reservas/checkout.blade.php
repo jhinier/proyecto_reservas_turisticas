@@ -1,3 +1,4 @@
+{{-- Se aplica un margen negativo (-mt-6 md:-mt-8) para anular el padding que pone el layout principal y pegar la imagen al menú --}}
 <div class="w-full pb-12 bg-transparent min-h-screen font-sans">
     <div class="max-w-4xl mx-auto px-4 pt-8 md:pt-12">
         
@@ -166,10 +167,10 @@
                 <button wire:click="volver" type="button" class="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-100 transition-colors outline-none text-center">
                     Atrás
                 </button>
-                <button wire:click="confirmar" wire:loading.attr="disabled" class="w-full sm:w-auto px-8 py-2.5 rounded-lg bg-[#00D65B] text-[#06281E] font-bold text-sm hover:bg-[#00c052] transition-colors outline-none flex items-center justify-center gap-2">
-                    <span wire:loading.remove>Confirmar reserva</span>
-                    <span wire:loading>Procesando...</span>
-                    <svg wire:loading.remove class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <button wire:click="confirmar" wire:loading.attr="disabled" wire:target="confirmar" class="w-full sm:w-auto px-8 py-2.5 rounded-lg bg-[#00D65B] text-[#06281E] font-bold text-sm hover:bg-[#00c052] transition-colors outline-none flex items-center justify-center gap-2">
+                    <span wire:loading.remove wire:target="confirmar">Confirmar reserva</span>
+                    <span wire:loading wire:target="confirmar">Procesando...</span>
+                    <svg wire:loading.remove wire:target="confirmar" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 </button>
             </div>
 

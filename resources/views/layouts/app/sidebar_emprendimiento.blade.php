@@ -24,12 +24,13 @@
 
         [data-flux-sidebar],
         html [data-flux-sidebar] {
+            width: 18rem !important;
             --color-accent:rgba(0,0,0,0.05)!important;
             --color-accent-foreground:#000000!important;
             --color-zinc-800:#000000!important;
             --color-zinc-900:#000000!important;
 
-            background: #e1ece7!important; /* Fondo Blanco Claro */
+            background: #4ea674!important; 
             border-right: 1px solid rgba(0,0,0,0.08)!important;
             box-shadow: 4px 0 25px rgba(0,0,0,0.03)!important;
         }
@@ -44,7 +45,7 @@
         [data-flux-sidebar-header]{
             padding:1.6rem 1.2rem!important;
             border-bottom:1px solid rgba(0,0,0,0.06)!important;
-            background: #e1ece7!important;
+            background: #4ea674!important;
         }
         html.dark [data-flux-sidebar-header] {
             background: #18181b!important;
@@ -152,8 +153,8 @@
         /* HOVER: Tono oscuro transparente */
         [data-flux-sidebar-item]:hover,
         [data-flux-sidebar] a[data-flux-sidebar-item]:hover{
-            background: rgba(0,0,0,0.06)!important;
-            color: #000000!important;
+            background: rgba(0, 0, 0, 0.34)!important;
+            color: #d8d8d8!important;
             transform: none !important;
             box-shadow: none !important;
         }
@@ -167,7 +168,7 @@
         [data-flux-sidebar-item][data-current],
         [data-flux-sidebar-item][aria-current="page"],
         [data-flux-sidebar] a[data-flux-sidebar-item][data-current]{
-            background: #43c367!important; 
+            background: #a3d2b0!important; 
             color: #000000!important;
             border-left: 5px solid #a0ecc1 !important; 
             box-shadow: none !important;
@@ -206,7 +207,7 @@
         /* ZONA USER INFERIOR */
         [data-flux-sidebar] > *:last-child{
             border-top: 1px solid rgba(0,0,0,0.06)!important;
-            background: #cbcdcc!important;
+            background: #6ebd97!important;
             padding:1rem 1.2rem!important;
         }
         html.dark [data-flux-sidebar] > *:last-child{
@@ -354,7 +355,7 @@
                 <flux:sidebar.item
                     icon="chart-bar"
                     href="{{ route('emprendimiento.reportes') }}"
-                    current="request()->routeIs('emprendimiento.reportes')">
+                    :current="request()->routeIs('emprendimiento.reportes')">
                     Reportes
                 </flux:sidebar.item>
 

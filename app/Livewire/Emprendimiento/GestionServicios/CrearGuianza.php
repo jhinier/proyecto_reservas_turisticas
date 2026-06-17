@@ -5,7 +5,10 @@ namespace App\Livewire\Emprendimiento\GestionServicios;
 use Livewire\Component;
 use Livewire\Attributes\Layout; 
 use App\Services\GuianzaService;
+use App\Rules\NoHtmlTags;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Controlador de UI para la creación de Guianzas.
@@ -14,16 +17,19 @@ use Illuminate\Support\Facades\Log;
 #[Layout('layouts.app.sidebar_emprendimiento')] 
 class CrearGuianza extends Component
 {
-    public $pivotId;
+    public int $pivotId;
     
     // Asignamos el nombre por defecto desde el inicio
     public string $nombre = 'Servicio de Guía Turístico'; 
-    public $descripcion, $precio, $stock, $numero_max_persona;
+    public string $descripcion = '';
+    public float|int|null $precio = null;
+    public int $stock = 0;
+    public int $numero_max_persona = 1;
 
     /**
      * Método mount para capturar el pivotId desde la URL
      */
-    public function mount($pivotId)
+    public function mount(int $pivotId): void
     {
         $this->pivotId = $pivotId;
     }
@@ -34,10 +40,10 @@ class CrearGuianza extends Component
     protected function rules()
     {
         return [
-            'nombre'             => 'required|string|min:3|max:100',
-            'descripcion'        => 'required|string|min:10|max:1000',
-            'precio'             => 'required|numeric|min:0.01',
-            'stock'              => 'required|integer|min:1',
+            'nombre'             => ['required', 'string', 'min:3', 'max:100', new NoHtmlTags()],
+            'descripcion'        => ['required', 'string', 'min:10', 'max:1000', new NoHtmlTags()],
+            'precio'             => 'required|numeric|min:0.01|max:1000|regex:/^\d+(\.\d{1,2})?$/',
+            'stock'              => 'required|integer|min:1|max:1000',
             'numero_max_persona' => 'required|integer|min:1',
         ];
     }
@@ -49,13 +55,20 @@ class CrearGuianza extends Component
     protected function messages()
     {
         return [
+            'nombre.required'             => 'El nombre del servicio es obligatorio.',
+            'nombre.min'                  => 'El nombre debe tener al menos 3 caracteres.',
+            'nombre.max'                  => 'El nombre no puede exceder 100 caracteres.',
             'descripcion.required'        => 'Por favor, describe los lugares o rutas que puede guiar.',
             'descripcion.min'             => 'La descripción debe tener al menos 10 caracteres.',
+            'descripcion.max'             => 'La descripción no puede exceder 1000 caracteres.',
             'precio.required'             => 'El precio por día es obligatorio.',
             'precio.numeric'              => 'El precio debe ser un número válido.',
             'precio.min'                  => 'El precio debe ser mayor a cero.',
+            'precio.max'                  => 'El precio no puede exceder $1000.',
+            'precio.regex'                => 'El precio debe tener máximo 2 decimales.',
             'stock.required'              => 'Indica la cantidad de guías disponibles por día.',
             'stock.min'                   => 'Debe haber al menos 1 guía disponible.',
+            'stock.max'                   => 'El stock no puede exceder 1000 unidades.',
             'numero_max_persona.required' => 'Debes indicar el límite de personas por guía.',
             'numero_max_persona.min'      => 'El límite debe ser de al menos 1 persona.',
         ];
@@ -66,6 +79,13 @@ class CrearGuianza extends Component
      */
     public function guardar(GuianzaService $service)
     {
+        // Verificar rol de seguridad
+        $user = Auth::user();
+        if (!$user instanceof User || !$user->hasRole('emprendimiento')) {
+            session()->flash('error', 'No tienes permiso para realizar esta acción.');
+            return;
+        }
+
         $this->validate();
 
         try {
