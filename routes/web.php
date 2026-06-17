@@ -22,6 +22,8 @@ use App\Livewire\Emprendimiento\GestionServicios\CrearAlquilerEquipo;
 use App\Livewire\Emprendimiento\GestorReservas;
 use App\Livewire\Emprendimiento\Reserva\CrearReserva;
 use App\Http\Controllers\Emprendimiento\ReporteEmprendedorController;
+use App\Livewire\Admin\MapaTuristico\Index;
+use App\Livewire\Turista\MapaTuristico\Index as MapaTuristicoTurista;
 
 //Turista Publicaciones
 use App\Http\Controllers\Turista\TuristaController;
@@ -41,8 +43,12 @@ Route::get('/empresa/{emprendimiento}/servicios/{tipo?}', VerServicios::class)->
 // Ruta Visitante un sitio turístico- PUBLICACIONES
 //Route::view('/', 'livewire.Turista.publicacion.inicio');
 Route::get('/sitios', [TuristaController::class, 'sitios'])->name('sitios');
+Route::get('/sitio-turistico/{sitio}', [LandingController::class, 'detalleSitio'])->name('turista.sitio.detalle');
 Route::get('/actividades', [TuristaController::class, 'actividades'])->name('actividades');
+Route::get('/actividad-turistica/{actividad}',[LandingController::class, 'detalleActividad'])->name('turista.actividad.detalle');
 Route::get('/festividades', [TuristaController::class, 'festividades'])->name('festividades');
+Route::get('/festividad/{festividad}',[LandingController::class, 'detalleFestividad'])->name('turista.festividad.detalle');
+
 
 // 2. RUTAS PROTEGIDAS (Solo usuarios logueados)
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -77,7 +83,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/festividades/gestion', GestionFestividades::class)->name('admin.festividades.gestion');
         Route::get('/admin/sitios', GestionSitiosTuristicos::class)->name('admin.sitios.gestion');
         Route::get('/admin/actividades', GestionActividadesTuristicas::class)->name('admin.actividades');
-        Route::get('/admin/mapa-turistico', function () {return view('Admin.MapaTuristico.turistico');})->name('admin.mapa.turistico');
+        //Ruta de vista de mapa
+
+        Route::get('/MapaTuristico', Index::class)->name('admin.mapa.turistico');
     });
 
     // --- GRUPO DE EMPRENDIMIENTOS ---

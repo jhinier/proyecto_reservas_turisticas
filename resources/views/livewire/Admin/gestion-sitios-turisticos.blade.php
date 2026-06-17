@@ -1,4 +1,4 @@
-<div class="p-6">
+ <div class="p-6">
     @if (session()->has('mensaje'))
         <div class="mb-4 p-4 bg-green-800 text-white rounded-2xl shadow-lg text-sm font-medium">
             {{ session('mensaje') }}

@@ -77,9 +77,9 @@
                     <flux:icon.sparkles class="w-5 h-5" style="color: white !important;" />
                     <span>Actividades</span>
                 </a>
-
+                
                 <a href="{{ route('admin.mapa.turistico') }}"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white 
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white
                    {{ request()->routeIs('admin.mapa.turistico') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
                 
                     <flux:icon.map class="w-5 h-5" style="color: white !important;" />
@@ -92,7 +92,9 @@
         {{-- USER SECTION --}}
         <div class="p-4 bg-emerald-950/30 border-t border-emerald-700/50">
             <div class="p-1 rounded-xl text-white hover:bg-white/5 transition duration-200">
-                <x-desktop-user-menu :name="auth()->user()->name" />
+                @auth
+                    <x-desktop-user-menu :name="auth()->user()->name" />
+                @endauth
             </div>
         </div>
 

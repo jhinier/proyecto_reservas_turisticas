@@ -45,7 +45,7 @@
                                         x-transition
                                         src="{{ asset('storage/' . $img->imagen) }}"
                                         alt="{{ $sitio->publicacion->nombre }}"
-                                        class="absolute inset-0 w-full h-full object-cover">
+                                        class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"
 
                                 @endforeach
 
@@ -104,11 +104,12 @@
                     {{-- CONTENIDO --}}
                     <div class="p-8">
 
+
+                        <div class="p-8">
+
                         <span
                             class="bg-emerald-100 text-emerald-700 text-xs font-bold px-4 py-2 rounded-full">
-
                             Sitio Turístico
-
                         </span>
 
                         <h2 class="text-2xl font-bold text-gray-900 mt-5">
@@ -117,11 +118,33 @@
 
                         </h2>
 
-                        <p class="text-gray-500 leading-relaxed mt-4 line-clamp-3">
+                        <a
+                            href="{{ route('turista.sitio.detalle', $sitio->publicacion_id) }}"
+                            class="mt-6 inline-flex items-center justify-center w-full
+                                   bg-emerald-600 text-white py-3 rounded-2xl font-semibold
+                                   shadow-lg hover:bg-emerald-700 hover:scale-105
+                                   hover:shadow-2xl active:scale-95 transition duration-300">
 
-                            {{ $sitio->publicacion->descripcion }}
+                            Ver más
 
-                        </p>
+
+                            <svg
+                                class="w-5 h-5 ml-2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24">
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 5l7 7-7 7"/>
+
+                            </svg>
+
+                        </a>
+
+                    </div>
 
                     </div>
 

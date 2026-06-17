@@ -27,7 +27,7 @@ class TuristaController extends Controller
     {
         $actividades = ActividadTuristica::with('publicacion.imagenes')
                     ->latest()
-                    ->get();
+                    ->paginate(9);
 
         return view(
             'livewire.Turista.publicacion.actividades',
@@ -46,6 +46,17 @@ class TuristaController extends Controller
         return view(
             'livewire.Turista.publicacion.festividades', 
             compact('festividades')
+        );
+    }
+
+    public function detalleSitio($id)
+    {
+        $sitio = SitioTuristico::with('publicacion.imagenes')
+                    ->findOrFail($id);
+    
+        return view(
+            'turista.publicacion.detalle-sitio',
+            compact('sitio')
         );
     }
 }
