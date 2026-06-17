@@ -115,62 +115,57 @@
                             {{ $festividad->publicacion->nombre }}
                         </h2>
 
-                        {{-- Descripción --}}
-                        <p class="text-slate-500 mt-4 leading-relaxed line-clamp-3">
-                            {{ $festividad->publicacion->descripcion }}
-                        </p>
 
-                        {{-- Fechas --}}
-                        <div class="mt-6 space-y-2 text-sm">
+                        <div class="mt-6 space-y-3">
 
-                            <p class="text-emerald-700 font-semibold">
-                                📅 Inicio:
-                                {{ \Carbon\Carbon::parse($festividad->fecha_inicio)->format('d/m/Y') }}
-                            </p>
+                            <div class="flex flex-col gap-2 text-sm">
 
-                            <p class="text-red-600 font-semibold">
-                                🏁 Fin:
-                                {{ \Carbon\Carbon::parse($festividad->fecha_fin)->format('d/m/Y') }}
-                            </p>
+                                <span
+                                    class="bg-emerald-50 text-emerald-700 px-4 py-2 rounded-xl font-semibold">
 
-                        </div>
+                                    📅 Inicio:
+                                    {{ \Carbon\Carbon::parse($festividad->fecha_inicio)->format('d/m/Y') }}
 
-                        {{-- Actividades --}}
-                        <div class="mt-8">
+                                </span>
 
-                            <h3 class="font-bold text-slate-700 mb-4">
-                                Actividades
-                            </h3>
+                                <span
+                                    class="bg-red-50 text-red-600 px-4 py-2 rounded-xl font-semibold">
 
-                            <div class="space-y-3">
+                                    🏁 Fin:
+                                    {{ \Carbon\Carbon::parse($festividad->fecha_fin)->format('d/m/Y') }}
 
-                                @forelse($festividad->actividades as $actividad)
-
-                                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-
-                                        <h4 class="font-semibold text-slate-800 text-sm">
-                                            {{ $actividad->nombre }}
-                                        </h4>
-
-                                        <p class="text-xs text-slate-500 mt-2">
-                                            📍 {{ $actividad->lugar }}
-                                        </p>
-
-                                        <p class="text-xs text-slate-500 mt-1">
-                                            🕒 {{ $actividad->fecha }} - {{ $actividad->hora }}
-                                        </p>
-
-                                    </div>
-
-                                @empty
-
-                                    <p class="text-sm text-slate-400 italic">
-                                        No hay actividades registradas
-                                    </p>
-
-                                @endforelse
+                                </span>
 
                             </div>
+
+                            <a
+                                href="{{ route('turista.festividad.detalle', $festividad->publicacion_id) }}"
+                                class="mt-6 inline-flex items-center justify-center w-full
+                                       bg-emerald-600 text-white py-3 rounded-2xl font-semibold
+                                       shadow-lg
+                                       hover:bg-emerald-700
+                                       hover:scale-105
+                                       hover:shadow-2xl
+                                       active:scale-95
+                                       transition duration-300">
+
+                                Ver más
+
+                                <svg
+                                    class="w-5 h-5 ml-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 5l7 7-7 7"/>
+
+                                </svg>
+
+                            </a>
 
                         </div>
 

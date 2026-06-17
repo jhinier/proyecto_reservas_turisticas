@@ -134,25 +134,53 @@
 
                         </div>
 
-                        <p class="text-gray-500 leading-relaxed mt-5 line-clamp-3">
+                        <div class="mt-6 space-y-3">
 
-                            {{ $actividad->publicacion->descripcion }}
+                        <div class="flex justify-between text-sm">
 
-                        </p>
+                            <span
+                                class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-semibold">
 
-                        {{-- INFO --}}
-                        <div class="mt-6 pt-5 border-t border-gray-100">
+                                {{ $actividad->dificultad }}
 
-                            <p class="text-sm text-gray-600 line-clamp-2">
+                            </span>
 
-                                🎒
-                                <span class="font-semibold">
-                                    Recomendaciones:
-                                </span>
+                            <span class="font-semibold text-gray-600">
 
-                                {{ $actividad->recomendaciones }}
+                                ⏱ {{ $actividad->duracion_estimada }}
 
-                            </p>
+                            </span>
+
+                        </div>
+
+                            <a
+                                href="{{ route('turista.actividad.detalle', $actividad->publicacion_id) }}"
+                                class="mt-4 inline-flex items-center justify-center w-full
+                                       bg-emerald-600 text-white py-3 rounded-2xl font-semibold
+                                       shadow-lg
+                                       hover:bg-emerald-700
+                                       hover:scale-105
+                                       hover:shadow-2xl
+                                       active:scale-95
+                                       transition duration-300">
+
+                                Ver más
+
+                                <svg
+                                    class="w-5 h-5 ml-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 5l7 7-7 7"/>
+
+                                </svg>
+
+                            </a>
 
                         </div>
 
