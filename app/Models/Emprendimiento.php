@@ -20,10 +20,12 @@ class Emprendimiento extends Model
         'descripcion',
         'imagen',
         'estado',
+        'enlaces',
     ];
 
     protected $casts = [
         'estado' => 'boolean',
+        'enlaces' => 'array',
     ];
 
     public function user(): BelongsTo

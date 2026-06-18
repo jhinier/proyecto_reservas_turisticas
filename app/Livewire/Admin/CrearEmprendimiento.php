@@ -10,14 +10,28 @@ use App\Services\EmprendimientoService;
 
 class CrearEmprendimiento extends Component
 {
-    use WithFileUploads; // Indispensable para subir archivos
+    use WithFileUploads; 
 
     public $step = 1;
     public UsuarioForm $datosUsuario;
     
     public ?string $nombre_emprendimiento = null;
     public ?string $descripcion = null;
-    public ?TemporaryUploadedFile $imagen = null; // Propiedad para la imagen
+    public ?TemporaryUploadedFile $imagen = null; 
+    
+    // Arreglo dinámico para las URLs
+    public array $enlaces = [''];
+
+    public function agregarEnlace()
+    {
+        $this->enlaces[] = '';
+    }
+
+    public function eliminarEnlace($index)
+    {
+        unset($this->enlaces[$index]);
+        $this->enlaces = array_values($this->enlaces); // Reindexar el arreglo
+    }
 
     public function siguiente()
     {
@@ -27,7 +41,9 @@ class CrearEmprendimiento extends Component
             $this->validate([
                 'nombre_emprendimiento' => 'required|string|min:3|max:150',
                 'descripcion'           => 'required|string|min:10|max:500',
-                'imagen'                => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120', // Seguridad: Solo imágenes, max 5MB
+                'imagen'                => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120', 
+                'enlaces'               => 'nullable|array',
+                'enlaces.*'             => 'nullable|url|max:255',
             ]);
         }
         $this->step++;
@@ -40,12 +56,15 @@ class CrearEmprendimiento extends Component
 
     public function guardar(EmprendimientoService $servicio)
     {
+        // Limpiamos las casillas vacías
+        $enlacesLimpios = array_filter($this->enlaces, fn($valor) => !is_null($valor) && trim($valor) !== '');
+
         $datosEmpresa = [
             'nombre_emprendimiento' => $this->nombre_emprendimiento,
             'descripcion'           => $this->descripcion,
+            'enlaces'               => empty($enlacesLimpios) ? null : array_values($enlacesLimpios),
         ];
 
-        // Pasamos la imagen como tercer parámetro
         $servicio->registrarNuevoEmprendimiento($this->datosUsuario->all(), $datosEmpresa, $this->imagen);
 
         return redirect()->route('admin.emprendimientos.gestion')

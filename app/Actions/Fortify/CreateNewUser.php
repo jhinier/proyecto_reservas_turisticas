@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use App\Rules\CedulaEcuatoriana;
+use Illuminate\Validation\Rules\Password;
+
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules, ProfileValidationRules;
@@ -21,14 +23,15 @@ class CreateNewUser implements CreatesNewUsers
     {
         // Unificamos todas las validaciones en un solo bloque
         Validator::make($input, [
-    ...$this->profileRules(),
-    'cedula' => ['required', 'numeric'], // Aquí quitamos la validación ecuatoriana
-    'password' => $this->passwordRules(),
-    'edad' => ['required', 'integer', 'min:18'],
-], [
-            'edad.min' => 'Debes tener al menos 18 años para registrarte en la plataforma.',
-            'edad.required' => 'La edad es obligatoria.',
-            'edad.integer' => 'La edad debe ser un número válido.'
+            ...$this->profileRules(),
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'cedula' => ['required', 'string', 'unique:users', new CedulaEcuatoriana()],
+            'password' => ['required', 'string', Password::min(8)->mixedCase()->symbols(), 'confirmed'],
+            'edad' => ['required', 'integer', 'min:18'],
+        ], [
+            // ... tus mensajes de error ...
+            'cedula.unique' => 'Esta cédula ya se encuentra registrada.',
+            'email.unique' => 'Este correo electrónico ya se encuentra registrado.'
         ])->validate();
 
         // 1. Guardamos el usuario

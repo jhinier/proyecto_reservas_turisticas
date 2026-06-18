@@ -34,7 +34,7 @@ class EmprendimientoService
         return Emprendimiento::with('user')->findOrFail($id);
     }
 
-    // ACTUALIZADO: Recibe la imagen y la procesa
+    // ACTUALIZADO: Recibe la imagen, enlaces y los procesa
     public function registrarNuevoEmprendimiento(array $datosUsuario, array $datosEmpresa, $imagen = null)
     {
         try {
@@ -55,6 +55,7 @@ class EmprendimientoService
                     'descripcion' => $datosEmpresa['descripcion'],
                     'imagen'      => $rutaImagen,
                     'estado'      => $datosEmpresa['estado'] ?? 1,
+                    'enlaces'     => $datosEmpresa['enlaces'] ?? null, // Nuevo campo agregado
                 ]);
             });
         } catch (Exception $e) {
