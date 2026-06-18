@@ -42,11 +42,13 @@
     </style>
 
     @livewireStyles
+    @fluxAppearance
 </head>
 <body class="bg-green-50 min-h-screen flex flex-col">
 
     @php
         $isHome = request()->routeIs('home');
+        $isSettingsRoute = request()->routeIs('profile.edit', 'user-password.edit', 'two-factor.show', 'appearance.edit');
 
         $navBg = $isHome
             ? 'bg-zinc-900/60 border-b border-white/10'
@@ -295,9 +297,16 @@
         </ul>
     </nav>
 
-    <main class="{{ request()->routeIs('home') ? '' : 'pt-28' }} min-h-screen flex-1">
+    <main class="{{ $isHome ? '' : 'pt-28' }} min-h-screen flex-1 {{ $isSettingsRoute ? 'bg-slate-50' : '' }}">
         @yield('content')
-        {{ $slot ?? '' }}
+
+        @if ($isSettingsRoute)
+            <section class="mx-auto w-full max-w-6xl px-4 pb-14 pt-6 sm:px-6 lg:px-8">
+                {{ $slot ?? '' }}
+            </section>
+        @else
+            {{ $slot ?? '' }}
+        @endif
     </main>
 
          {{-- FOOTER --}}
@@ -307,7 +316,5 @@
     @include('components.chatbot')
 
     @livewireScripts
-
-
 </body>
 </html>

@@ -3,6 +3,7 @@
 namespace App\Livewire\Settings;
 
 use App\Concerns\ProfileValidationRules;
+use App\Livewire\Settings\Concerns\UsesSettingsLayout;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -14,11 +15,12 @@ use Livewire\Component;
 class Profile extends Component
 {
     use ProfileValidationRules;
+    use UsesSettingsLayout;
+
     public function render()
-{
-    $layout = auth()->user()->hasRole('emprendimiento') ? 'layouts.app.sidebar_emprendimiento' : 'layouts.app';
-    return view('livewire.settings.profile')->layout($layout);
-}
+    {
+        return view('livewire.settings.profile')->layout($this->settingsLayout());
+    }
 
     public string $name = '';
 

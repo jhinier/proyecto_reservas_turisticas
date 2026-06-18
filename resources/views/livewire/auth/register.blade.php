@@ -6,6 +6,9 @@
     <title>Registro - Explora Candelaria</title>
     <link rel="preload" as="image" href="{{ asset('img/fondop.jpeg') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <style>[x-cloak] { display: none !important; }</style>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="min-h-screen bg-black overflow-x-hidden overflow-y-auto">
@@ -18,7 +21,7 @@
             class="w-full h-full object-cover"
             alt="Fondo"
         >
-        <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-[#0b1a0b]/80"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/80 to-[#0b1a0b]/90"></div>
     </div>
 
     <div class="absolute top-0 left-0 z-30 w-full">
@@ -41,110 +44,165 @@
         </div>
     </div>
 
-    <div class="relative z-20 flex flex-col lg:flex-row items-center justify-between w-full h-full px-6 lg:px-20 pt-24 pb-6 lg:pt-20 lg:pb-8 gap-6 lg:gap-10">
+    <div class="relative z-20 flex flex-col lg:flex-row items-center justify-center lg:justify-between w-full h-full px-6 lg:px-20 pt-28 pb-10 lg:pt-24 lg:pb-12 gap-8 lg:gap-12">
 
-        <div class="max-w-xl hidden lg:block">
+        <div class="max-w-md hidden lg:block">
             <h6 class="text-3xl lg:text-5xl font-extrabold uppercase text-gray-200 leading-tight">
                 Únete a <br>
                 La Candelaria
             </h6>
             
             <p class="mt-4 text-base lg:text-lg text-gray-300 leading-relaxed">
-                Crea tu cuenta para gestionar tus reservaciones, guardar tus lugares favoritos y planificar tu próxima aventura.
+                Crea tu cuenta para gestionar tus reservaciones, guardar tus lugares favoritos y planificar tu próxima aventura en la naturaleza.
             </p>
 
-            <div class="mt-6 border-l-4 border-[#7ed957] pl-5">
-                <p class="text-white italic text-lg lg:text-xl">
-                    “El primer paso hacia tu próxima experiencia.”
+            <div class="mt-8 border-l-4 border-[#7ed957] pl-5">
+                <p class="text-white italic text-lg lg:text-xl font-light">
+                    “El primer paso hacia tu próxima experiencia inolvidable.”
                 </p>
             </div>
         </div>
 
-        <div class="w-full max-w-2xl bg-black/50 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 lg:p-8 shadow-2xl">
+        <div class="w-full max-w-4xl bg-black/50 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 lg:p-10 shadow-2xl">
 
-            <h3 class="text-2xl lg:text-3xl font-black uppercase text-white mb-1 text-center lg:text-left">
-                Crear cuenta
-            </h3>
+            <div class="mb-8 text-center lg:text-left">
+                <h3 class="text-2xl lg:text-3xl font-black uppercase text-white mb-2">
+                    Crear cuenta
+                </h3>
+                <p class="text-gray-300 text-sm lg:text-base">
+                    Completa la información para tu perfil de turista
+                </p>
+            </div>
 
-            <p class="text-gray-300 mb-5 text-sm lg:text-base text-center lg:text-left">
-                Introduce tus datos a continuación
-            </p>
+            <x-auth-session-status class="mb-4 text-white text-center text-sm" :status="session('status')" />
 
-            <x-auth-session-status class="mb-3 text-white text-center text-sm" :status="session('status')" />
-
-            <form method="POST" action="{{ route('register.store') }}" class="space-y-4">
+            <form method="POST" action="{{ route('register.store') }}" class="space-y-8">
                 @csrf
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                     
-                    <div>
-                        <label class="text-[11px] uppercase tracking-wider text-gray-300">Nombre</label>
-                        <input type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" placeholder="Tu nombre"
-                            class="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 focus:border-[#7ed957] focus:outline-none transition text-sm">
-                        @error('name') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                    <div class="space-y-4">
+                        <div class="border-b border-white/10 pb-2 mb-4">
+                            <h4 class="text-[#7ed957] font-bold uppercase tracking-widest text-xs">Datos Personales</h4>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Nombre</label>
+                                <input type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" placeholder="Tu nombre"
+                                    class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm">
+                                @error('name') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Apellidos</label>
+                                <input type="text" name="apellidos" value="{{ old('apellidos') }}" required autocomplete="apellidos" placeholder="Tus apellidos"
+                                    class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm">
+                                @error('apellidos') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Cédula</label>
+                            <input type="text" name="cedula" value="{{ old('cedula') }}" required autocomplete="cedula" placeholder="Número de cédula (10 dígitos)"
+                                class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm">
+                            @error('cedula') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Edad</label>
+                                <input type="number" name="edad" value="{{ old('edad') }}" required autocomplete="edad" placeholder="+18" min="18"
+                                    class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm">
+                                @error('edad') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Teléfono</label>
+                                <input type="text" name="telefono" value="{{ old('telefono') }}" required autocomplete="telefono" placeholder="0900000000"
+                                    class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm">
+                                @error('telefono') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="text-[11px] uppercase tracking-wider text-gray-300">Apellidos</label>
-                        <input type="text" name="apellidos" value="{{ old('apellidos') }}" required autocomplete="apellidos" placeholder="Tus apellidos"
-                            class="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 focus:border-[#7ed957] focus:outline-none transition text-sm">
-                        @error('apellidos') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                    <div class="space-y-4">
+                        <div class="border-b border-white/10 pb-2 mb-4 mt-6 md:mt-0">
+                            <h4 class="text-[#7ed957] font-bold uppercase tracking-widest text-xs">Datos de la Cuenta</h4>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Correo electrónico</label>
+                            <input type="email" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="correo@ejemplo.com"
+                                class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm">
+                            @error('email') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div x-data="{ password: '', showPassword: false }">
+                            <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Contraseña</label>
+                            <div class="relative mt-1">
+                                <input :type="showPassword ? 'text' : 'password'" name="password" x-model="password" required autocomplete="new-password" placeholder="••••••••"
+                                    class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm pr-10">
+                                
+                                <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7ed957] focus:outline-none transition">
+                                    <svg x-show="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                    <svg x-cloak x-show="showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                                </button>
+                            </div>
+                            @error('password') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
+                            
+                            <div class="mt-3 space-y-2">
+                                <div class="flex items-center gap-2 text-[10px] md:text-xs transition-colors duration-300" :class="password.length >= 8 ? 'text-[#7ed957]' : 'text-gray-400'">
+                                    <svg x-cloak x-show="password.length >= 8" class="w-4 h-4 shrink-0 text-[#7ed957]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    <svg x-cloak x-show="password.length < 8" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                                    <span>Al menos 8 caracteres</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[10px] md:text-xs transition-colors duration-300" :class="/[A-Z]/.test(password) ? 'text-[#7ed957]' : 'text-gray-400'">
+                                    <svg x-cloak x-show="/[A-Z]/.test(password)" class="w-4 h-4 shrink-0 text-[#7ed957]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    <svg x-cloak x-show="!/[A-Z]/.test(password)" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                                    <span>Una mayúscula</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[10px] md:text-xs transition-colors duration-300" :class="/[a-z]/.test(password) ? 'text-[#7ed957]' : 'text-gray-400'">
+                                    <svg x-cloak x-show="/[a-z]/.test(password)" class="w-4 h-4 shrink-0 text-[#7ed957]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    <svg x-cloak x-show="!/[a-z]/.test(password)" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                                    <span>Una minúscula</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[10px] md:text-xs transition-colors duration-300" :class="/[^a-zA-Z0-9]/.test(password) ? 'text-[#7ed957]' : 'text-gray-400'">
+                                    <svg x-cloak x-show="/[^a-zA-Z0-9]/.test(password)" class="w-4 h-4 shrink-0 text-[#7ed957]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                    <svg x-cloak x-show="!/[^a-zA-Z0-9]/.test(password)" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                                    <span>Un carácter especial</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div x-data="{ showConfirmPassword: false }">
+                            <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Confirmar contraseña</label>
+                            <div class="relative mt-1">
+                                <input :type="showConfirmPassword ? 'text' : 'password'" name="password_confirmation" required autocomplete="new-password" placeholder="••••••••"
+                                    class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm pr-10">
+                                
+                                <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7ed957] focus:outline-none transition">
+                                    <svg x-show="!showConfirmPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                    <svg x-cloak x-show="showConfirmPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                                </button>
+                            </div>
+                            @error('password_confirmation') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="text-[11px] uppercase tracking-wider text-gray-300">Cédula</label>
-                        <input type="text" name="cedula" value="{{ old('cedula') }}" required autocomplete="cedula" placeholder="Número de cédula"
-                            class="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 focus:border-[#7ed957] focus:outline-none transition text-sm">
-                        @error('cedula') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="text-[11px] uppercase tracking-wider text-gray-300">Edad</label>
-                        <input type="number" name="edad" value="{{ old('edad') }}" required autocomplete="edad" placeholder="Tu edad"
-                            class="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 focus:border-[#7ed957] focus:outline-none transition text-sm">
-                        @error('edad') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="text-[11px] uppercase tracking-wider text-gray-300">Teléfono</label>
-                        <input type="text" name="telefono" value="{{ old('telefono') }}" required autocomplete="telefono" placeholder="Número telefónico"
-                            class="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 focus:border-[#7ed957] focus:outline-none transition text-sm">
-                        @error('telefono') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="text-[11px] uppercase tracking-wider text-gray-300">Correo electrónico</label>
-                        <input type="email" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="correo@ejemplo.com"
-                            class="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 focus:border-[#7ed957] focus:outline-none transition text-sm">
-                        @error('email') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="text-[11px] uppercase tracking-wider text-gray-300">Contraseña</label>
-                        <input type="password" name="password" required autocomplete="new-password" placeholder="••••••••"
-                            class="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 focus:border-[#7ed957] focus:outline-none transition text-sm">
-                        @error('password') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="text-[11px] uppercase tracking-wider text-gray-300">Confirmar contraseña</label>
-                        <input type="password" name="password_confirmation" required autocomplete="new-password" placeholder="••••••••"
-                            class="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 focus:border-[#7ed957] focus:outline-none transition text-sm">
-                        @error('password_confirmation') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
-                    </div>
                 </div>
 
-                <div class="pt-2">
-                    <button type="submit" class="w-full rounded-full bg-[#0b8a0f] hover:bg-[#276a25] transition duration-300 py-3 uppercase tracking-[0.2em] text-white font-bold shadow-2xl text-sm">
+                <div class="pt-6">
+                    <button type="submit" class="w-full rounded-xl bg-[#0b8a0f] hover:bg-[#276a25] transition duration-300 py-3.5 uppercase tracking-[0.2em] text-white font-bold shadow-2xl text-sm">
                         Registrarse
                     </button>
                 </div>
 
             </form>
 
-            <div class="mt-5 text-center text-sm text-gray-300">
+            <div class="mt-6 text-center text-sm text-gray-400">
                 ¿Ya tienes una cuenta?
-                <a href="{{ route('login') }}" class="text-[#7ed957] hover:text-white transition font-semibold">
+                <a href="{{ route('login') }}" class="text-[#7ed957] hover:text-white transition font-semibold ml-1">
                     Inicia sesión
                 </a>
             </div>

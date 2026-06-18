@@ -79,12 +79,39 @@
                                 @error('descripcion') <small class="text-danger dark:text-red-400">{{ $message }}</small> @enderror
                             </div>
 
+                            {{-- Enlaces Dinámicos --}}
+                            <div class="flex w-full flex-col gap-1 text-on-surface dark:text-zinc-200 border-t border-zinc-100 pt-6 dark:border-zinc-800">
+                                <label class="flex w-fit items-center gap-1 pl-0.5 text-sm font-bold text-zinc-800 dark:text-zinc-300">
+                                    Enlaces del Emprendimiento (URLs)
+                                </label>
+                                <p class="text-[10px] text-zinc-500 mb-2 dark:text-zinc-400">Añade los links de redes sociales o sitio web.</p>
+                                
+                                <div class="space-y-3">
+                                    @foreach($enlaces as $index => $enlace)
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex-1 relative">
+                                                <input type="url" wire:model.blur="enlaces.{{ $index }}" placeholder="https://ejemplo.com" class="w-full rounded-radius border {{ $errors->has('enlaces.'.$index) ? 'border-danger dark:border-red-500' : 'border-outline dark:border-zinc-700' }} bg-surface-alt px-3 py-2 text-sm focus:outline-none focus:border-primary dark:bg-zinc-800/50 dark:text-white transition-colors" />
+                                            </div>
+                                            <button type="button" wire:click="eliminarEnlace({{ $index }})" class="p-2 text-danger hover:bg-danger/10 rounded-lg transition-colors outline-none shrink-0 dark:text-red-400 dark:hover:bg-red-500/20" title="Eliminar enlace">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                            </button>
+                                        </div>
+                                        @error('enlaces.'.$index) <small class="text-danger dark:text-red-400 block mt-1">{{ $message }}</small> @enderror
+                                    @endforeach
+                                </div>
+
+                                <button type="button" wire:click="agregarEnlace" class="mt-4 w-fit flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors dark:text-blue-400 dark:bg-blue-500/10 dark:hover:bg-blue-500/20 outline-none">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                                    Agregar otro enlace
+                                </button>
+                            </div>
+
                             {{-- Subida de Imagen --}}
-                            <div class="flex w-full flex-col gap-1 text-on-surface dark:text-zinc-200">
+                            <div class="flex w-full flex-col gap-1 text-on-surface dark:text-zinc-200 border-t border-zinc-100 pt-6 dark:border-zinc-800">
                                 <label class="flex w-fit items-center gap-1 pl-0.5 text-sm font-medium {{ $errors->has('imagen') ? 'text-danger dark:text-red-400' : 'text-zinc-700 dark:text-zinc-300' }}">
                                     Logo o Imagen Principal
                                 </label>
-                                <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-4 mt-2">
                                     <div class="relative w-full max-w-sm">
                                         <input type="file" wire:model="imagen" accept="image/*" class="w-full rounded-radius border {{ $errors->has('imagen') ? 'border-danger dark:border-red-500' : 'border-outline dark:border-zinc-700' }} bg-surface-alt px-3 py-2 text-sm text-zinc-600 file:mr-4 file:rounded-full file:border-0 file:bg-primary/10 file:px-4 file:py-1 file:text-sm file:font-semibold file:text-primary hover:file:bg-primary/20 focus:outline-none dark:bg-zinc-800/50 dark:text-zinc-300 dark:file:bg-blue-900/30 dark:file:text-blue-400" />
                                         <div wire:loading wire:target="imagen" class="absolute right-3 top-2.5 text-sm text-primary dark:text-blue-400">Cargando...</div>
@@ -116,7 +143,22 @@
                                     <p class="mb-4 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
                                         {{ filled($descripcion) ? $descripcion : 'Sin descripción registrada.' }}
                                     </p>
-                                    <p class="text-sm text-zinc-500 dark:text-zinc-400">Estado: <span class="text-success dark:text-green-400 font-bold">Activo</span></p>
+                                    
+                                    <div class="my-4 border-t border-zinc-200 pt-4 dark:border-zinc-700/50">
+                                        <p class="text-[11px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-2">Enlaces Guardados</p>
+                                        <div class="flex flex-col gap-1 text-sm font-medium">
+                                            @php $enlacesLlenos = array_filter($enlaces, fn($v) => trim($v) !== ''); @endphp
+                                            @if(!empty($enlacesLlenos))
+                                                @foreach($enlacesLlenos as $link)
+                                                    <a href="{{ $link }}" target="_blank" class="text-primary dark:text-blue-400 hover:underline truncate">{{ $link }}</a>
+                                                @endforeach
+                                            @else
+                                                <span class="text-zinc-400 text-xs font-normal">Sin enlaces registrados.</span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-auto">Estado: <span class="text-success dark:text-green-400 font-bold">Activo</span></p>
                                 </article>
 
                                 <article class="flex flex-col rounded-radius border border-outline bg-surface-alt p-6 dark:bg-zinc-800/50 dark:border-zinc-700">

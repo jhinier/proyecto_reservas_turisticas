@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Settings;
 
+use App\Livewire\Settings\Concerns\UsesSettingsLayout;
 use Exception;
 use Laravel\Fortify\Actions\ConfirmTwoFactorAuthentication;
 use Laravel\Fortify\Actions\DisableTwoFactorAuthentication;
@@ -17,12 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 #[Title('Two-factor authentication')]
 class TwoFactor extends Component
 {
+    use UsesSettingsLayout;
+
     public function render()
-{
-    $layout = auth()->user()->hasRole('emprendimiento') ? 'layouts.app.sidebar_emprendimiento' : 'layouts.app';
-    return view('livewire.settings.two-factor')->layout($layout);
-}
-    
+    {
+        return view('livewire.settings.two-factor')->layout($this->settingsLayout());
+    }
+
     #[Locked]
     public bool $twoFactorEnabled;
 

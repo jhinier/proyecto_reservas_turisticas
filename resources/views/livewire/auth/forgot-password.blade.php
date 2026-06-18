@@ -1,4 +1,4 @@
-<x-layouts::auth :title="__('Forgot password')">
+<x-layouts::auth :title="__('Recuperar contraseña')">
     <div class="flex flex-col gap-6">
         <x-auth-header :title="__('Recuperar contraseña')" :description="__('Introduce tu correo electrónico para recibir un enlace de restablecimiento de contraseña')" />
 
