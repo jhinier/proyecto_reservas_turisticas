@@ -23,7 +23,7 @@ class UserService
                 'edad'      => (int) $datos['edad'],
             ]);
 
-            $usuario->assignRole('turista');
+            $usuario->assignRole($datos['role'] ?? 'turista');
 
             return $usuario;
         });
@@ -45,7 +45,8 @@ class UserService
             );
 
             if ($usuario->wasRecentlyCreated) {
-                $usuario->assignRole('turista');
+                // Si se creó por este método, asignamos rol turista por defecto
+                $usuario->assignRole($datos['role'] ?? 'turista');
             }
 
             return $usuario;
