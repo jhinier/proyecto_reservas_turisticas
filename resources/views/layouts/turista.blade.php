@@ -43,7 +43,7 @@
 
     @livewireStyles
 </head>
-<body class="bg-[#eeeeee] min-h-screen flex flex-col">
+<body class="bg-green-50 min-h-screen flex flex-col">
 
     @php
         $isHome = request()->routeIs('home');
@@ -300,8 +300,14 @@
         {{ $slot ?? '' }}
     </main>
 
+         {{-- FOOTER --}}
+    
+    @include('components.Turista_Admin.footer_turista')
+
     @include('components.chatbot')
 
     @livewireScripts
+
+
 </body>
 </html>

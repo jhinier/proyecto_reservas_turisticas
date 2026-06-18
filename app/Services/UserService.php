@@ -11,9 +11,10 @@ class UserService
 {
     public function crearUsuario(array $datos)
     {
+        
         return DB::transaction(function () use ($datos) {
             $usuario = User::create([
-                'name'      => strip_tags($datos['name']),
+                'name'      => strip_tags($datos['nombre']),
                 'apellidos' => strip_tags($datos['apellidos']),
                 'email'     => filter_var($datos['email'], FILTER_SANITIZE_EMAIL),
                 'password'  => Hash::make($datos['password']),
@@ -34,7 +35,7 @@ class UserService
             $usuario = User::firstOrCreate(
                 ['cedula' => strip_tags($datos['cedula'])],
                 [
-                    'name'      => strip_tags($datos['name']),
+                    'name'      => strip_tags($datos['nombre']),
                     'apellidos' => strip_tags($datos['apellidos']),
                     'email'     => filter_var($datos['email'], FILTER_SANITIZE_EMAIL),
                     'telefono'  => strip_tags($datos['telefono']),

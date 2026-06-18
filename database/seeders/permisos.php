@@ -20,7 +20,7 @@ class permisos extends Seeder
         // ==========================================
         
         // Permisos exclusivos del SuperAdministrador
-        Permission::create(['name' => 'crear administradores gad']);
+        Permission::create(['name' => 'crear administradores gad','web']);
         
         // Permisos del GAD (SuperAdmin y Admin GAD)
         Permission::create(['name' => 'gestionar emprendimientos']);
