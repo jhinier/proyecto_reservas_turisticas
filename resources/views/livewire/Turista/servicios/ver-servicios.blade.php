@@ -132,8 +132,8 @@
         }
     @endphp
 
-    {{-- Contenedor tarjetas --}}
-    <div class="max-w-screen-2xl mx-auto px-4 md:px-16 lg:px-32 xl:px-64 mt-12 relative z-10">
+    {{-- Contenedor tarjetas alineado al buscador con 3 columnas --}}
+    <div class="w-full max-w-4xl mx-auto px-4 mt-12 relative z-10">
         @if($busquedaRealizada)
             
             <div class="mb-8">
@@ -152,9 +152,9 @@
                 @endif
             </div>
 
-            {{-- 1. SKELETON LOADER (Muestra la animación de carga fantasmal) --}}
+            {{-- 1. SKELETON LOADER --}}
             <div wire:loading wire:target="buscar" class="w-full">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 xl:gap-10">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     @for($i = 0; $i < 3; $i++)
                         <div class="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col h-full overflow-hidden animate-pulse min-h-[420px]">
                             <div class="w-full h-48 bg-gray-200 shrink-0"></div>
@@ -175,8 +175,8 @@
                 </div>
             </div>
 
-            {{-- 2. TARJETAS REALES (Se ocultan mientras "buscar" se ejecuta) --}}
-            <div wire:loading.remove wire:target="buscar" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 xl:gap-10">
+            {{-- 2. TARJETAS REALES --}}
+            <div wire:loading.remove wire:target="buscar" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 @forelse($servicios as $servicio)
                     <div x-data="{
                             modalOpen: false,
@@ -301,7 +301,6 @@
                                                     <button @click="activeSlide = activeSlide === 0 ? imagenes.length - 1 : activeSlide - 1" class="bg-white/80 hover:bg-white p-2 rounded-full shadow-md text-gray-800 outline-none">
                                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                                                     </button>
-                                                    {{-- FÓRMULA CORREGIDA PARA EL CARRUSEL: --}}
                                                     <button @click="activeSlide = activeSlide === imagenes.length - 1 ? 0 : activeSlide + 1" class="bg-white/80 hover:bg-white p-2 rounded-full shadow-md text-gray-800 outline-none">
                                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                                     </button>
