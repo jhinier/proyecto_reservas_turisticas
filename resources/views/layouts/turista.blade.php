@@ -309,15 +309,19 @@
         @endif
     </main>
 
-         {{-- FOOTER --}}
-    
-    @include('components.Turista_Admin.footer_turista')
+    {{-- FOOTER INSTITUCIONAL DEL GAD (Por defecto) --}}
+    @if(!View::hasSection('ocultar_footer_gad'))
+        @include('components.Turista_Admin.footer_turista')
+    @endif
 
-    @include('components.chatbot')
+    {{-- Aquí se inyectará el footer del negocio si la vista lo solicita --}}
+    @yield('footer_personalizado')
+
+    {{-- ¡ESTAS TRES LÍNEAS SE QUEDAN! --}}
+    @include('components.asistente-virtual')
 
     @fluxScripts
     @livewireScripts
-
 
 </body>
 </html>
