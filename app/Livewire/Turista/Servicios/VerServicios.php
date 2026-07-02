@@ -295,6 +295,12 @@ class VerServicios extends Component
         if (isset($this->carrito[$index])) {
             unset($this->carrito[$index]);
             $this->carrito = array_values($this->carrito);
+
+            session()->put('reserva_turista_carrito', $this->carrito);
+            if (empty($this->carrito)) {
+                session()->forget(['reserva_turista_carrito', 'reserva_turista_datos']);
+            }
+
             $this->ejecutarBusqueda(app(CatalogoReservaService::class), app(InventarioService::class));
             $this->dispatch('notificar', ['tipo' => 'info', 'mensaje' => 'Servicio eliminado.']);
         }
