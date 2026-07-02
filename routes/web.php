@@ -14,6 +14,8 @@ use App\Livewire\Emprendimiento\GestionServicios\CrearHospedaje;
 use App\Livewire\Admin\Festividades\GestionFestividades;
 use App\Livewire\Admin\GestionSitiosTuristicos;
 use App\Livewire\Admin\GestionActividadesTuristicas;
+use App\Livewire\Admin\GestionReportes;
+use App\Http\Controllers\Admin\ReporteController;
 
 use App\Livewire\Emprendimiento\GestionServicios\CrearGuianza;
 use App\Livewire\Emprendimiento\GestionServicios\CrearAlimentacion;
@@ -54,6 +56,8 @@ Route::get('/', function () {
 
 // Ruta pública del buscador de servicios
 Route::get('/servicios', BuscadorServicios::class)->name('turista.servicios.index');
+// 🗺️ Mapa Turístico Interactivo
+        Route::get('/mapa', MapaTuristicoTurista::class)->name('turista.mapa');
 Route::get('/empresa/{emprendimiento}/servicios/{tipo?}', VerServicios::class)->name('turista.empresa.servicios');
 
 // Ruta Visitante un sitio turístico- PUBLICACIONES
@@ -99,9 +103,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/festividades/gestion', GestionFestividades::class)->name('admin.festividades.gestion');
         Route::get('/admin/sitios', GestionSitiosTuristicos::class)->name('admin.sitios.gestion');
         Route::get('/admin/actividades', GestionActividadesTuristicas::class)->name('admin.actividades');
-        //Ruta de vista de mapa
-
-        Route::get('/MapaTuristico', Index::class)->name('admin.mapa.turistico');
+        Route::get('/reportes', GestionReportes::class)->name('admin.reportes');
+        Route::get('/reportes/general/pdf', [ReporteController::class, 'general'])->name('admin.reportes.general.pdf');
     });
 
     // --- GRUPO DE EMPRENDIMIENTOS ---

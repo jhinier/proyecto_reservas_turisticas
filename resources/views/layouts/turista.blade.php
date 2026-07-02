@@ -317,11 +317,15 @@
     {{-- Aquí se inyectará el footer del negocio si la vista lo solicita --}}
     @yield('footer_personalizado')
 
+<<<<<<< HEAD
     {{-- ¡ESTAS TRES LÍNEAS SE QUEDAN! --}}
     @include('components.asistente-virtual')
 
     @fluxScripts
     @livewireScripts
 
+=======
+    @livewireScripts
+>>>>>>> origin/Rama-Daniela
 </body>
 </html>

@@ -78,13 +78,15 @@
                     <span>Actividades</span>
                 </a>
                 
-                <a href="{{ route('admin.mapa.turistico') }}"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white
-                   {{ request()->routeIs('admin.mapa.turistico') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
+                <a href="{{ route('admin.reportes') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.reportes*') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
                 
-                    <flux:icon.map class="w-5 h-5" style="color: white !important;" />
-                    <span>Mapa Turístico</span>
+                    <flux:icon.chart-bar class="w-5 h-5" style="color:white!important;" />
+                
+                    <span>Reportes</span>
+                
                 </a>
+
             </div>
 
         </nav>
