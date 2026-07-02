@@ -14,7 +14,7 @@ class UserService
         
         return DB::transaction(function () use ($datos) {
             $usuario = User::create([
-                'name'      => strip_tags($datos['name']),
+                'name'      => strip_tags($datos['nombre']),
                 'apellidos' => strip_tags($datos['apellidos']),
                 'email'     => filter_var($datos['email'], FILTER_SANITIZE_EMAIL),
                 'password'  => Hash::make($datos['password']),

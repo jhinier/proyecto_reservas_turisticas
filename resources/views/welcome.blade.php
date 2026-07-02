@@ -54,17 +54,14 @@
                 </p>
 
                 <!-- BOTONES -->
-                    <div class="flex flex-wrap gap-5 mt-10">
-    <a href="https://www.google.com/maps/place/La+Candelaria/@-1.6370357,-78.481284,13261m/data=!3m2!1e3!4b1!4m6!3m5!1s0x91d3ba84a6c69689:0x58ca58a34aa5c880!8m2!3d-1.651618!4d-78.4410895!16s%2Fg%2F11fm42fjbc?entry=ttu&g_ep=EgoyMDYxMy4wIKXMDSoASAFQAw%3D%3D"
-       target="_blank"
-       class="px-8 py-4 bg-[#0b8a0f] hover:bg-[#276a25] text-white rounded-full text-sm uppercase tracking-[0.3em] transition duration-300 shadow-2xl">
-        Explorar
-    </a>
-</div>
-                    <a href="{{ route('turista.servicios.index') }}"
-                    class="px-8 py-4 border border-white/40 hover:bg-white hover:text-black text-white rounded-full text-sm uppercase tracking-[0.3em] transition duration-300 backdrop-blur-md">
-                        Reservar Ahora
+                <div class="flex flex-wrap gap-5 mt-10">
+                    <a href="{{ route('turista.mapa') }}"
+                       class="px-8 py-4 bg-[#0b8a0f] hover:bg-[#276a25] text-white rounded-full text-sm uppercase tracking-[0.3em] transition duration-300 shadow-2xl">
+                
+                        🗺️ Explorar Mapa
+                
                     </a>
+                </div>
                 </div>
             </div>
         </div>

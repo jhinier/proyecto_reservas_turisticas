@@ -146,7 +146,7 @@
                     <span class="text-lg">ℹ️</span>
                     <div>
                         <p class="font-bold text-blue-900">Aviso sobre tarifas infantiles</p>
-                        <p class="mt-0.5">Los niños mayores de 6 años pagan igual que un adulto. Si son menores de 6 años, duermen con sus padres.</p>
+                        <p class="mt-0.5">Los niños mayores de 6 años pagan igual que un adulto. Si son menores de 6 años, no pagan.</p>
                     </div>
                 </div>
                 @endif
