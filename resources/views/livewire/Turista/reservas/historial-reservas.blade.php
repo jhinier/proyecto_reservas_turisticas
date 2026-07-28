@@ -4,7 +4,16 @@
     
     <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Mis reservas</h1>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
+                Mis reservas
+                <div class="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-full bg-green-50 border border-green-200 text-[9px] text-green-700 uppercase tracking-widest font-black ml-1" title="Sincronización automática activada">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-600"></span>
+                    </span>
+                    En vivo
+                </div>
+            </h1>
             <p class="text-sm text-gray-500 mt-1">Historial de tus solicitudes y servicios contratados.</p>
         </div>
         
@@ -16,6 +25,7 @@
                     <option value="">Todos los estados</option>
                     <option value="Pendiente">Pendiente</option>
                     <option value="Confirmada">Confirmada</option>
+                    <option value="Pago en revisión">Pago en revisión</option>
                     <option value="Completada">Completada</option>
                     <option value="Cancelada">Cancelada</option>
                 </select>
@@ -27,7 +37,7 @@
     </div>
 
     {{-- TABLA DE RESERVAS ESTILO TÉCNICO --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div wire:poll.10s class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm whitespace-nowrap">
                 <thead class="bg-gray-50 text-[#464646] font-bold text-xs  tracking-widest border-b border-gray-200">
@@ -40,7 +50,7 @@
                         <th class="p-4 pr-6 text-center">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody wire:loading.class="opacity-40" class="divide-y divide-gray-100 transition-opacity duration-300">
                     @forelse($reservas as $reserva)
                         @php
                             $emprendimiento = $reserva->detalles->first()?->servicio?->categoriaPivot?->emprendimiento;
@@ -52,15 +62,20 @@
                             <td class="p-4 text-gray-500">{{ $reserva->created_at->format('d/m/Y H:i') }}</td>
                             <td class="p-4 text-gray-500">{{ $reserva->updated_at->format('d/m/Y H:i') }}</td>
                             <td class="p-4">
-                                @if($reserva->estado === 'Pendiente')
-                                    <span class="px-2.5 py-1 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-700 text-[11px] font-bold uppercase tracking-wider">Pendiente</span>
-                                @elseif(in_array($reserva->estado, ['Confirmada', 'Completada']))
-                                    <span class="px-2.5 py-1 rounded-md bg-green-50 border border-green-200 text-green-700 text-[11px] font-bold uppercase tracking-wider">{{ $reserva->estado }}</span>
-                                @elseif(in_array($reserva->estado, ['Cancelada', 'Rechazada']))
-                                    <span class="px-2.5 py-1 rounded-md bg-red-50 border border-red-200 text-red-700 text-[11px] font-bold uppercase tracking-wider">{{ $reserva->estado }}</span>
-                                @else
-                                    <span class="px-2.5 py-1 rounded-md bg-gray-50 border border-gray-200 text-gray-700 text-[11px] font-bold uppercase tracking-wider">{{ $reserva->estado }}</span>
-                                @endif
+                                @php
+                                    $color = match($reserva->estado) {
+                                        'Confirmada' => 'text-green-700 bg-green-50 border-green-200',
+                                        'Completada' => 'text-blue-700 bg-blue-50 border-blue-200',
+                                        'Reagendada' => 'text-yellow-700 bg-yellow-50 border-yellow-200',
+                                        'Pendiente'  => 'text-orange-700 bg-orange-50 border-orange-200',
+                                        'Pago en revisión' => 'text-indigo-700 bg-indigo-50 border-indigo-200',
+                                        'Cancelada', 'Rechazada' => 'text-red-700 bg-red-50 border-red-200',
+                                        default => 'text-gray-700 bg-gray-50 border-gray-200'
+                                    };
+                                @endphp
+                                <span class="px-2.5 py-1 rounded-md border text-[11px] font-bold uppercase tracking-wider {{ $color }}">
+                                    {{ $reserva->estado }}
+                                </span>
                             </td>
                             <td class="p-4 text-right font-bold text-gray-900">${{ number_format($reserva->precio_total, 2) }}</td>
                             <td class="p-4 pr-6">
@@ -109,16 +124,20 @@
                                 <h3 class="text-xl font-bold text-[#00A344] tracking-tight" id="modal-title">
                                     Detalles de la reserva 
                                 </h3>
-                                
-                                @if($reservaSeleccionada->estado === 'Pendiente')
-                                    <span class="px-2.5 py-1 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-700 text-[10px] font-bold uppercase tracking-wider">Pendiente</span>
-                                @elseif(in_array($reservaSeleccionada->estado, ['Confirmada', 'Completada']))
-                                    <span class="px-2.5 py-1 rounded-md bg-green-50 border border-green-200 text-green-700 text-[10px] font-bold uppercase tracking-wider">{{ $reservaSeleccionada->estado }}</span>
-                                @elseif(in_array($reservaSeleccionada->estado, ['Cancelada', 'Rechazada']))
-                                    <span class="px-2.5 py-1 rounded-md bg-red-50 border border-red-200 text-red-700 text-[10px] font-bold uppercase tracking-wider">{{ $reservaSeleccionada->estado }}</span>
-                                @else
-                                    <span class="px-2.5 py-1 rounded-md bg-gray-50 border border-gray-200 text-gray-700 text-[10px] font-bold uppercase tracking-wider">{{ $reservaSeleccionada->estado }}</span>
-                                @endif
+                                @php
+                                    $colorModal = match($reservaSeleccionada->estado) {
+                                        'Confirmada' => 'text-green-700 bg-green-50 border-green-200',
+                                        'Completada' => 'text-blue-700 bg-blue-50 border-blue-200',
+                                        'Reagendada' => 'text-yellow-700 bg-yellow-50 border-yellow-200',
+                                        'Pendiente'  => 'text-orange-700 bg-orange-50 border-orange-200',
+                                        'Pago en revisión' => 'text-indigo-700 bg-indigo-50 border-indigo-200',
+                                        'Cancelada', 'Rechazada' => 'text-red-700 bg-red-50 border-red-200',
+                                        default => 'text-gray-700 bg-gray-50 border-gray-200'
+                                    };
+                                @endphp
+                                <span class="px-2.5 py-1 rounded-md border text-[10px] font-bold uppercase tracking-wider {{ $colorModal }}">
+                                    {{ $reservaSeleccionada->estado }}
+                                </span>
                             </div>
                             @php
                                 $emprendimientoModal = $reservaSeleccionada->detalles->first()?->servicio?->categoriaPivot?->emprendimiento;
@@ -176,6 +195,39 @@
                         <span class="text-3xl font-bold text-gray-900 tracking-tight">${{ number_format($reservaSeleccionada->precio_total, 2) }}</span>
                     </div>
 
+                    {{-- ZONA DE COMPROBANTE DE PAGO --}}
+                    @if($reservaSeleccionada->estado === 'Confirmada' && empty($reservaSeleccionada->comprobante_pago))
+                        <div class="mt-6 p-5 bg-blue-50 rounded-xl border border-blue-100 shadow-sm">
+                            <label class="block text-[11px] font-bold text-blue-800 uppercase tracking-widest mb-2">Subir comprobante de pago</label>
+                            <p class="text-xs text-blue-700 mb-3">Sube la foto de tu transferencia o depósito. Tienes 24 horas desde la confirmación para realizarlo.</p>
+                            
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                                <input type="file" wire:model="comprobanteFoto" accept="image/*" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:outline-none cursor-pointer">
+                                
+                                <button type="button" wire:click="guardarComprobante" wire:loading.attr="disabled" class="mt-2 sm:mt-0 px-5 py-2 rounded-lg bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition shadow-sm outline-none whitespace-nowrap disabled:opacity-50">
+                                    <span wire:loading.remove wire:target="guardarComprobante">Enviar comprobante</span>
+                                    <span wire:loading wire:target="guardarComprobante">Subiendo...</span>
+                                </button>
+                            </div>
+                            @error('comprobanteFoto') <span class="text-xs text-red-600 font-bold mt-2 block">{{ $message }}</span> @enderror
+                        </div>
+                    @elseif($reservaSeleccionada->estado === 'Pago en revisión')
+                        <div class="mt-6 p-4 bg-yellow-50 rounded-xl border border-yellow-200 flex items-start gap-3">
+                            <svg class="w-5 h-5 text-yellow-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <div>
+                                <span class="block text-[11px] font-bold text-yellow-800 uppercase tracking-widest">Comprobante en revisión</span>
+                                <p class="text-xs text-yellow-700 mt-1">El comprobante fue subido exitosamente. El establecimiento lo está verificando.</p>
+                                @if(!empty($reservaSeleccionada->comprobante_pago))
+                                    <a href="{{ asset('storage/' . $reservaSeleccionada->comprobante_pago) }}" target="_blank" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors mt-2 inline-block">Ver comprobante subido &rarr;</a>
+                                @endif
+                            </div>
+                        </div>
+                    @elseif(in_array($reservaSeleccionada->estado, ['Completada']) && !empty($reservaSeleccionada->comprobante_pago))
+                        <div class="mt-4 text-right">
+                             <a href="{{ asset('storage/' . $reservaSeleccionada->comprobante_pago) }}" target="_blank" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors">Ver comprobante de pago &rarr;</a>
+                        </div>
+                    @endif
+
                     @if($reservaService->esCancelablePorTurista($reservaSeleccionada))
                         <div class="mt-6 border-t border-gray-100 pt-6">
                             @if(!$intentoCancelar)
@@ -205,7 +257,7 @@
                         @if(!in_array($reservaSeleccionada->estado, ['Completada', 'Cancelada', 'Rechazada']))
                             <div class="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200 text-center">
                                 <span class="text-xs font-semibold text-gray-500">
-                                    Faltan menos de 24 horas para el servicio. Ya no es posible cancelar.
+                                    No es posible cancelar. El tiempo límite expiró o el estado actual no lo permite.
                                 </span>
                             </div>
                         @endif

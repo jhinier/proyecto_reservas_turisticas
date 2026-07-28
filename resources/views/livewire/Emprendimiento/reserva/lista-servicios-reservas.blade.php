@@ -15,7 +15,9 @@
             $esGuianzaV     = str_contains($catLower, 'guianza');
             $esPaqueteV     = str_contains($catLower, 'paquete');
             $esAlquilerV    = str_contains($catLower, 'alquiler');
+            $esAlimentacionV = str_contains($catLower, 'aliment');
             $tieneMetaV     = $esHospedajeV || $esGuianzaV;
+            $mostrarStock   = !$esAlimentacionV;
 
             // Recalculamos personas separando por categoría para evitar bloqueos cruzados
             $personasAcomodadas = 0;
@@ -50,9 +52,11 @@
                             <h4 class="font-black text-lg text-[#06281E] dark:text-white leading-tight">
                                 {{ $servicio->nombre }}
                             </h4>
-                            <span class="bg-green-50 dark:bg-green-900/30 text-[#00A344] dark:text-[#00D65B] text-[9px] font-black px-2 py-1 rounded-full whitespace-nowrap shrink-0 border border-[#00A344]/30 dark:border-[#00D65B]/30">
-                                {{ $servicio->cupos_libres }} disp.
-                            </span>
+                            @if($mostrarStock)
+                                <span class="bg-green-50 dark:bg-green-900/30 text-[#00A344] dark:text-[#00D65B] text-[9px] font-black px-2 py-1 rounded-full whitespace-nowrap shrink-0 border border-[#00A344]/30 dark:border-[#00D65B]/30">
+                                    {{ $servicio->cupos_libres }} disp.
+                                </span>
+                            @endif
                         </div>
 
                         <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-3 leading-relaxed">{{ $servicio->descripcion }}</p>

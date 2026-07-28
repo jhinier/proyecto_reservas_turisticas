@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Services\EmprendimientoService;
+use App\Models\TipoServicio;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -17,9 +18,43 @@ class GestionEmprendimientos extends Component
     // Propiedades del formulario (Usuario Responsable)
     public $user_name, $user_apellidos, $user_email, $user_telefono, $user_cedula;
 
+    // Arreglo dinámico para las URLs (edición)
+    public array $enlaces = [''];
+
     // Banderas de interfaz
     public $editando = false;
     public $empresaDetalle = null;
+
+    // Filtros
+    public $busqueda = '';
+    public $filtroTipoServicio = '';
+    public $tiposServicio = [];
+
+    public function mount()
+    {
+        $this->tiposServicio = TipoServicio::pluck('nombre', 'id')->toArray();
+    }
+
+    public function updatedBusqueda()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFiltroTipoServicio()
+    {
+        $this->resetPage();
+    }
+
+    public function agregarEnlace()
+    {
+        $this->enlaces[] = '';
+    }
+
+    public function eliminarEnlace($index)
+    {
+        unset($this->enlaces[$index]);
+        $this->enlaces = array_values($this->enlaces);
+    }
 
     /**
      * Renderiza la vista delegando la obtención de datos al Servicio.
@@ -28,7 +63,7 @@ class GestionEmprendimientos extends Component
     {
         return view('livewire.admin.gestion-emprendimientos', [ 
             'usuarios' => $servicio->obtenerUsuariosEmprendedores(),
-            'emprendimientos' => $servicio->listarPaginados(10)
+            'emprendimientos' => $servicio->listarPaginados(10, $this->busqueda, $this->filtroTipoServicio)
         ]);
     }
 
@@ -73,6 +108,9 @@ class GestionEmprendimientos extends Component
         $this->user_email = $emp->user->email;
         $this->user_telefono = $emp->user->telefono;
         $this->user_cedula = $emp->user->cedula;
+
+        // Cargar enlaces existentes
+        $this->enlaces = $emp->enlaces ?? [''];
 
         $this->modal('modal-emprendimiento')->show();
     }
@@ -134,12 +172,18 @@ class GestionEmprendimientos extends Component
             'user_telefono' => 'required',
             'user_email' => 'required|email',
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'enlaces' => 'nullable|array',
+            'enlaces.*' => 'nullable|url|max:255',
         ]);
+
+        // Limpiamos las casillas vacías
+        $enlacesLimpios = array_filter($this->enlaces, fn($valor) => !is_null($valor) && trim($valor) !== '');
 
         $datosEmpresa = [
             'nombre' => $this->nombre,
             'descripcion' => $this->descripcion,
             'estado' => $this->estado,
+            'enlaces' => empty($enlacesLimpios) ? null : array_values($enlacesLimpios),
         ];
 
         $datosUsuario = [

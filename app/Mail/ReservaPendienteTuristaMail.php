@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\Reserva;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -15,10 +14,14 @@ class ReservaPendienteTuristaMail extends Mailable
     use Queueable, SerializesModels;
 
     public $reserva;
+    public string $nombreEmprendimiento;
 
     public function __construct(Reserva $reserva)
     {
-        $this->reserva = $reserva;
+        $this->reserva = $reserva->loadMissing('detalles.servicio.categoriaPivot.emprendimiento');
+        
+        $detalle = $this->reserva->detalles->first();
+        $this->nombreEmprendimiento = $detalle?->servicio?->categoriaPivot?->emprendimiento?->nombre ?? 'el establecimiento';
     }
 
     public function envelope(): Envelope
@@ -33,10 +36,5 @@ class ReservaPendienteTuristaMail extends Mailable
         return new Content(
             view: 'emails.reserva_pendiente_turista',
         );
-    }
-
-    public function attachments(): array
-    {
-        return [];
     }
 }

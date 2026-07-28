@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Reserva;
 use App\Models\ReservaDetalle;
 use App\Models\Servicio;
+use App\Models\Emprendimiento;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -17,7 +18,7 @@ use Illuminate\Support\Collection;
 class ReservaService
 {
     protected InventarioService $inventarioService;
-    protected UserService       $userService; // Cambiado para usar el servicio correcto
+    protected UserService       $userService; 
 
     public function __construct(InventarioService $inventarioService, UserService $userService)
     {
@@ -36,7 +37,6 @@ class ReservaService
             $query->where('estado', $filtroEstado);
         }
 
-        // Limpieza de espacios en la cédula
         if (!empty($buscarCedula)) {
             $cedulaLimpia = trim($buscarCedula);
             $query->whereHas('turista', function ($q) use ($cedulaLimpia) {
@@ -50,13 +50,11 @@ class ReservaService
             });
         }
 
-        // Ordenamos por la última modificación (updated_at) de forma descendente
         return $query->latest('updated_at')->paginate(10);
     }
 
     public function obtenerReservasPorTurista(int $turistaId, string $filtroEstado = '')
     {
-        // Navegamos por las relaciones para extraer el emprendimiento sin sobrecargar la BD
         $query = Reserva::with(['detalles.servicio.categoriaPivot.emprendimiento'])
             ->where('user_id', $turistaId);
 
@@ -100,7 +98,6 @@ class ReservaService
         return DB::transaction(function () use ($reservaId, $turistaId, $motivo) {
             $reserva = $this->obtenerDetalleSeguroTurista($reservaId, $turistaId);
 
-            // Bloquea si no existe o si no pasa la regla de las 24 horas
             if (!$reserva || !$this->esCancelablePorTurista($reserva)) {
                 return false;
             }
@@ -124,6 +121,20 @@ class ReservaService
                 return false;
             }
 
+            // REGLA DE SEGURIDAD: Bloquear cancelación si la fecha ya pasó
+            if ($nuevoEstado === 'Cancelada') {
+                $primerDetalle = $reserva->detalles->sortBy('fecha_inicio')->first();
+                if ($primerDetalle) {
+                    $fechaString = \Carbon\Carbon::parse($primerDetalle->fecha_inicio)->format('Y-m-d');
+                    $horaString = $primerDetalle->hora_llegada ?? '00:00:00';
+                    $fechaHoraInicio = \Carbon\Carbon::parse($fechaString . ' ' . $horaString);
+                    
+                    if (now()->greaterThanOrEqualTo($fechaHoraInicio)) {
+                        throw new \Exception("La fecha del servicio ya pasó. El sistema no permite cancelar esta reserva.");
+                    }
+                }
+            }
+
             $reserva->estado = $nuevoEstado;
 
             if (in_array($nuevoEstado, ['Cancelada', 'Rechazada'], true)) {
@@ -134,13 +145,16 @@ class ReservaService
 
             $reserva->save();
 
-            // Enviar correo solo después de que la base de datos guarda los cambios
-            // Enviar correo solo después de que la base de datos guarda los cambios
-            DB::afterCommit(function () use ($reserva, $nuevoEstado, $motivo) {
+            DB::afterCommit(function () use ($reserva, $nuevoEstado, $motivo, $emprendimientoId) {
                 if (in_array($nuevoEstado, ['Cancelada', 'Rechazada'], true)) {
                     Mail::to($reserva->turista->email)->send(new ReservaCanceladaMail($reserva, $motivo));
                 } elseif ($nuevoEstado === 'Confirmada') {
-                    Mail::to($reserva->turista->email)->send(new \App\Mail\ReservaAceptadaMail($reserva));
+                    // Obtenemos el teléfono del emprendimiento para el pago
+                    $emprendimiento = Emprendimiento::with('user')->find($emprendimientoId);
+                    $telefono = $emprendimiento->user->telefono ?? 'No disponible';
+                    
+                    // Enviamos el correo de Aceptada (pasos para el pago)
+                    Mail::to($reserva->turista->email)->send(new \App\Mail\ReservaAceptadaMail($reserva, $telefono));
                 }
             });
 
@@ -148,7 +162,7 @@ class ReservaService
         });
     }
 
-   public function reagendarReserva(int $reservaId, array $nuevasFechas, int $emprendimientoId): bool
+    public function reagendarReserva(int $reservaId, array $nuevasFechas, int $emprendimientoId): bool
     {
         return DB::transaction(function () use ($reservaId, $nuevasFechas, $emprendimientoId) {
             $reserva = $this->obtenerDetalleSeguro($reservaId, $emprendimientoId);
@@ -252,7 +266,6 @@ class ReservaService
     {
         return DB::transaction(function () use ($datosTurista, $carrito, $emprendimientoId) {
 
-            // Buscamos al usuario existente en lugar de crearlo
             $user = $this->userService->buscarPorIdentificacion($datosTurista['identificacion']);
 
             if (!$user) {
@@ -261,7 +274,6 @@ class ReservaService
 
             $reserva = Reserva::create([
                 'user_id'           => $user->id,
-                'emprendimiento_id' => $emprendimientoId,
                 'estado'            => 'Confirmada',
                 'precio_total'      => 0,
                 'reservada_por_rol' => 'Emprendimiento',
@@ -271,11 +283,13 @@ class ReservaService
 
             $reserva->update(['precio_total' => $totalCalculado]);
 
-            // Enviar el correo de confirmación
-            DB::afterCommit(function () use ($user, $reserva, $carrito) {
+            $emprendimiento = \App\Models\Emprendimiento::with('user')->find($emprendimientoId);
+            $telefono = $emprendimiento->user->telefono ?? 'No disponible';
+
+            DB::afterCommit(function () use ($user, $reserva, $carrito, $telefono) {
                 try {
                     Mail::to($user->email)->send(
-                        new \App\Mail\ReservaConfirmadaMail($reserva, $user, $carrito)
+                        new \App\Mail\ReservaConfirmadaMail($reserva, $user, $carrito, $telefono)
                     );
                 } catch (\Exception $e) {
                     Log::error('Fallo al enviar correo de reserva al turista: ' . $e->getMessage());
@@ -308,7 +322,6 @@ class ReservaService
             $fechaInicio    = $item['fecha_inicio'];
             $cantidad       = (int) $item['cantidad'];
             
-            // Para la BD, hospedaje usa número de personas, los demás mandan 0
             $numeroPersonas = $esHospedaje ? (int) ($item['numero_personas'] ?? 1) : 0;
             $numeroPersonasCalculo = max(1, $numeroPersonas);
 
@@ -319,7 +332,6 @@ class ReservaService
             }
 
             $fechaParaCalculo = $fechaFin ?: $fechaInicio;
-            // Corrección: añadimos + 1 para que el backend cobre los días inclusivos igual que la vista
             $diasCalculados = max(1, Carbon::parse($fechaInicio)->diffInDays(Carbon::parse($fechaParaCalculo)) + 1);
 
             if ($this->inventarioService->manejaStockDiario($nombreTipo) && !$esAlimentacion) {
@@ -335,13 +347,11 @@ class ReservaService
                 }
             }
 
-            // Matemática exacta y alineada con la vista
             if ($esPaquete) {
                 $subtotal = $servicioDB->precio * $cantidad;
             } elseif ($esHospedaje) {
                 $subtotal = $servicioDB->precio * $numeroPersonasCalculo * $cantidad * $diasCalculados;
             } elseif ($esGuianza || $esAlquiler) {
-                // Guianza y Alquiler NO multiplican por el número de personas
                 $subtotal = $servicioDB->precio * $cantidad * $diasCalculados;
             } else {
                 $subtotal = $servicioDB->precio * $cantidad;
@@ -351,7 +361,7 @@ class ReservaService
                 'servicio_id'     => $servicioDB->id,
                 'fecha_inicio'    => $fechaInicio,
                 'fecha_fin'       => $fechaFin,
-                'hora_llegada'    => $item['hora'] ?? null, // Nombre correcto de la base de datos
+                'hora_llegada'    => $item['hora'] ?? null,
                 'numero_personas' => $numeroPersonas,
                 'cantidad'        => $cantidad,
                 'precio_unitario' => $servicioDB->precio,
@@ -384,9 +394,8 @@ class ReservaService
                 $q->where('estado', $estado);
             });
         } else {
-            // AHORA MOSTRARÁ TODOS LOS ESTADOS POR DEFECTO
             $query->whereHas('reserva', function ($q) {
-                $q->whereIn('estado', ['Confirmada', 'Reagendada', 'Pendiente', 'Completada', 'Cancelada', 'Rechazada']);
+                $q->whereIn('estado', ['Confirmada', 'Reagendada', 'Pendiente', 'Completada', 'Cancelada', 'Rechazada', 'Pago en revisión']);
             });
         }
 
@@ -398,36 +407,29 @@ class ReservaService
         }
 
         if (!empty($categoria)) {
-    $query->whereHas('servicio.tipoServicio', function ($q) use ($categoria) {
-        // Cambiamos 'id' por 'tipo_servicios.id'
-        $q->where('tipo_servicios.id', $categoria);
-    });
-}
+            $query->whereHas('servicio.tipoServicio', function ($q) use ($categoria) {
+                $q->where('tipo_servicios.id', $categoria);
+            });
+        }
 
         return $query->orderBy('hora_llegada', 'asc')->get();
     }
 
-    /**
-     * Nuevo flujo: Registro para Turistas (Estado Pendiente)
-     */
     public function registrarReservaTurista(array $carrito, int $userId): Reserva
     {
         return DB::transaction(function () use ($carrito, $userId) {
             
-            // 1. Crear Reserva como Pendiente
             $reserva = Reserva::create([
                 'user_id'           => $userId,
                 'estado'            => Reserva::ESTADO_PENDIENTE,
-                'precio_total'      => 0, // Se actualizará al procesar detalles
+                'precio_total'      => 0, 
                 'reservada_por_rol' => 'Turista'
             ]);
 
-            // 2. Procesar detalles (reutilizamos tu método privado existente)
             $totalCalculado = $this->procesarDetallesCarrito($reserva, $carrito);
 
             $reserva->update(['precio_total' => $totalCalculado]);
 
-            // 3. Disparar correo de confirmación de recepción
             DB::afterCommit(function () use ($reserva) {
                 try {
                     Mail::to($reserva->turista->email)->send(new \App\Mail\ReservaPendienteTuristaMail($reserva));
@@ -440,29 +442,146 @@ class ReservaService
         });
     }
 
-    /**
-     * Regla de negocio: Cancelación (24h antes)
-     * Se puede usar en el Controller o Service
-     */
+    public function subirComprobante(int $reservaId, int $userId, $archivo): bool
+    {
+        return DB::transaction(function () use ($reservaId, $userId, $archivo) {
+            $reserva = Reserva::where('id', $reservaId)->where('user_id', $userId)->firstOrFail();
+            
+            if ($reserva->estado !== 'Confirmada') {
+                throw new \Exception("La reserva no está habilitada para recibir comprobantes.");
+            }
+
+            $ruta = $archivo->store('comprobantes', 'public');
+            
+            $reserva->comprobante_pago = $ruta;
+            $reserva->fecha_subida_comprobante = now();
+            $reserva->estado = 'Pago en revisión';
+            $reserva->save();
+
+            return true;
+        });
+    }
+
+    public function procesarCancelacionesAutomaticas(): void
+    {
+        $ahora = Carbon::now();
+
+        // 1. Cancelar Pendientes > 24 horas
+        $pendientes = Reserva::with('turista') // <-- Traemos al turista
+            ->where('estado', 'Pendiente')
+            ->where('created_at', '<=', $ahora->copy()->subHours(24))
+            ->get();
+
+        foreach ($pendientes as $reserva) {
+            $motivo = 'La reserva no fue confirmada a tiempo.';
+            
+            $reserva->update([
+                'estado' => 'Cancelada',
+                'motivo_cancelacion' => $motivo,
+                'cancelada_en' => $ahora,
+                'cancelada_por_rol' => 'Sistema'
+            ]);
+
+            // Enviar correo de cancelación
+            if ($reserva->turista && $reserva->turista->email) {
+                try {
+                    Mail::to($reserva->turista->email)->send(new \App\Mail\ReservaCanceladaMail($reserva, $motivo));
+                } catch (\Exception $e) {
+                    Log::error("Error enviando cancelación por timeout: " . $e->getMessage());
+                }
+            }
+        }
+
+        // 2. Cancelar Confirmadas sin pago > 24 horas
+        $confirmadas = Reserva::with('turista') // <-- Traemos al turista
+            ->where('estado', 'Confirmada')
+            ->whereNull('comprobante_pago')
+            ->where('updated_at', '<=', $ahora->copy()->subHours(24))
+            ->get();
+
+        foreach ($confirmadas as $reserva) {
+            $motivo = 'Tiempo límite agotado. No se recibió el comprobante de pago.';
+            
+            $reserva->update([
+                'estado' => 'Cancelada',
+                'motivo_cancelacion' => $motivo,
+                'cancelada_en' => $ahora,
+                'cancelada_por_rol' => 'Sistema'
+            ]);
+
+            // Enviar correo de cancelación
+            if ($reserva->turista && $reserva->turista->email) {
+                try {
+                    Mail::to($reserva->turista->email)->send(new \App\Mail\ReservaCanceladaMail($reserva, $motivo));
+                } catch (\Exception $e) {
+                    Log::error("Error enviando cancelación por falta de pago: " . $e->getMessage());
+                }
+            }
+        }
+
+        // 3. Alerta a las 23 horas (1 hora antes de que se cumplan las 24)
+        $reservasPorAvisar = Reserva::with(['detalles.servicio.categoriaPivot.emprendimiento.user', 'turista'])
+            ->where('estado', 'Pago en revisión')
+            ->whereNotNull('fecha_subida_comprobante')
+            ->where('fecha_subida_comprobante', '<=', $ahora->copy()->subHours(23))
+            ->where('fecha_subida_comprobante', '>', $ahora->copy()->subHours(24))
+            ->get();
+
+        foreach ($reservasPorAvisar as $reserva) {
+            $detalle = $reserva->detalles->first();
+            $emprendedor = null;
+
+            // Navegamos por las relaciones reales de tu sistema para llegar al dueño
+            if ($detalle && $detalle->servicio && $detalle->servicio->categoriaPivot && $detalle->servicio->categoriaPivot->emprendimiento) {
+                $emprendedor = $detalle->servicio->categoriaPivot->emprendimiento->user;
+            }
+            
+            if ($emprendedor && $emprendedor->email) {
+                try {
+                    Mail::to($emprendedor->email)->send(new \App\Mail\AlertaRevisionComprobanteMail($reserva));
+                } catch (\Exception $e) {
+                    Log::error("Error enviando alerta en reserva #{$reserva->id}: " . $e->getMessage());
+                }
+            } else {
+                Log::error("Fallo al enviar correo: No se encontró el emprendedor vinculado a los detalles de la reserva #{$reserva->id}");
+            }
+        }
+
+        // 4. Aprobación automática a las 24 horas exactas
+        $reservasPorCompletar = Reserva::where('estado', 'Pago en revisión')
+            ->whereNotNull('fecha_subida_comprobante')
+            ->where('fecha_subida_comprobante', '<=', $ahora->copy()->subHours(24))
+            ->get();
+
+        foreach ($reservasPorCompletar as $reserva) {
+            $reserva->update([
+                'estado' => 'Completada'
+            ]);
+        }
+    }
+
     public function esCancelablePorTurista(Reserva $reserva): bool
     {
-        if (in_array($reserva->estado, ['Completada', 'Cancelada', 'Rechazada'])) {
-            return false;
-        }
-
-        // Ordenamos para encontrar el servicio que inicia primero
         $primerDetalle = $reserva->detalles->sortBy('fecha_inicio')->first();
-        
-        if (!$primerDetalle) {
-            return false;
+        if ($primerDetalle) {
+            $fechaString = \Carbon\Carbon::parse($primerDetalle->fecha_inicio)->format('Y-m-d');
+            $horaString = $primerDetalle->hora_llegada ?? '00:00:00';
+            $fechaHoraInicio = \Carbon\Carbon::parse($fechaString . ' ' . $horaString);
+            
+            if (now()->addHours(24)->greaterThanOrEqualTo($fechaHoraInicio)) {
+                return false;
+            }
         }
 
-        $fechaString = \Carbon\Carbon::parse($primerDetalle->fecha_inicio)->format('Y-m-d');
-        $horaString = $primerDetalle->hora_llegada ?? '00:00:00';
-        
-        $fechaInicioServicio = \Carbon\Carbon::parse($fechaString . ' ' . $horaString);
-        
-        // Valida si faltan más de 24 horas desde este momento
-        return now()->addHours(24)->isBefore($fechaInicioServicio);
+        if ($reserva->estado === 'Pendiente') {
+            return true;
+        }
+
+        if ($reserva->estado === 'Confirmada' && empty($reserva->comprobante_pago)) {
+            $horasDesdeConfirmacion = Carbon::parse($reserva->updated_at)->diffInHours(now());
+            return $horasDesdeConfirmacion <= 24;
+        }
+
+        return false;
     }
 }

@@ -3,7 +3,8 @@
         
         <div class="flex-1 w-full px-4 py-2">
             <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1 ml-1">Fecha de inicio</label>
-            <input type="date" wire:model.blur="fecha" min="{{ $this->getFechaMinima() }}" 
+            <input type="date" wire:model.blur="fecha" min="{{ $this->getFechaMinima() }}"
+                   x-on:change="if ({{ $this->esPaquete() ? 'true' : 'false' }} && $event.target.value) { const fecha = new Date($event.target.value); if (fecha.getDay() === 0 || fecha.getDay() === 1) { $event.target.value = ''; @this.set('fecha', ''); } }"
                    class="w-full bg-transparent border-none p-0 text-sm font-black text-[#06281E] dark:text-white focus:ring-0 cursor-pointer dark:[color-scheme:dark] outline-none">
             @error('fecha') <span class="text-red-500 dark:text-red-400 text-[10px] font-bold mt-1 block">{{ $message }}</span> @enderror
         </div>

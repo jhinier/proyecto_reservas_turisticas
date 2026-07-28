@@ -17,12 +17,18 @@ class ReservaConfirmadaMail extends Mailable
     public Reserva $reserva;
     public User $turista;
     public array $carrito;
+    public string $telefono;
+    public string $nombreEmprendimiento;
 
-    public function __construct(Reserva $reserva, User $turista, array $carrito)
+    public function __construct(Reserva $reserva, User $turista, array $carrito, string $telefono)
     {
-        $this->reserva = $reserva;
+        $this->reserva = $reserva->loadMissing('detalles.servicio.categoriaPivot.emprendimiento');
         $this->turista = $turista;
         $this->carrito = $carrito;
+        $this->telefono = $telefono;
+        
+        $detalle = $this->reserva->detalles->first();
+        $this->nombreEmprendimiento = $detalle?->servicio?->categoriaPivot?->emprendimiento?->nombre ?? 'el establecimiento';
     }
 
     public function envelope(): Envelope

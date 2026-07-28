@@ -94,7 +94,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     // --- GRUPO DEL GAD ---
-    // Solo entran SuperAdmin y Admin del GAD
+ 
     Route::prefix('admin')->middleware(['role:superAdministrador|administrador_gad'])->group(function () {
         Route::get('/panel', AdminDashboard::class)->name('admin.dashboard');
         Route::get('/emprendimientos/gestion', GestionEmprendimientos::class)->name('admin.emprendimientos.gestion');

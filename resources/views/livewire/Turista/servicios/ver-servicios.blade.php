@@ -1,5 +1,5 @@
 {{-- Se aplica un margen negativo (-mt-6 md:-mt-8) para anular el padding que pone el layout principal y pegar la imagen al menú --}}
-<div class="w-full min-h-screen bg-white -mt-6 md:-mt-8 flex flex-col">
+<div class="w-full min-h-screen bg-[#f4f9f4] -mt-6 md:-mt-8 flex flex-col">
 
     {{-- Cabecera --}}
     <div class="w-full max-w-screen-2xl mx-auto md:px-16 lg:px-32 xl:px-64">
@@ -28,10 +28,14 @@
                              x-init="
                                 let defaultDates = ['{{ $fechaInicio }}'];
                                 if ('{{ $this->requiereFechaFin() }}' && '{{ $fechaFin }}') { defaultDates.push('{{ $fechaFin }}'); }
+                                let bloquearLunesDomingos = {{ $this->esPaquete() ? 'true' : 'false' }};
                                 let fp = flatpickr($refs.dateWrapper, {
                                     mode: '{{ $this->requiereFechaFin() ? 'range' : 'single' }}',
                                     showMonths: window.innerWidth > 768 ? 2 : 1, locale: 'es', 
-                                    minDate: new Date().fp_incr(2), // AQUI SE BLOQUEAN LOS DOS DIAS
+                                    minDate: new Date().fp_incr(3),
+                                    disable: bloquearLunesDomingos ? [function(date) {
+                                        return date.getDay() === 0 || date.getDay() === 1;
+                                    }] : [],
                                     defaultDate: defaultDates, dateFormat: 'Y-m-d',
                                     onChange: function(selectedDates, dateStr, instance) {
                                         if (selectedDates.length > 0) { inicio = instance.formatDate(selectedDates[0], 'd M Y'); @this.set('fechaInicio', instance.formatDate(selectedDates[0], 'Y-m-d')); }
@@ -448,7 +452,10 @@
                                         </div>
                                     </div>
                                     <div class="shrink-0 font-bold text-gray-900 text-sm md:text-base text-right pl-2">
-                                        ${{ number_format($item['subtotal'], 2) }}
+                                        @php
+                                            $precioUnitarioItem = $item['precio_unitario'] ?? $item['precio'] ?? ($item['subtotal'] / max(1, (int) ($item['cantidad'] ?? 1)));
+                                        @endphp
+                                        ${{ number_format($precioUnitarioItem, 2) }}
                                     </div>
                                 </div>
                             @endforeach

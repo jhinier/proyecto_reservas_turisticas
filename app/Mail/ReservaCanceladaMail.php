@@ -15,11 +15,15 @@ class ReservaCanceladaMail extends Mailable
 
     public Reserva $reserva;
     public string $motivo;
+    public string $nombreEmprendimiento;
 
     public function __construct(Reserva $reserva, string $motivo)
     {
-        $this->reserva = $reserva;
+        $this->reserva = $reserva->loadMissing('detalles.servicio.categoriaPivot.emprendimiento');
         $this->motivo = $motivo;
+        
+        $detalle = $this->reserva->detalles->first();
+        $this->nombreEmprendimiento = $detalle?->servicio?->categoriaPivot?->emprendimiento?->nombre ?? 'el establecimiento';
     }
 
     public function envelope(): Envelope

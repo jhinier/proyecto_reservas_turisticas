@@ -38,13 +38,121 @@
     </script>
 
     <style>
-        [x-cloak] { display: none !important; }
-    </style>
+    [x-cloak] { display: none !important; }
+
+    body { top: 0 !important; }
+    .skiptranslate iframe { display: none !important; }
+    #goog-gt-tt { display: none !important; }
+    .goog-tooltip, .goog-tooltip:hover { display: none !important; }
+    .goog-text-highlight { background: none !important; box-shadow: none !important; }
+
+    #google_translate_element {
+        display: flex;
+        align-items: center;
+        min-width: 140px;
+        min-height: 36px;
+    }
+
+    .goog-te-gadget {
+        font-size: 0px !important;
+        color: transparent !important;
+        display: flex !important;
+        align-items: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .goog-logo-link { display: none !important; }
+    .goog-te-gadget img { display: none !important; }
+
+    .goog-te-gadget > span {
+        display: inline-block !important;
+        width: auto !important;
+    }
+
+    .goog-te-combo {
+        font-family: inherit !important;
+        font-size: 0.875rem !important;
+        font-weight: 600 !important;
+        color: #10b981 !important;
+        border: 1px solid #d1fae5 !important;
+        border-radius: 9999px !important;
+        padding: 0.35rem 2.25rem 0.35rem 1rem !important;
+        background-color: #ecfdf5 !important;
+        cursor: pointer !important;
+        outline: none !important;
+        margin: 0 !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2310b981' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+        background-position: right 0.75rem center !important;
+        background-repeat: no-repeat !important;
+        background-size: 1.25em 1.25em !important;
+        height: 36px !important;
+        width: 140px !important;
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
+        transition: all 0.3s ease;
+    }
+
+    .goog-te-combo option {
+        background-color: #ffffff !important;
+        color: #374151 !important;
+        font-size: 14px !important;
+    }
+
+    .goog-te-combo:hover {
+        border-color: #10b981 !important;
+        background-color: #d1fae5 !important;
+    }
+
+    .goog-te-gadget-simple {
+        font-family: inherit !important;
+        font-size: 0.875rem !important;
+        font-weight: 600 !important;
+        color: #10b981 !important;
+        border: 1px solid #d1fae5 !important;
+        border-radius: 9999px !important;
+        padding: 0.4rem 1rem !important;
+        background-color: #ecfdf5 !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.35rem !important;
+        height: 36px !important;
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
+        transition: all 0.3s ease !important;
+        line-height: 1 !important;
+        text-decoration: none !important;
+    }
+
+    .goog-te-gadget-simple:hover {
+        border-color: #10b981 !important;
+        background-color: #d1fae5 !important;
+    }
+
+    .goog-te-gadget-simple .VIpgJd-ZVi9od-ORHb-OEVmcd,
+    .goog-te-gadget-simple .goog-te-menu-value,
+    .goog-te-gadget-simple .goog-te-menu-value span {
+        color: #10b981 !important;
+        font-size: 0.875rem !important;
+        font-weight: 600 !important;
+    }
+
+    .goog-te-gadget-simple img {
+        display: none !important;
+    }
+
+    .goog-te-gadget-simple .goog-te-menu-value:after,
+    .goog-te-gadget-simple .goog-te-menu-value span:last-child {
+        border: none !important;
+    }
+</style>
 
     @livewireStyles
     @fluxAppearance
 </head>
-<body class="bg-green-50 min-h-screen flex flex-col">
+<body class="bg-[#f4f9f4] min-h-screen flex flex-col">
 
     @php
         $isHome = request()->routeIs('home');
@@ -69,21 +177,23 @@
         class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 lg:px-14 py-4 backdrop-blur-xl transition-all duration-300 {{ $navBg }}"
         aria-label="menu principal"
     >
-        <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0">
-            <img 
-                src="{{ asset('img/Logo1.png') }}"
-                class="w-12 h-12 lg:w-14 lg:h-14 object-contain"
-                alt="Explora Candelaria"
-            >
-            <div class="hidden sm:block">
-                <h1 class="text-lg lg:text-xl font-black uppercase tracking-wide leading-none {{ $logoText }}">
-                    Explora Candelaria
-                </h1>
-                <p class="text-[10px] lg:text-xs text-slate-500 tracking-[0.2em] uppercase mt-1">
-                    Descubre · Reserva · Vive
-                </p>
-            </div>
-        </a>
+        <div class="flex items-center gap-4 lg:gap-8 shrink-0">
+            <a href="{{ route('home') }}" class="flex items-center gap-3 shrink-0">
+                <img
+                    src="{{ asset('img/Logo1.png') }}"
+                    class="w-12 h-12 lg:w-14 lg:h-14 object-contain"
+                    alt="Explora Candelaria"
+                >
+                <div class="hidden sm:block">
+                    <h1 class="text-lg lg:text-xl font-black uppercase tracking-wide leading-none {{ $logoText }}">
+                        Explora Candelaria
+                    </h1>
+                    <p class="text-[10px] lg:text-xs text-slate-500 tracking-[0.2em] uppercase mt-1">
+                        Descubre · Reserva · Vive
+                    </p>
+                </div>
+            </a>
+            <div id="google_translate_element" wire:ignore class="hidden sm:block pt-1 shrink-0"></div>
 
         <ul class="hidden items-center gap-6 lg:flex">
             <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'font-bold text-emerald-600 underline underline-offset-4' : 'font-medium ' . $menuText }}">Inicio</a></li>
@@ -138,10 +248,7 @@
                     <a href="{{ route('emprendimiento.panel') }}" class="rounded-full bg-slate-800 px-5 py-2 text-sm font-bold text-white hover:bg-slate-700 transition shadow-lg shrink-0">Ir a Gestión</a>
                 </li>
                 @else
-                <li 
-                    x-data="{ userDropDownIsOpen: false }"
-                    class="relative flex items-center ml-4">
-
+                <li x-data="{ userDropDownIsOpen: false }" class="relative flex items-center ml-4">
                     <button x-on:click="userDropDownIsOpen = ! userDropDownIsOpen" class="rounded-full focus:outline-none" aria-controls="userMenu">
                         <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-emerald-500 bg-slate-100 text-slate-500 hover:text-emerald-600 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
@@ -149,25 +256,15 @@
                             </svg>
                         </div>
                     </button>
-
-                    <ul
-                        x-cloak
-                        x-show="userDropDownIsOpen"
-                        x-transition.opacity
-                        x-on:click.outside="userDropDownIsOpen = false"
-                        id="userMenu"
-                        class="absolute right-0 top-14 flex w-56 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl py-2"
-                    >
+                    <ul x-cloak x-show="userDropDownIsOpen" x-transition.opacity x-on:click.outside="userDropDownIsOpen = false" id="userMenu" class="absolute right-0 top-14 flex w-56 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl py-2">
                         <li class="border-b border-slate-100">
                             <div class="flex flex-col px-5 py-4">
                                 <span class="text-sm font-bold text-slate-800">{{ Auth::user()->name }}</span>
                                 <p class="text-xs text-slate-500">Turista</p>
                             </div>
                         </li>
-                        
                         <li><a href="{{ route('profile.edit') }}" class="block px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600 transition">Mi Perfil</a></li>
                         <li><a href="{{ route('turista.reservas.historial') ?? '#' }}" class="block px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600 transition">Mis Reservas</a></li>
-
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -220,8 +317,7 @@
                         <div>
                             <span class="font-bold text-slate-800">{{ Auth::user()->name }}</span>
                             <p class="text-sm text-slate-500">Turista</p>
-                        </div>  
-                    </div>
+                        </div>
                 </li>
                 @endif
             @endauth
@@ -230,23 +326,9 @@
             <li class="p-2"><a href="{{ route('sitios') ?? '#' }}" class="w-full text-lg font-medium text-slate-700 hover:text-emerald-600 focus:underline">Sitios Turísticos</a></li>
             <li class="p-2"><a href="{{ route('actividades') ?? '#' }}" class="w-full text-lg font-medium text-slate-700 hover:text-emerald-600 focus:underline">Actividades</a></li>
             <li class="p-2"><a href="{{ route('festividades') ?? '#' }}" class="w-full text-lg font-medium text-slate-700 hover:text-emerald-600 focus:underline">Eventos</a></li>
-
             <li class="p-2" x-data="{ serviciosDropDownIsOpenMobile: false }">
-                <button
-                    x-on:click="serviciosDropDownIsOpenMobile = !serviciosDropDownIsOpenMobile"
-                    class="w-full text-left text-lg font-medium text-slate-700 focus:outline-none"
-                    type="button"
-                    x-bind:aria-expanded="serviciosDropDownIsOpenMobile"
-                >
-                    Servicios
-                </button>
-
-                <ul
-                    id="serviciosMenuMobile"
-                    x-cloak
-                    x-show="serviciosDropDownIsOpenMobile"
-                    class="mt-2 flex flex-col gap-2 pl-4 border-l-2 border-slate-100 ml-2"
-                >
+                <button x-on:click="serviciosDropDownIsOpenMobile = !serviciosDropDownIsOpenMobile" class="w-full text-left text-lg font-medium text-slate-700 focus:outline-none" type="button" x-bind:aria-expanded="serviciosDropDownIsOpenMobile">Servicios</button>
+                <ul id="serviciosMenuMobile" x-cloak x-show="serviciosDropDownIsOpenMobile" class="mt-2 flex flex-col gap-2 pl-4 border-l-2 border-slate-100 ml-2">
                     <li><a href="{{ route('turista.servicios.index') }}" class="w-full text-base font-bold text-emerald-600 focus:underline">Ver todos los servicios</a></li>
                     <li><a href="{{ route('turista.servicios.index', ['tipoServicioSeleccionado' => 4]) }}" class="w-full text-base font-medium text-slate-600 hover:text-emerald-600 focus:underline">Hospedaje</a></li>
                     <li><a href="{{ route('turista.servicios.index', ['tipoServicioSeleccionado' => 3]) }}" class="w-full text-base font-medium text-slate-600 hover:text-emerald-600 focus:underline">Alimentación</a></li>
@@ -255,7 +337,6 @@
                     <li><a href="{{ route('turista.servicios.index', ['tipoServicioSeleccionado' => 2]) }}" class="w-full text-base font-medium text-slate-600 hover:text-emerald-600 focus:underline">Paquetes turisticos</a></li>
                 </ul>
             </li>
-
             <hr role="none" class="my-4 border-slate-200">
             
             @guest
@@ -297,7 +378,7 @@
         </ul>
     </nav>
 
-    <main class="{{ $isHome ? '' : 'pt-28' }} min-h-screen flex-1 {{ $isSettingsRoute ? 'bg-slate-50' : '' }}">
+    <main class="{{ $isHome ? '' : 'pt-28' }} min-h-screen flex-1 {{ $isSettingsRoute ? 'bg-slate-50' : 'bg-[#f4f9f4]' }}">
         @yield('content')
 
         @if ($isSettingsRoute)
@@ -309,23 +390,67 @@
         @endif
     </main>
 
-    {{-- FOOTER INSTITUCIONAL DEL GAD (Por defecto) --}}
-    @if(!View::hasSection('ocultar_footer_gad'))
+    {{-- FOOTThe file is still truncated. Let me append the missing footer section:
+
+<edit_file>
+<path>
+c:/laragon/www/proyecto_reservas_turisticas/resources/views/layouts/turista.blade.php
+</path>
+<old_str>    {{-- FOOTER</old_str>
+<new_str>    {{-- FOOTER INSTITUCIONAL DEL GAD (Por defecto) --}}
+    @php
+        $footerEmprendimiento = null;
+
+        if (request()->routeIs('turista.empresa.servicios')) {
+            $footerEmprendimiento = request()->route('emprendimiento');
+        } elseif (request()->routeIs('turista.reservas.checkout')) {
+            $emprendimientoId = session('reserva_turista_datos.emprendimiento_id');
+            if ($emprendimientoId) {
+                $footerEmprendimiento = \App\Models\Emprendimiento::with('user')->find($emprendimientoId);
+            }
+        }
+
+        if (is_numeric($footerEmprendimiento)) {
+            $footerEmprendimiento = \App\Models\Emprendimiento::with('user')->find($footerEmprendimiento);
+        } elseif ($footerEmprendimiento instanceof \App\Models\Emprendimiento) {
+            $footerEmprendimiento->loadMissing('user');
+        }
+    @endphp
+
+    @if($footerEmprendimiento instanceof \App\Models\Emprendimiento)
+        @include('components.Turista_Admin.footer-turista-emprendimiento', ['emprendimiento' => $footerEmprendimiento])
+    @elseif(!$isHome && !View::hasSection('ocultar_footer_gad'))
         @include('components.Turista_Admin.footer_turista')
     @endif
 
     {{-- Aquí se inyectará el footer del negocio si la vista lo solicita --}}
     @yield('footer_personalizado')
 
-<<<<<<< HEAD
-    {{-- ¡ESTAS TRES LÍNEAS SE QUEDAN! --}}
     @include('components.asistente-virtual')
+
+    <!-- Scripts del traductor de Google -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            let container = document.getElementById('google_translate_element');
+            if (container && container.innerHTML === '') {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'es',
+                    includedLanguages: 'es,en,fr,de,pt,it,zh-CN',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                }, 'google_translate_element');
+            }
+        }
+
+        document.addEventListener('livewire:navigated', () => {
+            if (window.google && window.google.translate) {
+                googleTranslateElementInit();
+            }
+        });
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     @fluxScripts
     @livewireScripts
-
-=======
-    @livewireScripts
->>>>>>> origin/Rama-Daniela
 </body>
-</html>
+</html></new_str>
+</edit_file>

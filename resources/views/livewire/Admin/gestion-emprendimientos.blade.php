@@ -83,30 +83,25 @@
         </a>
     </div>
 
-    <div class="mb-6">
-        <div x-data="{
-            options: [ { value: 'Todos', label: 'Todos los servicios' }, { value: 'Hospedaje', label: 'Hospedaje' }, { value: 'Guianza', label: 'Guianza' }, { value: 'Alimentación', label: 'Alimentación' } ],
-            isOpen: false, openedWithKeyboard: false, selectedOption: null,
-            setSelectedOption(option) { this.selectedOption = option; this.isOpen = false; this.openedWithKeyboard = false; this.$refs.hiddenTextField.value = option.value; },
-            highlightFirstMatchingOption(pressedKey) { const option = this.options.find((item) => item.label.toLowerCase().startsWith(pressedKey.toLowerCase())); if (option) { const index = this.options.indexOf(option); const allOptions = document.querySelectorAll('.combobox-option'); if (allOptions[index]) { allOptions[index].focus(); } } }
-        }" class="w-full max-w-xs flex flex-col gap-1" x-on:keydown="highlightFirstMatchingOption($event.key)" x-on:keydown.esc.window="isOpen = false, openedWithKeyboard = false">
-            <label for="industry" class="w-fit pl-0.5 text-sm text-on-surface dark:text-on-surface-dark">Tipo de servicio</label>
-            <div class="relative">
-                <button type="button" role="combobox" class="inline-flex w-full items-center justify-between gap-2 whitespace-nowrap border-outline bg-surface-alt px-4 py-2 text-sm font-medium capitalize tracking-wide text-on-surface transition hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:border-outline-dark dark:bg-surface-dark-alt/50 dark:text-on-surface-dark dark:focus-visible:outline-primary-dark rounded-radius border" aria-haspopup="listbox" aria-controls="industriesList" x-on:click="isOpen = ! isOpen" x-on:keydown.down.prevent="openedWithKeyboard = true" x-on:keydown.enter.prevent="openedWithKeyboard = true" x-on:keydown.space.prevent="openedWithKeyboard = true" x-bind:aria-label="selectedOption ? selectedOption.value : 'Please Select'" x-bind:aria-expanded="isOpen || openedWithKeyboard">
-                    <span class="text-sm font-normal" x-text="selectedOption ? selectedOption.value : 'Seleccionar opción'"></span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
-                </button>
-                <input id="industry" name="industry" type="text" x-ref="hiddenTextField" hidden/>
-                <ul x-cloak x-show="isOpen || openedWithKeyboard" id="industriesList" class="absolute z-10 left-0 top-11 flex max-h-44 w-full flex-col overflow-hidden overflow-y-auto border-outline bg-surface-alt py-1.5 dark:border-outline-dark dark:bg-surface-dark-alt rounded-radius border" role="listbox" aria-label="industries list" x-on:click.outside="isOpen = false, openedWithKeyboard = false" x-on:keydown.down.prevent="$focus.wrap().next()" x-on:keydown.up.prevent="$focus.wrap().previous()" x-transition x-trap="openedWithKeyboard">
-                    <template x-for="(item, index) in options" x-bind:key="item.value"> 
-                        <li class="combobox-option inline-flex justify-between gap-6 bg-surface-alt px-4 py-2 text-sm text-on-surface hover:bg-surface-dark-alt/5 hover:text-on-surface-strong focus-visible:bg-surface-dark-alt/5 focus-visible:text-on-surface-strong focus-visible:outline-hidden dark:bg-surface-dark-alt dark:text-on-surface-dark dark:hover:bg-surface-alt/5 dark:hover:text-on-surface-dark-strong dark:focus-visible:bg-surface-alt/10 dark:focus-visible:text-on-surface-dark-strong" role="option" x-on:click="setSelectedOption(item)" x-on:keydown.enter="setSelectedOption(item)" x-bind:id="'option-' + index" tabindex="0" >
-                            <span x-bind:class="selectedOption == item ? 'font-bold' : null" x-text="item.label"></span>
-                            <span class="sr-only" x-text="selectedOption == item ? 'selected' : null"></span>
-                            <svg x-cloak x-show="selectedOption == item" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" class="size-4" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
-                        </li>
-                    </template>
-                </ul>
-            </div>
+    {{-- Filtros --}}
+    <div class="mb-6 flex flex-col sm:flex-row gap-4">
+        {{-- Buscador por nombre o cédula --}}
+        <div class="w-full sm:w-[65%]">
+            <label class="w-fit pl-0.5 text-sm text-on-surface dark:text-on-surface-dark">Buscar</label>
+            <input type="text" wire:model.live="busqueda" placeholder="Buscar por nombre o cédula..." 
+                class="w-full rounded-radius border border-outline bg-surface-alt px-4 py-2 text-sm text-on-surface focus:outline-none focus:border-primary dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-white dark:focus:border-blue-500 transition-colors" />
+        </div>
+
+        {{-- Filtro por tipo de servicio --}}
+        <div class="w-full sm:w-[35%]">
+            <label for="filtro-tipo" class="w-fit pl-0.5 text-sm text-on-surface dark:text-on-surface-dark">Tipo de servicio</label>
+            <select id="filtro-tipo" wire:model.live="filtroTipoServicio" 
+                class="w-full rounded-radius border border-outline bg-surface-alt px-4 py-2 text-sm text-on-surface focus:outline-none focus:border-primary dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-white dark:focus:border-blue-500 transition-colors">
+                <option value="">Todos los servicios</option>
+                @foreach($tiposServicio as $id => $nombre)
+                    <option value="{{ $nombre }}">{{ $nombre }}</option>
+                @endforeach
+            </select>
         </div>
     </div>
 
@@ -221,10 +216,23 @@
                             <p class="text-sm text-neutral-600 dark:text-neutral-400">Telf: {{ $empresaDetalle->user->telefono }}</p>
                             <p class="text-sm text-neutral-600 dark:text-neutral-400 break-all">{{ $empresaDetalle->user->email }}</p>
                         </div>
-                        <div class="col-span-1 md:col-span-2 p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-zinc-900 shadow-sm">
+                    <div class="col-span-1 md:col-span-2 p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-zinc-900 shadow-sm">
                             <h3 class="text-xs font-bold uppercase text-neutral-500 mb-2">Descripción General</h3>
                             <p class="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">{{ $empresaDetalle->descripcion }}</p>
                         </div>
+                        @if($empresaDetalle->enlaces)
+                            <div class="col-span-1 md:col-span-2 p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-zinc-900 shadow-sm">
+                                <h3 class="text-xs font-bold uppercase text-neutral-500 mb-2">Enlaces del Emprendimiento</h3>
+                                <div class="flex flex-col gap-2">
+                                    @foreach($empresaDetalle->enlaces as $link)
+                                        <a href="{{ $link }}" target="_blank" class="text-sm text-primary dark:text-blue-400 hover:underline truncate flex items-center gap-2">
+                                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                                            {{ $link }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="p-6 shrink-0 border-t border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-b-2xl flex flex-col-reverse sm:flex-row justify-end gap-3">
@@ -287,6 +295,35 @@
                         <flux:input wire:model="user_cedula" label="Cédula" /> 
                         <flux:input wire:model="user_email" label="Correo Electrónico" />
                         <flux:input wire:model="user_telefono" label="Teléfono / WhatsApp" />
+                    </div>
+                </div>
+
+                {{-- Enlaces del Emprendimiento (Edición) --}}
+                <div class="mt-6 border-t border-neutral-200 pt-6 dark:border-neutral-700">
+                    <div class="flex w-full flex-col gap-1 text-on-surface dark:text-zinc-200">
+                        <label class="flex w-fit items-center gap-1 pl-0.5 text-sm font-bold text-zinc-800 dark:text-zinc-300">
+                            Enlaces del Emprendimiento (URLs)
+                        </label>
+                        <p class="text-[10px] text-zinc-500 mb-2 dark:text-zinc-400">Añade los links de redes sociales o sitio web.</p>
+                        
+                        <div class="space-y-3">
+                            @foreach($enlaces as $index => $enlace)
+                                <div class="flex items-center gap-2">
+                                    <div class="flex-1 relative">
+                                        <input type="url" wire:model.blur="enlaces.{{ $index }}" placeholder="https://ejemplo.com" class="w-full rounded-radius border {{ $errors->has('enlaces.'.$index) ? 'border-danger dark:border-red-500' : 'border-outline dark:border-zinc-700' }} bg-surface-alt px-3 py-2 text-sm focus:outline-none focus:border-primary dark:bg-zinc-800/50 dark:text-white transition-colors" />
+                                    </div>
+                                    <button type="button" wire:click="eliminarEnlace({{ $index }})" class="p-2 text-danger hover:bg-danger/10 rounded-lg transition-colors outline-none shrink-0 dark:text-red-400 dark:hover:bg-red-500/20" title="Eliminar enlace">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    </button>
+                                </div>
+                                @error('enlaces.'.$index) <small class="text-danger dark:text-red-400 block mt-1">{{ $message }}</small> @enderror
+                            @endforeach
+                        </div>
+
+                        <button type="button" wire:click="agregarEnlace" class="mt-4 w-fit flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors dark:text-blue-400 dark:bg-blue-500/10 dark:hover:bg-blue-500/20 outline-none">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                            Agregar otro enlace
+                        </button>
                     </div>
                 </div>
             </div>

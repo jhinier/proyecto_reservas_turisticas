@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Emprendimiento;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\{Layout, Computed};
@@ -26,6 +27,11 @@ class GestorReservas extends Component
     public bool $modoReagendar = false;
     public bool $intentoCancelar = false;
     public array $nuevasFechas = [];
+
+    public function mount(): void
+    {
+        app(\App\Services\ReservaService::class)->procesarCancelacionesAutomaticas();
+    }
 
     public function updated(string $propertyName): void
     {
@@ -107,6 +113,25 @@ class GestorReservas extends Component
         $this->actualizarEstado($this->reservaSeleccionada->id, 'Cancelada');
     }
 
+    private function esPaqueteDetalle(int $detalleId): bool
+    {
+        $detalle = $this->reservaSeleccionada?->detalles->firstWhere('id', $detalleId);
+        $nombreCat = strtolower($detalle?->servicio?->tipoServicio?->nombre ?? '');
+
+        return str_contains($nombreCat, 'paquete');
+    }
+
+    private function esDiaBloqueado(string $fecha, int $detalleId): bool
+    {
+        if (!$this->esPaqueteDetalle($detalleId)) {
+            return false;
+        }
+
+        $dia = Carbon::parse($fecha)->dayOfWeek;
+
+        return in_array($dia, [Carbon::SUNDAY, Carbon::MONDAY], true);
+    }
+
     public function guardarReagendamiento(): void
     {
         $this->resetErrorBag();
@@ -115,7 +140,11 @@ class GestorReservas extends Component
         $messages = [];
 
         foreach ($this->nuevasFechas as $detalleId => $fechas) {
-            $rules["nuevasFechas.{$detalleId}.inicio"] = 'required|date';
+            $rules["nuevasFechas.{$detalleId}.inicio"] = ['required', 'date', function ($attribute, $value, $fail) use ($detalleId) {
+                if ($this->esDiaBloqueado($value, $detalleId)) {
+                    $fail('Los paquetes turísticos no pueden reagendarse los domingos ni los lunes.');
+                }
+            }];
             $rules["nuevasFechas.{$detalleId}.fin"]    = 'nullable|date|after_or_equal:nuevasFechas.' . $detalleId . '.inicio';
             
             $messages["nuevasFechas.{$detalleId}.inicio.required"] = 'La fecha de inicio es obligatoria.';

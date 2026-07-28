@@ -14,12 +14,8 @@
             'rounded-lg border border-slate-200 bg-white p-2 shadow-sm' => $isTouristSettings,
         ])>
             <flux:navlist aria-label="{{ __('Configuración') }}">
-            <flux:navlist.item :href="route('profile.edit')" wire:navigate>{{ $isTouristSettings ? 'Perfil' : __('Perfil') }}</flux:navlist.item>
-            <flux:navlist.item :href="route('user-password.edit')" wire:navigate>{{ $isTouristSettings ? 'Contraseña' : __('Contraseña') }}</flux:navlist.item>
-            @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
-                <flux:navlist.item :href="route('two-factor.show')" wire:navigate>{{ $isTouristSettings ? 'Verificación' : __('Autenticación de dos factores') }}</flux:navlist.item>
-            @endif
-            <flux:navlist.item :href="route('appearance.edit')" wire:navigate>{{ $isTouristSettings ? 'Apariencia' : __('Apariencia') }}</flux:navlist.item>
+                <flux:navlist.item :href="route('profile.edit')" wire:navigate>{{ $isTouristSettings ? 'Perfil' : __('Perfil') }}</flux:navlist.item>
+                <flux:navlist.item :href="route('user-password.edit')" wire:navigate>{{ $isTouristSettings ? 'Contraseña' : __('Contraseña') }}</flux:navlist.item>
             </flux:navlist>
         </div>
     </div>

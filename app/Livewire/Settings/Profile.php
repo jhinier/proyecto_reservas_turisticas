@@ -24,6 +24,8 @@ class Profile extends Component
 
     public string $name = '';
 
+    public string $apellidos = '';
+
     public string $email = '';
 
     /**
@@ -32,6 +34,7 @@ class Profile extends Component
     public function mount(): void
     {
         $this->name = Auth::user()->name;
+        $this->apellidos = Auth::user()->apellidos;
         $this->email = Auth::user()->email;
     }
 
@@ -52,7 +55,7 @@ class Profile extends Component
 
         $user->save();
 
-        $this->dispatch('profile-updated', name: $user->name);
+        $this->dispatch('profile-updated', name: $user->name, apellidos: $user->apellidos);
     }
 
     /**

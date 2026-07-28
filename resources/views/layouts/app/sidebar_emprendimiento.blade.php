@@ -8,8 +8,8 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
 
         body{
-            overflow-x:hidden;
-            /* Eliminamos el background !important de aquí para no dañar el modo oscuro de Tailwind */
+            /* FIX: Usar 'clip' en lugar de 'hidden' evita que se rompa el 'position: sticky' del sidebar al hacer scroll */
+            overflow-x: clip; 
         }
 
         /* ═══════════════════════════════
@@ -25,31 +25,36 @@
         [data-flux-sidebar],
         html [data-flux-sidebar] {
             width: 18rem !important;
-            --color-accent:rgba(0,0,0,0.05)!important;
-            --color-accent-foreground:#000000!important;
-            --color-zinc-800:#000000!important;
-            --color-zinc-900:#000000!important;
+            --color-accent:rgba(255,255,255,0.12)!important;
+            --color-accent-foreground:#ffffff!important;
+            --color-zinc-800:#ffffff!important;
+            --color-zinc-900:#ffffff!important;
 
-            background: #4ea674!important; 
-            border-right: 1px solid rgba(0,0,0,0.08)!important;
-            box-shadow: 4px 0 25px rgba(0,0,0,0.03)!important;
+            /* Match admin utilities: bg-emerald-800 and border-emerald-900/20 */
+            background: #065f46!important; /* emerald-800 */
+            border-right: 1px solid rgba(6,78,59,0.20)!important; /* emerald-900/20 */
+            box-shadow: 4px 0 25px rgba(0,0,0,0.08)!important;
+            
+            /* FIX: Forzar a que el sidebar siempre cubra el 100% del alto de la pantalla */
+            height: 100dvh !important;
+            max-height: 100dvh !important;
         }
 
         /* Modo oscuro para el fondo del Sidebar */
         html.dark [data-flux-sidebar] {
-            background: #18181b!important; /* Tono oscuro zinc */
-            border-right: 1px solid rgba(255,255,255,0.08)!important;
+            background: #065f46!important;
+            border-right: 1px solid rgba(6,78,59,0.20)!important;
         }
 
         /* HEADER SIDEBAR */
         [data-flux-sidebar-header]{
             padding:1.6rem 1.2rem!important;
-            border-bottom:1px solid rgba(0,0,0,0.06)!important;
-            background: #4ea674!important;
+            border-bottom:1px solid rgba(4,120,87,0.50)!important; /* emerald-700/50 */
+            background: rgba(6,78,59,0.20)!important; /* emerald-900/20 */
         }
         html.dark [data-flux-sidebar-header] {
-            background: #18181b!important;
-            border-bottom: 1px solid rgba(255,255,255,0.08)!important;
+            background: rgba(6,78,59,0.20)!important;
+            border-bottom: 1px solid rgba(4,120,87,0.50)!important;
         }
 
         .logo-wrapper{
@@ -66,64 +71,64 @@
         }
 
         .brand-title{
-            color:#000000!important; /* Letras negras oscuras */
+            color:#ffffff!important;
             font-size:1.35rem!important;
             font-weight:700!important;
             letter-spacing:-0.04em!important;
             line-height:1.1!important;
         }
-        html.dark .brand-title { color: #ffffff!important; } /* Texto blanco en modo oscuro */
+        html.dark .brand-title { color: #ffffff!important; }
 
         .brand-subtitle{
-            color: #06281E!important; 
+            color: rgba(187,247,208,0.60)!important; /* emerald-200/60 */
             font-size:0.72rem!important;
             font-weight:800!important;
             letter-spacing:0.20em!important;
             margin-top:0.3rem!important;
         }
-        html.dark .brand-subtitle { color: #00D65B!important; }
+        html.dark .brand-subtitle { color: rgba(187,247,208,0.60)!important; }
 
-        /* TEXTOS DE FLUX SOBRESCRITOS */
-        [data-flux-sidebar] .text-zinc-800,
-        [data-flux-sidebar] .text-zinc-900,
-        [data-flux-sidebar] .text-accent-foreground{
-            color:#000000!important;
+        /* TEXTOS DE FLUX SOBRESCRITOS: only affect nav items inside sidebar, not popups */
+        [data-flux-sidebar] nav .text-zinc-800,
+        [data-flux-sidebar] nav .text-zinc-900,
+        [data-flux-sidebar] nav .text-accent-foreground{
+            color:#ffffff!important;
         }
-        html.dark [data-flux-sidebar] .text-zinc-800,
-        html.dark [data-flux-sidebar] .text-zinc-900,
-        html.dark [data-flux-sidebar] .text-accent-foreground{
+        html.dark [data-flux-sidebar] nav .text-zinc-800,
+        html.dark [data-flux-sidebar] nav .text-zinc-900,
+        html.dark [data-flux-sidebar] nav .text-accent-foreground{
             color:#ffffff!important;
         }
 
-        [data-flux-sidebar] .text-zinc-400,
-        [data-flux-sidebar] .text-zinc-500{
-            color:rgba(0,0,0,0.6)!important;
+        [data-flux-sidebar] nav .text-zinc-400,
+        [data-flux-sidebar] nav .text-zinc-500{
+            color:rgba(255,255,255,0.72)!important;
         }
-        html.dark [data-flux-sidebar] .text-zinc-400,
-        html.dark [data-flux-sidebar] .text-zinc-500{
-            color:rgba(255,255,255,0.6)!important;
+        html.dark [data-flux-sidebar] nav .text-zinc-400,
+        html.dark [data-flux-sidebar] nav .text-zinc-500{
+            color:rgba(255,255,255,0.72)!important;
         }
 
         /* TITULOS DE GRUPO (GENERAL, GESTIÓN, ETC) */
         [data-flux-sidebar-group-heading]{
-            color:rgba(0,0,0,0.45)!important;
+            color:rgba(187,247,208,0.40)!important; /* emerald-200/40 */
             font-size:0.72rem!important;
             font-weight:900!important;
             letter-spacing:0.18em!important;
             padding: 1.7rem 1.5rem 0.8rem!important;
         }
         html.dark [data-flux-sidebar-group-heading]{
-            color:rgba(255,255,255,0.45)!important;
+            color:rgba(187,247,208,0.40)!important;
         }
 
         /* LINEA SEPARADORA */
         .sidebar-separator{
             height:1px;
             margin:1rem 1.5rem 0.4rem;
-            background: rgba(0,0,0,0.06);
+            background: rgba(4,120,87,0.40)!important; /* emerald-700/40 */
             border-radius:999px;
         }
-        html.dark .sidebar-separator { background: rgba(255,255,255,0.08); }
+        html.dark .sidebar-separator { background: rgba(4,120,87,0.40)!important; }
 
         /* ITEMS DEL MENÚ (BOTONES) */
         [data-flux-sidebar-item],
@@ -138,29 +143,29 @@
             border-radius: 0 !important; 
             padding: 1rem 1.5rem !important;
             
-            color: #000000!important; 
+            color: #ffffff!important;
             font-size: 1.05rem!important;
-            font-weight: 800!important; 
+            font-weight: 800!important;
             letter-spacing:-0.02em!important;
             
             transition: background .2s ease, color .2s ease !important;
         }
         html.dark [data-flux-sidebar-item],
         html.dark [data-flux-sidebar] a[data-flux-sidebar-item] {
-            color: rgba(255,255,255,0.9)!important;
+            color: #ffffff!important;
         }
 
-        /* HOVER: Tono oscuro transparente */
+        /* HOVER (match admin hover:bg-white/10) */
         [data-flux-sidebar-item]:hover,
         [data-flux-sidebar] a[data-flux-sidebar-item]:hover{
-            background: rgba(0, 0, 0, 0.34)!important;
-            color: #d8d8d8!important;
+            background: rgba(255,255,255,0.10)!important; /* white/10 */
+            color: #ffffff!important;
             transform: none !important;
             box-shadow: none !important;
         }
         html.dark [data-flux-sidebar-item]:hover,
         html.dark [data-flux-sidebar] a[data-flux-sidebar-item]:hover{
-            background: rgba(255,255,255,0.08)!important;
+            background: rgba(255,255,255,0.10)!important;
             color: #ffffff!important;
         }
 
@@ -168,17 +173,17 @@
         [data-flux-sidebar-item][data-current],
         [data-flux-sidebar-item][aria-current="page"],
         [data-flux-sidebar] a[data-flux-sidebar-item][data-current]{
-            background: #a3d2b0!important; 
-            color: #000000!important;
-            border-left: 5px solid #a0ecc1 !important; 
+            background: rgba(255,255,255,0.15)!important; /* white/15 */
+            color: #ffffff!important;
+            border-left: 5px solid rgba(255,255,255,0.70) !important;
             box-shadow: none !important;
         }
         html.dark [data-flux-sidebar-item][data-current],
         html.dark [data-flux-sidebar-item][aria-current="page"],
         html.dark [data-flux-sidebar] a[data-flux-sidebar-item][data-current]{
-            background: rgba(0,214,91,0.15)!important; 
-            color: #00D65B!important;
-            border-left: 5px solid #00D65B !important; 
+            background: rgba(255,255,255,0.15)!important;
+            color: #ffffff!important;
+            border-left: 5px solid rgba(255,255,255,0.70) !important;
         }
 
         /* ICONOS */
@@ -186,49 +191,70 @@
         [data-flux-sidebar-item] [data-flux-icon]{
             width:1.35rem!important;
             height:1.35rem!important;
-            color: #000000!important; 
+            color: #ffffff!important;
             transition:all .2s ease!important;
         }
         html.dark [data-flux-sidebar-item] svg,
         html.dark [data-flux-sidebar-item] [data-flux-icon]{
-            color: rgba(255,255,255,0.7)!important; 
+            color: #ffffff!important;
         }
 
         [data-flux-sidebar-item]:hover svg,
         [data-flux-sidebar-item][data-current] svg{
-            color: #07765ae9!important;
+            color: #ecfdf5!important; /* lighter emerald */
             transform:scale(1.08);
         }
         html.dark [data-flux-sidebar-item]:hover svg,
         html.dark [data-flux-sidebar-item][data-current] svg{
-            color: #00D65B!important;
+            color: #ecfdf5!important;
         }
 
         /* ZONA USER INFERIOR */
         [data-flux-sidebar] > *:last-child{
-            border-top: 1px solid rgba(0,0,0,0.06)!important;
-            background: #6ebd97!important;
+            border-top: 1px solid rgba(4,120,87,0.50)!important; /* emerald-700/50 */
+            background: rgba(6,78,59,0.30)!important;
             padding:1rem 1.2rem!important;
         }
         html.dark [data-flux-sidebar] > *:last-child{
-            border-top: 1px solid rgba(255,255,255,0.08)!important;
-            background: #1f2937!important;
+            border-top: 1px solid rgba(4,120,87,0.50)!important;
+            background: rgba(6,78,59,0.30)!important;
         }
 
-        [data-flux-profile]{
+        /* Apply profile styles only for the profile shown inside the sidebar
+           so dropdown/popover content (white background) keeps readable text */
+        [data-flux-sidebar] [data-flux-profile]{
             border-radius:0.8rem!important;
             padding:0.75rem!important;
-            color: #000000 !important;
+            color: #ffffff !important;
         }
-        html.dark [data-flux-profile]{ color: #ffffff !important; }
+        html.dark [data-flux-sidebar] [data-flux-profile]{ color: #2b4e3d !important; }
 
-        [data-flux-profile]:hover{
-            background:rgba(0,0,0,0.05)!important;
+        [data-flux-sidebar] [data-flux-profile]:hover{
+            background:rgba(255,255,255,0.12)!important;
         }
-        html.dark [data-flux-profile]:hover{ background:rgba(255,255,255,0.08)!important; }
+        html.dark [data-flux-sidebar] [data-flux-profile]:hover{ background:rgba(255,255,255,0.12)!important; }
+
+        [data-flux-sidebar] [data-flux-menu] {
+            background: #ffffff!important;
+            color: #0f172a!important;
+            box-shadow: 0 18px 35px rgba(0,0,0,0.18)!important;
+            border-radius: 1rem!important;
+        }
+        [data-flux-sidebar] [data-flux-menu] *,
+        [data-flux-sidebar] [data-flux-menu] [data-flux-menu-item],
+        [data-flux-sidebar] [data-flux-menu] [data-flux-menu-item] svg,
+        [data-flux-sidebar] [data-flux-menu] [data-flux-menu-item-icon],
+        [data-flux-sidebar] [data-flux-menu] [data-flux-icon],
+        [data-flux-sidebar] [data-flux-menu] svg {
+            color: #0f172a!important;
+            fill: currentColor!important;
+        }
+        [data-flux-sidebar] [data-flux-menu] [data-flux-menu-separator] {
+            background: rgba(15,23,42,0.08)!important;
+        }
 
         [data-flux-avatar]{
-            background: #111827!important;
+            background: #8c8c8e!important;
             color:#ffffff!important;
             border-radius:0.6rem!important;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1)!important;
@@ -267,16 +293,16 @@
                 font-size:1.08rem!important;
             }
             [data-flux-sidebar],
-        html [data-flux-sidebar] {
-            --color-accent:rgba(0,0,0,0.05)!important;
-            --color-accent-foreground:#000000!important;
-            --color-zinc-800:#000000!important;
-            --color-zinc-900:#000000!important;
+            html [data-flux-sidebar] {
+                --color-accent:rgba(255,255,255,0.12)!important;
+                --color-accent-foreground:#ffffff!important;
+                --color-zinc-800:#ffffff!important;
+                --color-zinc-900:#ffffff!important;
 
-            background: #ffffff!important; /* <-- CAMBIADO A BLANCO PURO AQUÍ */
-            border-right: 1px solid rgba(0,0,0,0.08)!important;
-            box-shadow: 4px 0 25px rgba(0,0,0,0.03)!important;
-        }
+                background: #065f46!important; /* emerald-800 */
+                border-right: 1px solid rgba(6,78,59,0.20)!important;
+                box-shadow: 4px 0 25px rgba(0,0,0,0.08)!important;
+            }
         }
     </style>
 </head>
@@ -303,7 +329,7 @@
                         Explora Candelaria
                     </h1>
                     <p class="brand-subtitle">
-                        ADMIN EMPRENDIMIENTO
+                        {{ auth()->user()->emprendimiento?->nombre ?? 'ADMIN EMPRENDIMIENTO' }}
                     </p>
                 </div>
 
@@ -447,7 +473,6 @@
         {{ $slot }}
     </flux:main>
 
-    {{-- JS FIX CLARO Y OSCURO --}}
     {{-- JS FIX CLARO Y OSCURO --}}
     <script>
         function applyTourismStyles() {
