@@ -21,11 +21,9 @@
 <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
 
 <df-messenger
-    project-id="asistente-virtual-499100"
-    agent-id="862e2089-75d1-423c-a013-77d5403bc1e9"
+    project-id="asistentecandelaria"
+    agent-id="15637663-a3df-4cea-8a31-7f57cce0dad1"
     language-code="es"
-    location="global"
-    environment-id="draft"
     max-query-length="-1">
     <df-messenger-chat-bubble
         chat-title="Asistente Virtual La Candelaria">

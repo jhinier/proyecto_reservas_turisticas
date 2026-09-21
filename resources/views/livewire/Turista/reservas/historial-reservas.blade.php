@@ -6,15 +6,8 @@
         <div>
             <h1 class="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
                 Mis reservas
-                <div class="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-full bg-green-50 border border-green-200 text-[9px] text-green-700 uppercase tracking-widest font-black ml-1" title="Sincronización automática activada">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-600"></span>
-                    </span>
-                    En vivo
-                </div>
             </h1>
-            <p class="text-sm text-gray-500 mt-1">Historial de tus solicitudes y servicios contratados.</p>
+            <p class="text-sm text-gray-500 mt-1">Historial de tus reservas turísticas.</p>
         </div>
         
         {{-- Selector personalizado técnico --}}
@@ -37,7 +30,7 @@
     </div>
 
     {{-- TABLA DE RESERVAS ESTILO TÉCNICO --}}
-    <div wire:poll.10s class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300">
+    <div wire:poll.30s.visible class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm whitespace-nowrap">
                 <thead class="bg-gray-50 text-[#464646] font-bold text-xs  tracking-widest border-b border-gray-200">
@@ -50,7 +43,7 @@
                         <th class="p-4 pr-6 text-center">Acciones</th>
                     </tr>
                 </thead>
-                <tbody wire:loading.class="opacity-40" class="divide-y divide-gray-100 transition-opacity duration-300">
+                <tbody class="divide-y divide-gray-100 transition-opacity duration-300">
                     @forelse($reservas as $reserva)
                         @php
                             $emprendimiento = $reserva->detalles->first()?->servicio?->categoriaPivot?->emprendimiento;
@@ -121,7 +114,7 @@
                     <div class="flex justify-between items-start mb-6 border-b border-gray-100 pb-4">
                         <div>
                             <div class="flex items-center gap-3">
-                                <h3 class="text-xl font-bold text-[#00A344] tracking-tight" id="modal-title">
+                                <h3 class="text-xl font-bold text-[#000000] tracking-tight" id="modal-title">
                                     Detalles de la reserva 
                                 </h3>
                                 @php

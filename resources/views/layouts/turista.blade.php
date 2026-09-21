@@ -365,6 +365,9 @@
                 </li>
                 @else
                 <li class="mt-2 w-full border-none">
+                    <a href="{{ route('profile.edit') }}" class="rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 block text-center font-bold text-slate-700 hover:bg-slate-100">Mi Perfil</a>
+                </li>
+                <li class="mt-2 w-full border-none">
                     <a href="{{ route('turista.reservas.historial') ?? '#' }}" class="rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 block text-center font-bold text-slate-700 hover:bg-slate-100">Mis Reservas</a>
                 </li>
                 <li class="mt-3 w-full border-none">

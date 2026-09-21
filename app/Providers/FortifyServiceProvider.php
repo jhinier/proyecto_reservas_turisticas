@@ -111,7 +111,8 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureActions(): void
     {
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
-        Fortify::createUsersUsing(CreateNewUser::class);
+        // Registro con confirmación por correo: no crear usuario aquí.
+        // Fortify::createUsersUsing(CreateNewUser::class);
     }
 
     private function configureViews(): void

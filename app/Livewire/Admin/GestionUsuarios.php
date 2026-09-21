@@ -4,27 +4,36 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 use App\Services\UserService;
 
 class GestionUsuarios extends Component
 {
     // Variables públicas: Livewire las sincroniza automáticamente con los inputs del HTML.
-    public $name, $email, $password, $cedula, $telefono, $role;
+    public ?string $name = null;
+    public ?string $email = null;
+    public ?string $password = null;
+    public ?string $cedula = null;
+    public ?string $telefono = null;
+    public ?string $role = null;
 
     /**
      * Reglas de validación nativas de Livewire.
      * ¿Por qué aquí? Livewire evalúa estas reglas en tiempo real desde el backend,
      * asegurando que nadie pueda saltarse la validación alterando el HTML.
      */
-    protected $rules = [
-        'name'     => 'required|string|max:255',
-        'email'    => 'required|email|unique:users,email',
-        'password' => 'required|min:8',
-        'cedula'   => 'required|string|max:10|unique:users,cedula',
-        'telefono' => 'required|string|max:15',
-        'role'     => 'required|exists:roles,name', // Evita que inyecten un rol falso
-    ];
+    public function rules(): array
+    {
+        return [
+            'name'     => 'required|string|max:255',
+            'email'    => ['required', 'email', Rule::unique('users', 'email')->whereNull('deleted_at')],
+            'password' => 'required|min:8',
+            'cedula'   => ['required', 'string', 'max:10', Rule::unique('users', 'cedula')->whereNull('deleted_at')],
+            'telefono' => 'required|string|max:15',
+            'role'     => 'required|exists:roles,name', // Evita que inyecten un rol falso
+        ];
+    }
 
     /**
      * Función que procesa el formulario.

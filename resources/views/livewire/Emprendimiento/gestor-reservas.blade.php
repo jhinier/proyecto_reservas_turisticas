@@ -6,13 +6,6 @@
             <h1 class="text-3xl font-black text-[#06281E] dark:text-white tracking-tight flex items-center gap-3">
                 <svg class="size-8 text-[#00A344] dark:text-[#00D65B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                 Gestión de reservas
-                <div class="hidden md:flex items-center gap-1.5 px-2 py-1 rounded-full bg-[#00A344]/10 border border-[#00A344]/20 text-[9px] text-[#00A344] dark:text-[#00D65B] uppercase tracking-widest font-black ml-1" title="Sincronización automática activada">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A344] dark:bg-[#00D65B] opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-[#00A344] dark:bg-[#00D65B]"></span>
-                    </span>
-                    En vivo
-                </div>
             </h1>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5 uppercase tracking-widest font-black">Administra las solicitudes de tus clientes</p>
         </div>
@@ -67,7 +60,7 @@
     </div>
 
     {{-- TABLA PRINCIPAL DE RESERVAS --}}
-    <div wire:poll.10s class="relative overflow-hidden w-full overflow-x-auto rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-zinc-900 shadow-sm transition-all duration-300">
+    <div wire:poll.30s.visible class="relative overflow-hidden w-full overflow-x-auto rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-zinc-900 shadow-sm transition-all duration-300">
         <div wire:loading.flex wire:target="filtroCategoria, filtroEstado, buscarCedula" class="absolute inset-0 bg-white/60 dark:bg-zinc-900/80 backdrop-blur-sm z-10 flex items-center justify-center">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00A344]"></div>
         </div>
@@ -83,7 +76,7 @@
                     <th scope="col" class="p-4.5 text-right">Acción</th>
                 </tr>
             </thead>
-            <tbody wire:loading.class="opacity-40" class="divide-y divide-gray-100 dark:divide-zinc-800 relative transition-opacity duration-300">
+            <tbody class="divide-y divide-gray-100 dark:divide-zinc-800 relative transition-opacity duration-300">
                 @forelse($this->reservas as $reserva)
                     <tr wire:key="reserva-item-{{ $reserva->id }}" class="hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
                         <td class="p-4.5">

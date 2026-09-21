@@ -42,6 +42,12 @@
                     </p>
                 </div>
             </a>
+
+            <a href="{{ url()->previous() ?: route('home') }}" class="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 p-2.5 text-white shadow-lg backdrop-blur-sm transition hover:bg-white/20" aria-label="Regresar">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </a>
         </div>
     </div>
 

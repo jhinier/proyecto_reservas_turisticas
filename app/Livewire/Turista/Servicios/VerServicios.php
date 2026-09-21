@@ -52,7 +52,7 @@ class VerServicios extends Component
             $this->fechaFin = $this->fechaInicio;
         }
         if ($this->requiereHora()) {
-            $this->horaLlegada = '12:00';
+            $this->horaLlegada = '';
         }
 
         // 2. Si vienen fechas en la URL tras realizar una reserva, las sobreescribimos
@@ -88,8 +88,9 @@ class VerServicios extends Component
     public function esPaquete(): bool   { return str_contains(Str::slug($this->tipoServicio->nombre ?? '', ' '), 'paquete'); }
     public function esAlquiler(): bool  { return str_contains($this->nombreTipo, 'alquiler'); }
     public function esGuianza(): bool   { return str_contains($this->nombreTipo, 'guianza'); }
+    public function esAlimentacion(): bool { return str_contains($this->nombreTipo, 'aliment'); }
     public function requiereFechaFin(): bool { return $this->esHospedaje() || $this->esAlquiler() || $this->esGuianza(); }
-    public function requiereHora(): bool     { return $this->esHospedaje() || $this->esGuianza() || $this->esAlquiler(); }
+    public function requiereHora(): bool     { return $this->esHospedaje() || $this->esGuianza() || $this->esAlquiler() || $this->esAlimentacion(); }
 
     private function esDiaBloqueado(string $fecha): bool
     {
@@ -128,10 +129,7 @@ class VerServicios extends Component
             $reglas['fechaFin'] = 'required|date|after_or_equal:fechaInicio';
         }
 
-        // 4. Regla para hora (solo si el servicio lo requiere)
-        if ($this->requiereHora()) {
-            $reglas['horaLlegada'] = 'required|date_format:H:i';
-        }
+        // 4. No se valida la hora en el buscador; se valida solo al añadir al carrito.
 
         // 5. Validamos los datos actuales del componente
         $this->validate($reglas);
@@ -207,7 +205,7 @@ class VerServicios extends Component
         $this->personasTarjetas[$id] = max(1, ($this->personasTarjetas[$id] ?? 1) - 1);
     }
 
-    public function agregarAlCarrito(int $id): void
+    public function agregarAlCarrito(int $id, ?int $cantidadElegida = null, ?int $personasElegidas = null): void
     {
         try {
             $servicio = collect($this->servicios)->firstWhere('id', $id);
@@ -222,8 +220,10 @@ class VerServicios extends Component
                 return;
             }
 
-            $cantidadElegida  = (int) ($this->cantidadesTarjetas[$id] ?? 1);
-            $personasElegidas = (int) ($this->personasTarjetas[$id]   ?? 1);
+            $cantidadElegida  = max(1, (int) ($cantidadElegida ?? ($this->cantidadesTarjetas[$id] ?? 1)));
+            $personasElegidas = max(1, (int) ($personasElegidas ?? ($this->personasTarjetas[$id]   ?? 1)));
+            $capacidadMaxima  = max(1, (int) ($this->capacidadesServicios[$id] ?? 1));
+            $personasElegidas = min($personasElegidas, $capacidadMaxima);
             $cuposLibres      = (int) ($this->disponibilidadServicios[$id] ?? 0);
 
             if ($cuposLibres <= 0) {
@@ -237,7 +237,7 @@ class VerServicios extends Component
             }
 
             if ($this->requiereHora() && empty($this->horaLlegada)) {
-                $this->dispatch('notificar', ['tipo' => 'warning', 'mensaje' => 'Especifica una hora de llegada.']);
+                $this->dispatch('notificar', ['tipo' => 'warning', 'mensaje' => 'Especifica una hora de llegada antes de añadir al carrito.']);
                 return;
             }
 
@@ -283,8 +283,7 @@ class VerServicios extends Component
 
             } else {
                 $subtotal = $servicio->precio * $cantidadElegida;
-                // --- CAMBIO AÑADIDO AQUÍ: Guardamos la hora para alimentación u otros ---
-                $horaFinal = $this->horaLlegada; 
+                $horaFinal = $this->horaLlegada;
             }
 
             $this->carrito[] = [
@@ -312,10 +311,12 @@ class VerServicios extends Component
 
             $this->dispatch('notificar', ['tipo' => 'success', 'mensaje' => '¡Servicio añadido!']);
             $this->dispatch('servicio-agregado');
+            return;
 
         } catch (\Exception $e) {
             Log::error('Error en agregarAlCarrito: ' . $e->getMessage());
             $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Error al procesar.']);
+            return;
         }
     }
 

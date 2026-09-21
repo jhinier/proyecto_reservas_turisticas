@@ -12,12 +12,41 @@ class UserService
     public function crearUsuario(array $datos)
     {
         return DB::transaction(function () use ($datos) {
+            $cedula = trim((string) ($datos['cedula'] ?? ''));
+            $email = filter_var($datos['email'] ?? '', FILTER_SANITIZE_EMAIL);
+
+            $usuarioExistente = User::withTrashed()
+                ->where('cedula', $cedula)
+                ->orWhere('email', $email)
+                ->first();
+
+            if ($usuarioExistente) {
+                if ($usuarioExistente->trashed()) {
+                    $usuarioExistente->restore();
+                    $usuarioExistente->update([
+                        'name'      => strip_tags($datos['nombre'] ?? $datos['name'] ?? ''),
+                        'apellidos' => strip_tags($datos['apellidos'] ?? ''),
+                        'email'     => $email,
+                        'password'  => Hash::make($datos['password'] ?? ''),
+                        'cedula'    => $cedula,
+                        'telefono'  => strip_tags($datos['telefono'] ?? ''),
+                        'edad'      => (int) ($datos['edad'] ?? 0),
+                    ]);
+
+                    $usuarioExistente->syncRoles(['turista']);
+
+                    return $usuarioExistente;
+                }
+
+                throw new \RuntimeException('Ya existe un usuario activo con esta cédula o correo.');
+            }
+
             $usuario = User::create([
                 'name'      => strip_tags($datos['nombre'] ?? $datos['name'] ?? ''),
                 'apellidos' => strip_tags($datos['apellidos'] ?? ''),
-                'email'     => filter_var($datos['email'] ?? '', FILTER_SANITIZE_EMAIL),
+                'email'     => $email,
                 'password'  => Hash::make($datos['password'] ?? ''),
-                'cedula'    => strip_tags($datos['cedula'] ?? ''),
+                'cedula'    => $cedula,
                 'telefono'  => strip_tags($datos['telefono'] ?? ''),
                 'edad'      => (int) ($datos['edad'] ?? 0),
             ]);
@@ -31,21 +60,42 @@ class UserService
     public function buscarOCrearTurista(array $datos)
     {
         return DB::transaction(function () use ($datos) {
-            $usuario = User::firstOrCreate(
-                ['cedula' => strip_tags($datos['cedula'] ?? '')],
-                [
-                    'name'      => strip_tags($datos['nombre'] ?? $datos['name'] ?? ''),
-                    'apellidos' => strip_tags($datos['apellidos'] ?? ''),
-                    'email'     => filter_var($datos['email'] ?? '', FILTER_SANITIZE_EMAIL),
-                    'telefono'  => strip_tags($datos['telefono'] ?? ''),
-                    'edad'      => (int) ($datos['edad'] ?? 18),
-                    'password'  => Hash::make(Str::random(16)),
-                ]
-            );
+            $cedula = trim((string) ($datos['cedula'] ?? ''));
+            $email = filter_var($datos['email'] ?? '', FILTER_SANITIZE_EMAIL);
 
-            if ($usuario->wasRecentlyCreated) {
-                $usuario->assignRole('turista');
+            $usuario = User::withTrashed()->where('cedula', $cedula)->first();
+
+            if ($usuario) {
+                if ($usuario->trashed()) {
+                    $usuario->restore();
+                    $usuario->update([
+                        'name'      => strip_tags($datos['nombre'] ?? $datos['name'] ?? ''),
+                        'apellidos' => strip_tags($datos['apellidos'] ?? ''),
+                        'email'     => $email,
+                        'telefono'  => strip_tags($datos['telefono'] ?? ''),
+                        'edad'      => (int) ($datos['edad'] ?? 18),
+                        'password'  => Hash::make(Str::random(16)),
+                    ]);
+                }
+
+                if (! $usuario->hasRole('turista')) {
+                    $usuario->assignRole('turista');
+                }
+
+                return $usuario;
             }
+
+            $usuario = User::create([
+                'name'      => strip_tags($datos['nombre'] ?? $datos['name'] ?? ''),
+                'apellidos' => strip_tags($datos['apellidos'] ?? ''),
+                'email'     => $email,
+                'telefono'  => strip_tags($datos['telefono'] ?? ''),
+                'edad'      => (int) ($datos['edad'] ?? 18),
+                'password'  => Hash::make(Str::random(16)),
+                'cedula'    => $cedula,
+            ]);
+
+            $usuario->assignRole('turista');
 
             return $usuario;
         });

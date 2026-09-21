@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\RegistroController;
 use App\Http\Controllers\LandingController;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\GestionEmprendimientos; 
@@ -69,6 +70,9 @@ Route::get('/actividad-turistica/{actividad}',[LandingController::class, 'detall
 Route::get('/festividades', [TuristaController::class, 'festividades'])->name('festividades');
 Route::get('/festividad/{festividad}',[LandingController::class, 'detalleFestividad'])->name('turista.festividad.detalle');
 
+// Registro con confirmación por correo
+Route::post('/registro', [RegistroController::class, 'store'])->name('registro.store');
+Route::get('/registro/confirmar/{token}', [RegistroController::class, 'confirmar'])->name('registro.confirmar');
 
 // 2. RUTAS PROTEGIDAS (Solo usuarios logueados)
 Route::middleware(['auth', 'verified'])->group(function () {

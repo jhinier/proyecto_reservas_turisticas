@@ -6,6 +6,7 @@ use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use App\Rules\CedulaEcuatoriana;
 use Illuminate\Validation\Rules\Password;
@@ -24,8 +25,8 @@ class CreateNewUser implements CreatesNewUsers
         // Unificamos todas las validaciones en un solo bloque
         Validator::make($input, [
             ...$this->profileRules(),
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'cedula' => ['required', 'string', 'unique:users', new CedulaEcuatoriana()],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->whereNull('deleted_at')],
+            'cedula' => ['required', 'string', Rule::unique('users', 'cedula')->whereNull('deleted_at'), new CedulaEcuatoriana()],
             'password' => ['required', 'string', Password::min(8)->mixedCase()->symbols(), 'confirmed'],
             'edad' => ['required', 'integer', 'min:18'],
         ], [

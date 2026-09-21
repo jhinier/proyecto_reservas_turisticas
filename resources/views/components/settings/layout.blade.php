@@ -14,8 +14,17 @@
             'rounded-lg border border-slate-200 bg-white p-2 shadow-sm' => $isTouristSettings,
         ])>
             <flux:navlist aria-label="{{ __('Configuración') }}">
-                <flux:navlist.item :href="route('profile.edit')" wire:navigate>{{ $isTouristSettings ? 'Perfil' : __('Perfil') }}</flux:navlist.item>
-                <flux:navlist.item :href="route('user-password.edit')" wire:navigate>{{ $isTouristSettings ? 'Contraseña' : __('Contraseña') }}</flux:navlist.item>
+                <flux:navlist.item
+                    :href="route('profile.edit')"
+                    wire:navigate
+                    class="{{ request()->routeIs('profile.edit') ? 'bg-emerald-50 text-emerald-700 font-semibold ring-1 ring-emerald-200' : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700' }}"
+                >{{ $isTouristSettings ? 'Perfil' : __('Perfil') }}</flux:navlist.item>
+
+                <flux:navlist.item
+                    :href="route('user-password.edit')"
+                    wire:navigate
+                    class="{{ request()->routeIs('user-password.edit') ? 'bg-emerald-50 text-emerald-700 font-semibold ring-1 ring-emerald-200' : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700' }}"
+                >{{ $isTouristSettings ? 'Contraseña' : __('Contraseña') }}</flux:navlist.item>
             </flux:navlist>
         </div>
     </div>

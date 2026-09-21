@@ -2,8 +2,8 @@
 <div class="w-full min-h-screen bg-[#f4f9f4] -mt-6 md:-mt-8 flex flex-col">
 
     {{-- Cabecera --}}
-    <div class="w-full max-w-screen-2xl mx-auto md:px-16 lg:px-32 xl:px-64">
-        <div class="relative w-full min-h-[55svh] md:min-h-[280px] md:h-[32vh] flex flex-col justify-center py-6 md:rounded-b-1xl overflow-hidden">
+    <div class="w-full max-w-screen-2xl mx-auto md:px-16 lg:px-32 xl:px-200">
+        <div class="relative w-full min-h-[55svh] md:min-h-[280px] md:h-[32vh] flex flex-col justify-center py-6 md:rounded-b-1xl overflow-visible">
             
             <img src="{{ asset('storage/' . $emprendimiento->imagen) }}" alt="Fondo" class="absolute inset-0 w-full h-full object-cover z-0">
             <div class="absolute inset-0 bg-black/40 z-10"></div>
@@ -40,6 +40,12 @@
                                     onChange: function(selectedDates, dateStr, instance) {
                                         if (selectedDates.length > 0) { inicio = instance.formatDate(selectedDates[0], 'd M Y'); @this.set('fechaInicio', instance.formatDate(selectedDates[0], 'Y-m-d')); }
                                         if (selectedDates.length === 2) { fin = instance.formatDate(selectedDates[1], 'd M Y'); @this.set('fechaFin', instance.formatDate(selectedDates[1], 'Y-m-d')); } else { fin = 'Seleccionar'; }
+
+                                        if (selectedDates.length > 0) {
+                                            setTimeout(() => {
+                                                $wire.buscar();
+                                            }, 50);
+                                        }
                                         
                                         let modoRango = '{{ $this->requiereFechaFin() }}' === '1';
                                         if ((modoRango && selectedDates.length === 2) || (!modoRango && selectedDates.length === 1)) {
@@ -62,7 +68,7 @@
                                 @endif
                              ">
                             <div x-ref="dateWrapper" class="flex flex-col sm:flex-row gap-3 cursor-pointer w-full">
-                                <div class="flex-1 border border-gray-300 rounded-full px-4 py-1.5 flex items-center gap-2 hover:border-gray-400 transition bg-white/90 overflow-hidden shadow-sm">
+                                <div class="flex-1 border border-gray-300 rounded-full px-4 py-1.5 flex items-center gap-2 hover:border-gray-400 transition bg-white/90 shadow-sm">
                                     <svg class="w-3.5 h-3.5 text-gray-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     <div class="flex flex-col min-w-0">
                                         <span class="text-[9px] font-medium text-gray-500 uppercase tracking-widest">{{ $this->esHospedaje() ? 'Fecha Inicio' : 'Fecha inicio' }}</span>
@@ -70,7 +76,7 @@
                                     </div>
                                 </div>
                                 @if($this->requiereFechaFin())
-                                <div class="flex-1 border border-gray-300 rounded-full px-4 py-1.5 flex items-center gap-2 hover:border-gray-400 transition bg-white/90 overflow-hidden shadow-sm">
+                                <div class="flex-1 border border-gray-300 rounded-full px-4 py-1.5 flex items-center gap-2 hover:border-gray-400 transition bg-white/90 shadow-sm">
                                     <svg class="w-3.5 h-3.5 text-gray-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     <div class="flex flex-col min-w-0">
                                         <span class="text-[9px] font-medium text-gray-500 uppercase tracking-widest">{{ $this->esHospedaje() ? 'Fecha Fin' : 'Fecha fin' }}</span>
@@ -81,7 +87,7 @@
                             </div>
                         </div>
 
-                        @if($this->requiereHora() || str_contains(strtolower($tipoServicio->nombre), 'aliment'))
+                        @if($this->requiereHora())
                         <div class="w-full md:w-auto border border-gray-300 rounded-full px-4 py-1.5 flex items-center gap-2 bg-white/90 hover:border-gray-400 transition shadow-sm">
                             <svg class="w-3.5 h-3.5 text-gray-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <div class="flex flex-col w-full text-left min-w-0">
@@ -91,16 +97,6 @@
                         </div>
                         @endif
 
-                        <button type="submit" class="w-full md:w-auto bg-[#00D65B] text-[#06281E] font-semibold text-xs uppercase tracking-widest py-2.5 px-6 rounded-full hover:bg-[#00c052] transition-colors outline-none shrink-0 flex items-center justify-center shadow-sm">
-                            <span wire:loading.remove wire:target="buscar">Buscar</span>
-                            <span wire:loading wire:target="buscar" class="flex items-center gap-1.5">
-                                <svg class="animate-spin h-3.5 w-3.5 text-[#06281E]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Buscando
-                            </span>
-                        </button>
                     </form>
 
                     <div class="mt-2 flex gap-4">
@@ -117,7 +113,7 @@
         $nombreTipoStr = strtolower($tipoServicio->nombre);
         if (str_contains($nombreTipoStr, 'hospedaje')) {
             $fraseTitulo = "Alojamientos recomendados";
-            $fraseSub = "Opciones de descanso con buenas valoraciones de los visitantes.";
+            $fraseSub = "Opciones de descanso para los visitantes.";
         } elseif (str_contains($nombreTipoStr, 'paquete')) {
             $fraseTitulo = "Paquetes turísticos";
             $fraseSub = "Recorridos planificados para conocer los atractivos de la zona.";
@@ -129,7 +125,7 @@
             $fraseSub = "Guías locales para acompañar tus recorridos.";
         } elseif (str_contains($nombreTipoStr, 'alquiler')) {
             $fraseTitulo = "Equipos de alquiler";
-            $fraseSub = "Artículos y herramientas disponibles para tus actividades.";
+            $fraseSub = "Artículos y herramientas disponibles para tus actividades turísticas.";
         } else {
             $fraseTitulo = "Opciones disponibles";
             $fraseSub = "Revisa los servicios que puedes reservar en esta categoría.";
@@ -144,16 +140,7 @@
                 <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-1.5">{{ $fraseTitulo }}</h2>
                 <p class="text-sm md:text-base text-gray-600 font-normal">{{ $fraseSub }}</p>
                 
-                {{-- Mensaje exclusivo para hospedaje --}}
-                @if($this->esHospedaje())
-                <div class="mt-4 bg-blue-50 border border-blue-200 text-blue-800 text-sm px-4 py-3 rounded-xl flex gap-3 items-start shadow-sm">
-                    <span class="text-lg">ℹ️</span>
-                    <div>
-                        <p class="font-bold text-blue-900">Aviso sobre tarifas infantiles</p>
-                        <p class="mt-0.5">Los niños mayores de 6 años pagan igual que un adulto. Si son menores de 6 años, no pagan.</p>
-                    </div>
-                </div>
-                @endif
+                
             </div>
 
             {{-- 1. SKELETON LOADER --}}
@@ -182,19 +169,67 @@
             {{-- 2. TARJETAS REALES --}}
             <div wire:loading.remove wire:target="buscar" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 @forelse($servicios as $servicio)
+                    @php
+                        $maxCantidadTarjeta = max(1, (int) ($disponibilidadServicios[$servicio->id] ?? ($servicio->cupos_libres ?? 99)));
+                        $maxPersonasTarjeta = max(1, (int) ($capacidadesServicios[$servicio->id] ?? ($servicio->capacidad_unitaria ?? 1)));
+                        $cantidadInicialTarjeta = min($maxCantidadTarjeta, max(1, (int) ($cantidadesTarjetas[$servicio->id] ?? 1)));
+                        $personasInicialTarjeta = min($maxPersonasTarjeta, max(1, (int) ($personasTarjetas[$servicio->id] ?? 1)));
+                    @endphp
                     <div x-data="{
                             modalOpen: false,
                             activeSlide: 0,
+                            modalSlide: 0,
                             imagenes: [
                                 @foreach($servicio->imagenes as $img)'{{ asset('storage/' . $img->imagen) }}',@endforeach
-                            ]
+                            ],
+                            cantidadTarjeta: {{ $cantidadInicialTarjeta }},
+                            personasTarjeta: {{ $personasInicialTarjeta }},
+                            maxCantidadTarjeta: {{ $maxCantidadTarjeta }},
+                            maxPersonasTarjeta: {{ $maxPersonasTarjeta }},
+                            agregando: false,
+                            init() {
+                                if (this.imagenes.length > 1) {
+                                    setInterval(() => {
+                                        this.activeSlide = (this.activeSlide + 1) % this.imagenes.length;
+                                    }, 2500);
+                                }
+                            },
+                            subirCantidad() {
+                                if (this.cantidadTarjeta < this.maxCantidadTarjeta) this.cantidadTarjeta++;
+                            },
+                            bajarCantidad() {
+                                if (this.cantidadTarjeta > 1) this.cantidadTarjeta--;
+                            },
+                            subirPersonas() {
+                                if (this.personasTarjeta < this.maxPersonasTarjeta) this.personasTarjeta++;
+                            },
+                            bajarPersonas() {
+                                if (this.personasTarjeta > 1) this.personasTarjeta--;
+                            },
+                            agregarRapido(id) {
+                                if (this.agregando) return;
+
+                                const cantidadActual = this.cantidadTarjeta;
+                                const personasActual = this.personasTarjeta;
+                                this.agregando = true;
+
+                                $wire.agregarAlCarrito(id, cantidadActual, personasActual).then((agregado) => {
+                                    if (!agregado) return;
+
+                                    this.maxCantidadTarjeta = Math.max(1, this.maxCantidadTarjeta - cantidadActual);
+                                    this.cantidadTarjeta = 1;
+                                    this.personasTarjeta = 1;
+                                }).finally(() => {
+                                    this.agregando = false;
+                                });
+                            }
                          }"
                          class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full overflow-hidden"
-                         wire:key="servicio-{{ $servicio->id }}">
+                         wire:key="servicio-{{ $servicio->id }}-{{ $fechaInicio }}-{{ $fechaFin }}-{{ $disponibilidadServicios[$servicio->id] ?? 0 }}">
 
                         <div class="w-full h-48 relative bg-gray-100 shrink-0 group cursor-pointer" @click="modalOpen = true">
                             @if($servicio->imagenes->isNotEmpty())
-                                <img src="{{ asset('storage/' . $servicio->imagenes->first()->imagen) }}"
+                                <img :src="imagenes[activeSlide] || '{{ asset('storage/' . $servicio->imagenes->first()->imagen) }}'"
                                      class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                      alt="{{ $servicio->nombre }}">
                                 @if(!$this->esGuianza())
@@ -255,9 +290,9 @@
                                 <div class="flex items-center justify-between bg-green-50 p-2 rounded-lg border border-green-200">
                                     <span class="font-semibold text-green-800 text-[10px] uppercase tracking-wide">Huéspedes</span>
                                     <div class="flex items-center gap-2">
-                                        <button type="button" wire:click.stop="disminuirPersonas({{ $servicio->id }})" class="w-6 h-6 rounded-full bg-white border border-green-300 text-green-700 flex items-center justify-center hover:bg-green-100 transition-colors outline-none shadow-sm"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
-                                        <span class="w-4 text-center font-bold text-gray-800 text-sm">{{ $personasTarjetas[$servicio->id] ?? 1 }}</span>
-                                        <button type="button" wire:click.stop="aumentarPersonas({{ $servicio->id }})" class="w-6 h-6 rounded-full bg-green-600 text-white flex items-center justify-center hover:bg-green-700 transition-colors outline-none shadow-sm"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
+                                        <button type="button" x-on:click.stop="bajarPersonas()" class="w-6 h-6 rounded-full bg-white border border-green-300 text-green-700 flex items-center justify-center hover:bg-green-100 transition-colors outline-none shadow-sm"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
+                                        <span class="w-4 text-center font-bold text-gray-800 text-sm" x-text="personasTarjeta">{{ $personasTarjetas[$servicio->id] ?? 1 }}</span>
+                                        <button type="button" x-on:click.stop="subirPersonas()" class="w-6 h-6 rounded-full bg-green-600 text-white flex items-center justify-center hover:bg-green-700 transition-colors outline-none shadow-sm"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
                                     </div>
                                 </div>
                                 @else
@@ -266,9 +301,9 @@
                                         @if($this->esAlquiler()) Cant. Equipos @elseif($this->esPaquete()) Cant. Paquetes @elseif($this->esGuianza()) Cant. Guías @elseif(str_contains(strtolower($tipoServicio->nombre), 'aliment')) Cant. Platos @else Cantidad @endif
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button type="button" wire:click.stop="disminuirCantidad({{ $servicio->id }})" class="w-6 h-6 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center hover:bg-gray-300 transition-colors outline-none shadow-sm"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
-                                        <span class="w-4 text-center font-bold text-gray-800 text-sm">{{ $cantidadesTarjetas[$servicio->id] ?? 1 }}</span>
-                                        <button type="button" wire:click.stop="aumentarCantidad({{ $servicio->id }})" class="w-6 h-6 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-900 transition-colors outline-none shadow-sm"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
+                                        <button type="button" x-on:click.stop="bajarCantidad()" class="w-6 h-6 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center hover:bg-gray-300 transition-colors outline-none shadow-sm"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
+                                        <span class="w-4 text-center font-bold text-gray-800 text-sm" x-text="cantidadTarjeta">{{ $cantidadesTarjetas[$servicio->id] ?? 1 }}</span>
+                                        <button type="button" x-on:click.stop="subirCantidad()" class="w-6 h-6 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-900 transition-colors outline-none shadow-sm"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
                                     </div>
                                 </div>
                                 @endif
@@ -278,9 +313,9 @@
                                         <span class="text-xs text-gray-500 font-medium">desde</span>
                                         <span class="text-lg font-bold text-gray-900">${{ number_format($servicio->precio, 2) }}</span>
                                     </div>
-                                    <button type="button" wire:click.stop="agregarAlCarrito({{ $servicio->id }})" wire:loading.attr="disabled" wire:target="agregarAlCarrito({{ $servicio->id }})" class="bg-[#00D65B] text-[#06281E] text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-[#00c052] active:scale-95 transition-all outline-none shadow-sm">
-                                        <span wire:loading.remove wire:target="agregarAlCarrito({{ $servicio->id }})">Añadir</span>
-                                        <span wire:loading wire:target="agregarAlCarrito({{ $servicio->id }})" class="flex items-center gap-1 justify-center">
+                                    <button type="button" x-on:click.stop="agregarRapido({{ $servicio->id }})" x-bind:disabled="agregando" class="bg-[#00D65B] text-[#06281E] text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-[#00c052] active:scale-95 transition-all outline-none shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                                        <span x-show="!agregando">Añadir</span>
+                                        <span x-show="agregando" style="display: none;" class="flex items-center gap-1 justify-center">
                                             <svg class="animate-spin h-3.5 w-3.5 text-[#06281E]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -307,18 +342,18 @@
                                     <div class="w-full lg:w-1/2 bg-gray-100 h-64 lg:h-auto relative p-3 lg:p-4 flex items-center justify-center">
                                         <template x-if="imagenes.length > 0">
                                             <div class="w-full h-full relative group/carousel rounded-xl overflow-hidden shadow-inner bg-black">
-                                                <img :src="imagenes[activeSlide]" class="w-full h-full object-cover transition-opacity duration-500">
-                                                <div x-show="imagenes.length > 1" class="absolute inset-0 flex items-center justify-between px-3 opacity-0 group-hover/carousel:opacity-100 transition-opacity">
-                                                    <button @click="activeSlide = activeSlide === 0 ? imagenes.length - 1 : activeSlide - 1" class="bg-white/80 hover:bg-white p-2 rounded-full shadow-md text-gray-800 outline-none">
+                                                <img :src="imagenes[modalSlide]" class="w-full h-full object-cover transition-opacity duration-500">
+                                                <div x-show="imagenes.length > 1" class="absolute inset-0 flex items-center justify-between px-3 opacity-100 transition-opacity">
+                                                    <button @click="modalSlide = modalSlide === 0 ? imagenes.length - 1 : modalSlide - 1" class="bg-white/80 hover:bg-white p-2 rounded-full shadow-md text-gray-800 outline-none">
                                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                                                     </button>
-                                                    <button @click="activeSlide = activeSlide === imagenes.length - 1 ? 0 : activeSlide + 1" class="bg-white/80 hover:bg-white p-2 rounded-full shadow-md text-gray-800 outline-none">
+                                                    <button @click="modalSlide = modalSlide === imagenes.length - 1 ? 0 : modalSlide + 1" class="bg-white/80 hover:bg-white p-2 rounded-full shadow-md text-gray-800 outline-none">
                                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                                     </button>
                                                 </div>
                                                 <div x-show="imagenes.length > 1" class="absolute bottom-3 left-0 right-0 flex justify-center gap-2">
                                                     <template x-for="(img, index) in imagenes" :key="index">
-                                                        <button @click="activeSlide = index" :class="{'bg-white w-5': activeSlide === index, 'bg-white/50 w-2': activeSlide !== index}" class="h-2 rounded-full transition-all outline-none shadow-sm"></button>
+                                                        <button @click="modalSlide = index" :class="{'bg-white w-5': modalSlide === index, 'bg-white/50 w-2': modalSlide !== index}" class="h-2 rounded-full transition-all outline-none shadow-sm"></button>
                                                     </template>
                                                 </div>
                                             </div>

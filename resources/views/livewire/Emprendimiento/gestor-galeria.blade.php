@@ -56,7 +56,7 @@
                     model="nuevasImagenes" 
                     :imagesArray="$nuevasImagenes" 
                     deleteMethod="removerTemporal"
-                    helpText="PNG, JPG o WEBP (Máx. 5MB por foto)"
+                    helpText="PNG, JPG o WEBP (Máx. 5 fotos en total por galería y 5MB por foto)"
                 />
 
                 {{-- Errores específicos de las fotos --}}
