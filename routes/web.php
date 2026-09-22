@@ -62,7 +62,7 @@ Route::get('/servicios', BuscadorServicios::class)->name('turista.servicios.inde
 Route::get('/empresa/{emprendimiento}/servicios/{tipo?}', VerServicios::class)->name('turista.empresa.servicios');
 
 // Ruta Visitante un sitio turístico- PUBLICACIONES
-//Route::view('/', 'livewire.Turista.publicacion.inicio');
+//Route::view('/', 'livewire.turista.publicacion.inicio');
 Route::get('/sitios', [TuristaController::class, 'sitios'])->name('sitios');
 Route::get('/sitio-turistico/{sitio}', [LandingController::class, 'detalleSitio'])->name('turista.sitio.detalle');
 Route::get('/actividades', [TuristaController::class, 'actividades'])->name('actividades');
