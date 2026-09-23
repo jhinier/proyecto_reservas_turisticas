@@ -19,6 +19,7 @@ return [
     ],
     'boolean'              => 'El campo :attribute debe ser verdadero o falso.',
     'confirmed'            => 'La confirmación de :attribute no coincide.',
+    'current_password'     => 'La contraseña actual no es correcta.',
     'date'                 => 'El campo :attribute no es una fecha válida.',
     'date_equals'          => 'El campo :attribute debe ser una fecha igual a :date.',
     'date_format'          => 'El campo :attribute no coincide con el formato :format.',
@@ -101,6 +102,12 @@ return [
     'unique'               => 'El campo :attribute ya ha sido tomado.',
     'uploaded'             => 'El campo :attribute no se pudo subir.',
     'url'                  => 'El formato de :attribute no es válido.',
+
+    'password' => [
+        'min' => 'La contraseña debe tener al menos 8 caracteres.',
+        'mixed' => 'La contraseña debe contener al menos una mayúscula y una minúscula.',
+        'symbols' => 'La contraseña debe contener al menos un carácter especial.',
+    ],
 
     'custom' => [
         'attribute-name' => [

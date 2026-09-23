@@ -28,7 +28,7 @@
         <div class="flex items-center justify-between px-6 lg:px-16 py-5">
             <a href="{{ route('home') }}" class="flex items-center gap-4">
                 <img 
-                    src="{{ asset('img/logo1.png') }}"
+                    src="{{ asset('img/Logo3.png') }}"
                     class="w-10 h-10 lg:w-14 lg:h-14 object-contain"
                     alt="Logo"
                 >
@@ -151,7 +151,7 @@
                         <div x-data="{ password: '', showPassword: false }">
                             <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Contraseña</label>
                             <div class="relative mt-1">
-                                <input :type="showPassword ? 'text' : 'password'" name="password" x-model="password" required autocomplete="new-password" placeholder="••••••••"
+                                <input type="password" :type="showPassword ? 'text' : 'password'" name="password" x-model="password" required autocomplete="new-password" placeholder="••••••••"
                                     class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm pr-10">
                                 
                                 <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7ed957] focus:outline-none transition">
@@ -188,7 +188,7 @@
                         <div x-data="{ showConfirmPassword: false }">
                             <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Confirmar contraseña</label>
                             <div class="relative mt-1">
-                                <input :type="showConfirmPassword ? 'text' : 'password'" name="password_confirmation" required autocomplete="new-password" placeholder="••••••••"
+                                <input type="password" :type="showConfirmPassword ? 'text' : 'password'" name="password_confirmation" required autocomplete="new-password" placeholder="••••••••"
                                     class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm pr-10">
                                 
                                 <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7ed957] focus:outline-none transition">
