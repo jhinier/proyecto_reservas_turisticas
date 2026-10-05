@@ -18,111 +18,424 @@
         </button>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-        @foreach ($sitios as $sitio)
-            @php $imagenPortada = $sitio->publicacion->imagenes->first(); @endphp
-
-            <div class="group relative bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between">
-                
-                <div>
-                    <div class="relative h-44 overflow-hidden bg-slate-100">
-                        @if ($imagenPortada)
-                            <img src="{{ asset('storage/' . $imagenPortada->imagen) }}"
-                                 class="w-full h-full object-cover transition duration-500 group-hover:opacity-0">
-                        @else
-                            <div class="w-full h-full flex items-center justify-center text-slate-400 font-medium text-xs">
-                                🖼️ Sin imagen configurada
-                            </div>
-                        @endif
-
-                        @if($sitio->publicacion->imagenes->count() > 0)
-                            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500">
-                                <div x-data="{ index: 0 }" class="relative w-full h-full">
-                                    @foreach ($sitio->publicacion->imagenes->take(5) as $i => $img)
-                                        <img x-show="index === {{ $i }}"
-                                             src="{{ asset('storage/' . $img->imagen) }}"
-                                             class="absolute w-full h-full object-cover transition duration-300">
-                                    @endforeach
-
-                                    <button @click.prevent="index = (index === 0) ? {{ $sitio->publicacion->imagenes->take(5)->count() - 1 }} : index - 1"
-                                            class="absolute left-2 top-1/2 -translate-y-1/2 bg-slate-900/60 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs z-20">
-                                        ‹
-                                    </button>
-
-                                    <button @click.prevent="index = (index === {{ $sitio->publicacion->imagenes->take(5)->count() - 1 }}) ? 0 : index + 1"
-                                            class="absolute right-2 top-1/2 -translate-y-1/2 bg-slate-900/60 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs z-20">
-                                        ›
-                                    </button>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold text-slate-800 tracking-tight line-clamp-1">
-                            {{ $sitio->publicacion->nombre }}
-                        </h3>
-                        <p class="text-slate-500 text-xs mt-1.5 line-clamp-2 leading-relaxed">
-                            {{ $sitio->publicacion->descripcion }}
+    {{-- TABLA DE SITIOS TURÍSTICOS --}}
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+    
+            {{-- Encabezado de tabla --}}
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50/70">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-800">
+                            Sitios registrados
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-0.5">
+                            Listado de atractivos turísticos registrados en el sistema
                         </p>
                     </div>
-                </div>
-
-                <div class="px-4 pb-4 pt-1 flex items-center justify-between gap-1.5 border-t border-slate-50 bg-slate-50/50">
-                    
-                    <button wire:click="abrirGaleria({{ $sitio->publicacion_id }})" 
-                            title="Gestionar Fotos"
-                            class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/50 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition">
-                        📸 <span class="hidden sm:inline">Galería ({{ $sitio->publicacion->imagenes->count() }})</span>
-                    </button>
-
-                    <div class="flex items-center gap-1">
-                        <button x-on:click="$flux.modal('detalle-sitio-{{ $sitio->publicacion_id }}').show()"
-                                title="Ver detalles" 
-                                class="bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 p-1.5 rounded-lg transition shadow-sm flex items-center justify-center">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        </button>
-
-                        <button wire:click="editar({{ $sitio->publicacion_id }})"
-                                title="Editar sitio" 
-                                class="bg-white hover:bg-amber-50 text-amber-600 border border-amber-200 p-1.5 rounded-lg transition shadow-sm flex items-center justify-center">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </button>
-
-                        <button wire:click="eliminarSitio({{ $sitio->publicacion_id }})" 
-                                wire:confirm="¿Seguro que deseas eliminar este sitio turístico?"
-                                title="Eliminar sitio" 
-                                class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200/50 p-1.5 rounded-lg transition flex items-center justify-center">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        </button>
+    
+                    <div class="bg-emerald-50 text-emerald-700 border border-emerald-100
+                                px-3 py-1.5 rounded-xl text-xs font-bold">
+                        {{ $sitios->count() }}
+                        {{ $sitios->count() == 1 ? 'sitio' : 'sitios' }}
                     </div>
-
                 </div>
             </div>
-
-            <flux:modal name="detalle-sitio-{{ $sitio->publicacion_id }}" class="md:w-2/4">
-                <div class="p-6 bg-white rounded-3xl text-slate-800">
-                    <h2 class="text-2xl font-bold mb-2 tracking-tight text-emerald-800">
-                        {{ $sitio->publicacion->nombre }}
-                    </h2>
-                    <h3 class="font-bold text-slate-700 mb-1 text-sm">Descripción:</h3>
-                    <p class="text-slate-600 text-xs mb-6 bg-slate-50 p-3 rounded-xl border border-slate-100 leading-relaxed">
-                        {{ $sitio->publicacion->descripcion }}
-                    </p>
-
-                    <h3 class="font-bold text-slate-700 mb-3 text-sm">Galería de Imágenes</h3>
-                    <div class="grid grid-cols-3 gap-2 mt-4 max-h-60 overflow-y-auto">
-                        @forelse($sitio->publicacion->imagenes as $img)
-                            <img src="{{ asset('storage/' . $img->imagen) }}"
-                                 class="w-full h-24 object-cover rounded-xl border border-slate-100">
+    
+            {{-- Contenedor responsive --}}
+            <div class="overflow-x-auto">
+    
+                <table class="w-full min-w-[900px] text-left">
+    
+                    {{-- CABECERA --}}
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+    
+                            <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                Sitio turístico
+                            </th>
+    
+                            <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                Descripción
+                            </th>
+    
+                            <th class="px-6 py-4 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                Imágenes
+                            </th>
+    
+                            <th class="px-6 py-4 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                Galería
+                            </th>
+    
+                            <th class="px-6 py-4 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                Acciones
+                            </th>
+    
+                        </tr>
+                    </thead>
+    
+                    {{-- CUERPO --}}
+                    <tbody class="divide-y divide-slate-100">
+    
+                        @forelse ($sitios as $sitio)
+    
+                            @php
+                                $imagenPortada = $sitio->publicacion->imagenes->first();
+                            @endphp
+    
+                            <tr class="hover:bg-slate-50/80 transition duration-200">
+    
+                                {{-- SITIO --}}
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+    
+                                        {{-- Miniatura --}}
+                                        <div class="w-14 h-14 rounded-xl overflow-hidden bg-slate-100
+                                                    border border-slate-200 flex-shrink-0">
+    
+                                            @if ($imagenPortada)
+    
+                                                <img
+                                                    src="{{ asset('storage/' . $imagenPortada->imagen) }}"
+                                                    alt="{{ $sitio->publicacion->nombre }}"
+                                                    class="w-full h-full object-cover"
+                                                >
+    
+                                            @else
+    
+                                                <div class="w-full h-full flex items-center justify-center
+                                                            text-slate-400">
+    
+                                                    <svg class="w-6 h-6"
+                                                         fill="none"
+                                                         stroke="currentColor"
+                                                         viewBox="0 0 24 24">
+    
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="1.5"
+                                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                        />
+    
+                                                    </svg>
+    
+                                                </div>
+    
+                                            @endif
+    
+                                        </div>
+    
+                                        {{-- Nombre --}}
+                                        <div class="min-w-0">
+    
+                                            <p class="text-sm font-bold text-slate-800 truncate max-w-[220px]">
+                                                {{ $sitio->publicacion->nombre }}
+                                            </p>
+    
+                                            <p class="text-[11px] text-slate-400 mt-1">
+                                                ID #{{ $sitio->publicacion_id }}
+                                            </p>
+    
+                                        </div>
+    
+                                    </div>
+                                </td>
+    
+    
+                                {{-- DESCRIPCIÓN --}}
+                                <td class="px-6 py-4">
+    
+                                    <p class="text-xs text-slate-500 leading-relaxed max-w-[320px] line-clamp-2">
+                                        {{ $sitio->publicacion->descripcion ?: 'Sin descripción registrada' }}
+                                    </p>
+    
+                                </td>
+    
+    
+                                {{-- IMÁGENES --}}
+                                <td class="px-6 py-4 text-center">
+    
+                                    <span class="inline-flex items-center justify-center
+                                                 min-w-[34px] h-8 px-2 rounded-lg
+                                                 bg-slate-100 text-slate-700
+                                                 border border-slate-200
+                                                 text-xs font-bold">
+    
+                                        {{ $sitio->publicacion->imagenes->count() }}
+    
+                                    </span>
+    
+                                </td>
+    
+    
+                                {{-- GALERÍA --}}
+                                <td class="px-6 py-4 text-center">
+    
+                                    <button
+                                        wire:click="abrirGaleria({{ $sitio->publicacion_id }})"
+                                        title="Gestionar Fotos"
+                                        class="inline-flex items-center gap-1.5
+                                               bg-emerald-50 hover:bg-emerald-100
+                                               text-emerald-800
+                                               border border-emerald-200
+                                               px-3 py-2 rounded-lg
+                                               text-xs font-bold
+                                               transition duration-200
+                                               hover:shadow-sm">
+    
+                                        <svg class="w-4 h-4"
+                                             fill="none"
+                                             stroke="currentColor"
+                                             viewBox="0 0 24 24">
+    
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="1.8"
+                                                d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"
+                                            />
+    
+                                            <circle
+                                                cx="8.5"
+                                                cy="8.5"
+                                                r="1.5"
+                                                stroke-width="1.5"
+                                            />
+    
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="1.8"
+                                                d="M4 16l4-4 3 3 2-2 7 6"
+                                            />
+    
+                                        </svg>
+    
+                                        Gestionar
+    
+                                    </button>
+    
+                                </td>
+    
+    
+                                {{-- ACCIONES --}}
+                                <td class="px-6 py-4">
+    
+                                    <div class="flex items-center justify-center gap-2">
+    
+                                        {{-- VER DETALLES --}}
+                                        <button
+                                            x-on:click="$flux.modal('detalle-sitio-{{ $sitio->publicacion_id }}').show()"
+                                            title="Ver detalles"
+                                            class="w-9 h-9 inline-flex items-center justify-center
+                                                   bg-white hover:bg-slate-100
+                                                   text-slate-600
+                                                   border border-slate-200
+                                                   rounded-lg
+                                                   transition duration-200
+                                                   shadow-sm">
+    
+                                            <svg class="w-4 h-4"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 viewBox="0 0 24 24">
+    
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                />
+    
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                />
+    
+                                            </svg>
+    
+                                        </button>
+    
+    
+                                        {{-- EDITAR --}}
+                                        <button
+                                            wire:click="editar({{ $sitio->publicacion_id }})"
+                                            title="Editar sitio"
+                                            class="w-9 h-9 inline-flex items-center justify-center
+                                                   bg-white hover:bg-amber-50
+                                                   text-amber-600
+                                                   border border-amber-200
+                                                   rounded-lg
+                                                   transition duration-200
+                                                   shadow-sm">
+    
+                                            <svg class="w-4 h-4"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 viewBox="0 0 24 24">
+    
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"
+                                                />
+    
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M18.5 2.5a2.121 2.121 0 013 3L12 15H9v-3l9.5-9.5z"
+                                                />
+    
+                                            </svg>
+    
+                                        </button>
+    
+    
+                                        {{-- ELIMINAR --}}
+                                        <button
+                                            wire:click="eliminarSitio({{ $sitio->publicacion_id }})"
+                                            wire:confirm="¿Seguro que deseas eliminar este sitio turístico?"
+                                            title="Eliminar sitio"
+                                            class="w-9 h-9 inline-flex items-center justify-center
+                                                   bg-red-50 hover:bg-red-100
+                                                   text-red-600
+                                                   border border-red-200
+                                                   rounded-lg
+                                                   transition duration-200">
+    
+                                            <svg class="w-4 h-4"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 viewBox="0 0 24 24">
+    
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7"
+                                                />
+    
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M10 11v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                />
+    
+                                            </svg>
+    
+                                        </button>
+    
+                                    </div>
+    
+                                </td>
+    
+                            </tr>
+    
+                            {{-- MODAL DE DETALLES --}}
+                            <flux:modal
+                                name="detalle-sitio-{{ $sitio->publicacion_id }}"
+                                class="md:w-2/4"
+                            >
+    
+                                <div class="p-6 bg-white rounded-3xl text-slate-800">
+    
+                                    <h2 class="text-2xl font-bold mb-2 tracking-tight text-emerald-800">
+                                        {{ $sitio->publicacion->nombre }}
+                                    </h2>
+    
+                                    <h3 class="font-bold text-slate-700 mb-1 text-sm">
+                                        Descripción:
+                                    </h3>
+    
+                                    <p class="text-slate-600 text-xs mb-6 bg-slate-50 p-3 rounded-xl
+                                              border border-slate-100 leading-relaxed">
+                                        {{ $sitio->publicacion->descripcion }}
+                                    </p>
+    
+                                    <h3 class="font-bold text-slate-700 mb-3 text-sm">
+                                        Galería de Imágenes
+                                    </h3>
+    
+                                    <div class="grid grid-cols-3 gap-2 mt-4 max-h-60 overflow-y-auto">
+    
+                                        @forelse($sitio->publicacion->imagenes as $img)
+    
+                                            <img
+                                                src="{{ asset('storage/' . $img->imagen) }}"
+                                                class="w-full h-24 object-cover rounded-xl border border-slate-100"
+                                            >
+    
+                                        @empty
+    
+                                            <p class="text-xs text-slate-400 col-span-3 italic">
+                                                Este sitio no cuenta con fotos en su galería.
+                                            </p>
+    
+                                        @endforelse
+    
+                                    </div>
+    
+                                </div>
+    
+                            </flux:modal>
+    
                         @empty
-                            <p class="text-xs text-slate-400 col-span-3 italic">Este sitio no cuenta con fotos en su galería.</p>
+    
+                            {{-- SIN REGISTROS --}}
+                            <tr>
+    
+                                <td colspan="5" class="px-6 py-14 text-center">
+    
+                                    <div class="flex flex-col items-center justify-center">
+    
+                                        <div class="w-14 h-14 rounded-2xl bg-slate-100
+                                                    flex items-center justify-center mb-3">
+    
+                                            <svg class="w-7 h-7 text-slate-400"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 viewBox="0 0 24 24">
+    
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="1.5"
+                                                    d="M19 11H5m14 0l-4-4m4 4l-4 4"
+                                                />
+    
+                                            </svg>
+    
+                                        </div>
+    
+                                        <p class="text-sm font-semibold text-slate-600">
+                                            No hay sitios turísticos registrados
+                                        </p>
+    
+                                        <p class="text-xs text-slate-400 mt-1">
+                                            Utiliza el botón "Agregar Sitio" para registrar uno.
+                                        </p>
+    
+                                    </div>
+    
+                                </td>
+    
+                            </tr>
+    
                         @endforelse
-                    </div>
-                </div>
-            </flux:modal>
-        @endforeach
-    </div>
+    
+                    </tbody>
+    
+                </table>
+    
+            </div>
+    
+        </div>
+    
 
     @if ($mostrarModal)
         <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">

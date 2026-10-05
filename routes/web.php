@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\RegistroController;
 use App\Http\Controllers\LandingController;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\GestionEmprendimientos; 
@@ -61,7 +62,7 @@ Route::get('/servicios', BuscadorServicios::class)->name('turista.servicios.inde
 Route::get('/empresa/{emprendimiento}/servicios/{tipo?}', VerServicios::class)->name('turista.empresa.servicios');
 
 // Ruta Visitante un sitio turístico- PUBLICACIONES
-//Route::view('/', 'livewire.Turista.publicacion.inicio');
+//Route::view('/', 'livewire.turista.publicacion.inicio');
 Route::get('/sitios', [TuristaController::class, 'sitios'])->name('sitios');
 Route::get('/sitio-turistico/{sitio}', [LandingController::class, 'detalleSitio'])->name('turista.sitio.detalle');
 Route::get('/actividades', [TuristaController::class, 'actividades'])->name('actividades');
@@ -69,6 +70,9 @@ Route::get('/actividad-turistica/{actividad}',[LandingController::class, 'detall
 Route::get('/festividades', [TuristaController::class, 'festividades'])->name('festividades');
 Route::get('/festividad/{festividad}',[LandingController::class, 'detalleFestividad'])->name('turista.festividad.detalle');
 
+// Registro con confirmación por correo
+Route::post('/registro', [RegistroController::class, 'store'])->name('registro.store');
+Route::get('/registro/confirmar/{token}', [RegistroController::class, 'confirmar'])->name('registro.confirmar');
 
 // 2. RUTAS PROTEGIDAS (Solo usuarios logueados)
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -94,7 +98,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     // --- GRUPO DEL GAD ---
-    // Solo entran SuperAdmin y Admin del GAD
+ 
     Route::prefix('admin')->middleware(['role:superAdministrador|administrador_gad'])->group(function () {
         Route::get('/panel', AdminDashboard::class)->name('admin.dashboard');
         Route::get('/emprendimientos/gestion', GestionEmprendimientos::class)->name('admin.emprendimientos.gestion');
@@ -104,7 +108,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/admin/sitios', GestionSitiosTuristicos::class)->name('admin.sitios.gestion');
         Route::get('/admin/actividades', GestionActividadesTuristicas::class)->name('admin.actividades');
         Route::get('/reportes', GestionReportes::class)->name('admin.reportes');
-        Route::get('/reportes/general/pdf', [ReporteController::class, 'general'])->name('admin.reportes.general.pdf');
+        Route::get('/reportes/pdf/{tipo}', [ReporteController::class, 'generarPDF'])->name('admin.reportes.pdf');
     });
 
     // --- GRUPO DE EMPRENDIMIENTOS ---
