@@ -23,10 +23,29 @@ class EmprendimientoService
         return User::role('emprendimiento')->get();
     }
 
-    public function listarPaginados(int $porPagina = 10)
+    public function listarPaginados(int $porPagina = 10, ?string $busqueda = null, ?string $tipoServicio = null)
     {
-        // Al usar SoftDeletes, Eloquent automáticamente omite los eliminados
-        return Emprendimiento::with('user')->latest()->paginate($porPagina);
+        $query = Emprendimiento::with('user');
+
+        // Filtro por nombre de emprendimiento o cédula del responsable
+        if ($busqueda && trim($busqueda) !== '') {
+            $searchTerm = trim($busqueda);
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('nombre', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('user', function ($u) use ($searchTerm) {
+                      $u->where('cedula', 'like', "%{$searchTerm}%");
+                  });
+            });
+        }
+
+        // Filtro por tipo de servicio
+        if ($tipoServicio && trim($tipoServicio) !== '' && $tipoServicio !== 'Todos') {
+            $query->whereHas('tiposServicios', function ($q) use ($tipoServicio) {
+                $q->where('nombre', $tipoServicio);
+            });
+        }
+
+        return $query->latest()->paginate($porPagina);
     }
 
     public function buscarConRelaciones(int $id)

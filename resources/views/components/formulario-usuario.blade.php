@@ -61,7 +61,7 @@
             @endif
             Cédula
         </label>
-        <input wire:model="{{ $cedula['name'] }}" type="text" maxlength="10" inputmode="numeric" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="060xxxxxxx"
+        <input wire:model="{{ $cedula['name'] }}" type="text" maxlength="10" inputmode="numeric" pattern="[0-9]{10}" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" placeholder="060xxxxxxx"
             class="w-full rounded-radius border {{ $cedula['statusClass'] }} {{ $inputClass }} px-2 py-2 text-sm {{ $focusClass }}" />
         @error($cedula['name']) <small class="pl-0.5 text-danger">{{ $message }}</small> @enderror
     </div>
@@ -110,7 +110,7 @@
                 <span x-text="selectedOption?.phoneCode" class="text-xs font-bold"></span>
             </button>
 
-            <input wire:model="{{ $telefono['name'] }}" type="tel" maxlength="10" autocomplete="off" placeholder="0999999999"
+            <input wire:model="{{ $telefono['name'] }}" type="tel" maxlength="10" inputmode="numeric" pattern="[0-9]{10}" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" placeholder="0999999999"
                 class="w-full rounded-r-radius border {{ $telefono['statusClass'] }} {{ $inputClass }} px-2.5 py-2 text-sm focus:outline-hidden" />
         </div>
         @error($telefono['name']) <small class="text-danger">{{ $message }}</small> @enderror

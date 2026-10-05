@@ -33,7 +33,7 @@ class LandingController extends Controller
                         ->findOrFail($id);
 
         return view(
-            'livewire.Turista.publicacion.detalle-actividad',
+            'livewire.turista.publicacion.detalle-actividad',
             compact('actividad')
         );
     }
@@ -46,7 +46,7 @@ class LandingController extends Controller
         ])->findOrFail($id);
     
         return view(
-            'livewire.Turista.publicacion.detalle-festividad',
+            'livewire.turista.publicacion.detalle-festividad',
             compact('festividad')
         );
     }

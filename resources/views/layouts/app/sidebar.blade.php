@@ -17,7 +17,7 @@
                wire:navigate
                class="flex items-center gap-3 group">
                
-                <img src="{{ asset('img/logo1.png') }}"
+                <img src="{{ asset('img/Logo1.png') }}"
                      class="h-11 w-11 rounded-xl bg-white p-1.5 shadow-md transform group-hover:scale-105 transition-all duration-200"
                      alt="Explora Candelaria">
 

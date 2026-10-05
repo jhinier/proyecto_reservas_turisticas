@@ -13,11 +13,17 @@ class ReservaAceptadaMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $reserva;
+    public Reserva $reserva;
+    public string $telefono;
+    public string $nombreEmprendimiento;
 
-    public function __construct(Reserva $reserva)
+    public function __construct(Reserva $reserva, string $telefono)
     {
-        $this->reserva = $reserva;
+        $this->reserva = $reserva->loadMissing('detalles.servicio.categoriaPivot.emprendimiento');
+        $this->telefono = $telefono;
+        
+        $detalle = $this->reserva->detalles->first();
+        $this->nombreEmprendimiento = $detalle?->servicio?->categoriaPivot?->emprendimiento?->nombre ?? 'el establecimiento';
     }
 
     public function envelope(): Envelope

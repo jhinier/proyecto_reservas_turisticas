@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Emprendimiento\Reserva;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\Attributes\Reactive;
 use Illuminate\Support\Str;
@@ -22,18 +23,33 @@ class FormularioReserva extends Component
             || str_contains($tipo, 'guianza');
     }
 
+    public function esPaquete(): bool
+    {
+        $tipo = Str::slug($this->nombreCategoria ?? '', ' ');
+
+        return str_contains($tipo, 'paquete');
+    }
+
+    public function esDiaBloqueado(string $fecha): bool
+    {
+        $dia = Carbon::parse($fecha)->dayOfWeek;
+
+        return $this->esPaquete() && in_array($dia, [Carbon::SUNDAY, Carbon::MONDAY], true);
+    }
+
     // Calcula la fecha mínima para el calendario según la categoría actual
     public function getFechaMinima(): string
     {
-        $tipo = Str::slug($this->nombreCategoria ?? '', ' ');
-        
-        if (str_contains($tipo, 'paquete')) {
-            // Si es paquete, suma 3 días a la fecha actual
-            return now()->addDays(3)->toDateString();
+        $diasAnticipacion = 3;
+        $fecha = now()->copy()->addDays($diasAnticipacion);
+
+        if ($this->esPaquete()) {
+            while ($this->esDiaBloqueado($fecha->toDateString())) {
+                $fecha->addDay();
+            }
         }
 
-        // Si no es paquete, todos los demás servicios bloquean hoy y mañana (suma 2 días)
-        return now()->addDays(2)->toDateString();
+        return $fecha->toDateString();
     }
 
     public function buscar(): void
@@ -41,8 +57,11 @@ class FormularioReserva extends Component
         $fechaMinimaPermitida = $this->getFechaMinima();
 
         $reglas = [
-            // Validamos contra la fecha mínima calculada para que no puedan forzar fechas pasadas
-            'fecha' => 'required|date|after_or_equal:' . $fechaMinimaPermitida,
+            'fecha' => ['required', 'date', 'after_or_equal:' . $fechaMinimaPermitida, function ($attribute, $value, $fail) {
+                if ($this->esPaquete() && $this->esDiaBloqueado($value)) {
+                    $fail('Los paquetes turísticos no pueden reservarse los domingos ni los lunes.');
+                }
+            }],
         ];
 
         if ($this->requiereFechaFin()) {

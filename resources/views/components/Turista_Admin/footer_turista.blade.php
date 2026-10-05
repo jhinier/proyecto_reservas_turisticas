@@ -3,7 +3,11 @@
      Diseño institucional, moderno y responsive
 ========================================================= -->
 
+<<<<<<< HEAD
 <footer class="relative mt-16 overflow-hidden bg-[#014726] text-white">
+=======
+        <div class="grid md:grid-cols-4 gap-10">
+>>>>>>> origin/Rama_jhinier
 
     <!-- Línea decorativa superior -->
     <div class="h-1 w-full bg-gradient-to-r from-[#0b8a0f] via-[#7ed957] to-[#0b8a0f]"></div>

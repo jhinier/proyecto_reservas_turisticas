@@ -8,23 +8,23 @@
 @endphp
 
 <div wire:key="serv-{{ $servicio->id }}" 
-     class="group bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex flex-col h-full relative overflow-hidden {{ $sinStock ? 'opacity-75 bg-gray-50' : 'hover:border-[#1a4031] transition-colors' }}">
+     class="group bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex flex-col h-full relative overflow-hidden dark:border-white/10 dark:bg-zinc-900 {{ $sinStock ? 'opacity-75 bg-gray-50 dark:bg-zinc-900/70' : 'hover:border-[#1a4031] dark:hover:border-emerald-400 transition-colors' }}">
     
     <!-- Contenedor izquierdo: Datos del servicio -->
     <div class="w-full flex-1 flex flex-col">
         <div class="mb-2">
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">{{ $nombreTipo ?: 'Servicio' }}</p>
-            <h3 class="text-xl font-black text-gray-900 leading-tight {{ $sinStock ? 'text-gray-500' : 'group-hover:text-[#1a4031]' }}">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1 dark:text-slate-500">{{ $nombreTipo ?: 'Servicio' }}</p>
+            <h3 class="text-xl font-black text-gray-900 leading-tight dark:text-white {{ $sinStock ? 'text-gray-500 dark:text-slate-500' : 'group-hover:text-[#1a4031] dark:group-hover:text-emerald-300' }}">
                 {{ $servicio->nombre }}
             </h3>
         </div>
 
         @if($servicio->descripcion)
-            <p class="text-sm text-gray-500 mb-4 line-clamp-2">{{ $servicio->descripcion }}</p>
+            <p class="text-sm text-gray-500 mb-4 line-clamp-2 dark:text-slate-400">{{ $servicio->descripcion }}</p>
         @endif
 
         <!-- Detalles -->
-        <div class="flex flex-col gap-2 mt-1 mb-4 text-xs font-medium text-gray-600">
+        <div class="flex flex-col gap-2 mt-1 mb-4 text-xs font-medium text-gray-600 dark:text-slate-300">
             
             @if($servicio->detalleHospedaje)
                 <div class="flex items-start gap-2">
@@ -81,9 +81,9 @@
     </div>
 
     <!-- Contenedor inferior: Precio y botón -->
-    <div class="w-full flex flex-row items-center justify-between border-t border-gray-100 pt-4 mt-auto">
+    <div class="w-full flex flex-row items-center justify-between border-t border-gray-100 pt-4 mt-auto dark:border-white/10">
         
-        <div class="text-2xl font-black {{ $sinStock ? 'text-gray-400' : 'text-gray-900' }}">
+        <div class="text-2xl font-black {{ $sinStock ? 'text-gray-400 dark:text-slate-500' : 'text-gray-900 dark:text-white' }}">
             ${{ number_format($servicio->precio, 2) }}
         </div>
         

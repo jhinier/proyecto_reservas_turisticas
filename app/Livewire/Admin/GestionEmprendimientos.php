@@ -3,6 +3,8 @@
 namespace App\Livewire\Admin;
 
 use App\Services\EmprendimientoService;
+use App\Models\TipoServicio;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -12,14 +14,58 @@ class GestionEmprendimientos extends Component
     use WithFileUploads, WithPagination;
 
     // Propiedades del formulario (Emprendimiento)
-    public $selected_id, $nombre, $descripcion, $estado, $user_id, $imagen, $imagenActual;
+    public int|string|null $selected_id = null;
+    public ?string $nombre = null;
+    public ?string $descripcion = null;
+    public ?string $estado = null;
+    public ?int $user_id = null;
+    public mixed $imagen = null;
+    public ?string $imagenActual = null;
 
     // Propiedades del formulario (Usuario Responsable)
-    public $user_name, $user_apellidos, $user_email, $user_telefono, $user_cedula;
+    public ?string $user_name = null;
+    public ?string $user_apellidos = null;
+    public ?string $user_email = null;
+    public ?string $user_telefono = null;
+    public ?string $user_cedula = null;
+
+    // Arreglo dinámico para las URLs (edición)
+    public array $enlaces = [''];
 
     // Banderas de interfaz
-    public $editando = false;
-    public $empresaDetalle = null;
+    public bool $editando = false;
+    public mixed $empresaDetalle = null;
+
+    // Filtros
+    public $busqueda = '';
+    public $filtroTipoServicio = '';
+    public $tiposServicio = [];
+
+    public function mount()
+    {
+        $this->tiposServicio = TipoServicio::pluck('nombre', 'id')->toArray();
+    }
+
+    public function updatedBusqueda()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFiltroTipoServicio()
+    {
+        $this->resetPage();
+    }
+
+    public function agregarEnlace()
+    {
+        $this->enlaces[] = '';
+    }
+
+    public function eliminarEnlace(int $index)
+    {
+        unset($this->enlaces[$index]);
+        $this->enlaces = array_values($this->enlaces);
+    }
 
     /**
      * Renderiza la vista delegando la obtención de datos al Servicio.
@@ -28,14 +74,14 @@ class GestionEmprendimientos extends Component
     {
         return view('livewire.admin.gestion-emprendimientos', [ 
             'usuarios' => $servicio->obtenerUsuariosEmprendedores(),
-            'emprendimientos' => $servicio->listarPaginados(10)
+            'emprendimientos' => $servicio->listarPaginados(10, $this->busqueda, $this->filtroTipoServicio)
         ]);
     }
 
     /**
      * Busca el detalle mediante el servicio y abre el modal.
      */
-    public function verDetalle($id, EmprendimientoService $servicio)
+    public function verDetalle(int $id, EmprendimientoService $servicio)
     {
         $this->authorize('gestionar emprendimientos');
 
@@ -51,7 +97,7 @@ class GestionEmprendimientos extends Component
     /**
      * Prepara los campos para edición delegando la búsqueda al servicio.
      */
-    public function editar($id, EmprendimientoService $servicio)
+    public function editar(int $id, EmprendimientoService $servicio)
     {
         $this->authorize('gestionar emprendimientos');
         $this->resetErrorBag();
@@ -74,6 +120,9 @@ class GestionEmprendimientos extends Component
         $this->user_telefono = $emp->user->telefono;
         $this->user_cedula = $emp->user->cedula;
 
+        // Cargar enlaces existentes
+        $this->enlaces = $emp->enlaces ?? [''];
+
         $this->modal('modal-emprendimiento')->show();
     }
 
@@ -90,9 +139,9 @@ class GestionEmprendimientos extends Component
             'estado' => 'required|in:0,1',
             'user_name' => 'required|string|max:255',
             'user_apellidos' => 'required|string|max:255',
-            'user_cedula' => 'required|digits:10|unique:users,cedula',
-            'user_telefono' => 'required',
-            'user_email' => 'required|email|unique:users,email',
+            'user_cedula' => ['required', 'digits:10', Rule::unique('users', 'cedula')->whereNull('deleted_at')],
+            'user_telefono' => 'required|numeric|digits:10',
+            'user_email' => ['required', 'email', Rule::unique('users', 'email')->whereNull('deleted_at')],
         ]);
 
         $datosEmpresa = [
@@ -131,15 +180,21 @@ class GestionEmprendimientos extends Component
             'user_name' => 'required|string|max:255',
             'user_apellidos' => 'required|string|max:255',
             'user_cedula' => 'required|digits:10',
-            'user_telefono' => 'required',
+            'user_telefono' => 'required|numeric|digits:10',
             'user_email' => 'required|email',
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'enlaces' => 'nullable|array',
+            'enlaces.*' => 'nullable|url|max:255',
         ]);
+
+        // Limpiamos las casillas vacías
+        $enlacesLimpios = array_filter($this->enlaces, fn($valor) => !is_null($valor) && trim($valor) !== '');
 
         $datosEmpresa = [
             'nombre' => $this->nombre,
             'descripcion' => $this->descripcion,
             'estado' => $this->estado,
+            'enlaces' => empty($enlacesLimpios) ? null : array_values($enlacesLimpios),
         ];
 
         $datosUsuario = [
@@ -160,7 +215,7 @@ class GestionEmprendimientos extends Component
     /**
      * Elimina el registro.
      */
-    public function eliminar($id, EmprendimientoService $servicio)
+    public function eliminar(int $id, EmprendimientoService $servicio)
     {
         $this->authorize('gestionar emprendimientos');
 

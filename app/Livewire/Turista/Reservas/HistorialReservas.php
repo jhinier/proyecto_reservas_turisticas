@@ -4,6 +4,7 @@ namespace App\Livewire\Turista\Reservas;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use App\Models\Reserva;
 use App\Services\ReservaService;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class HistorialReservas extends Component
 {
     use WithPagination;
+    use WithFileUploads;
 
     public string $filtroEstado = '';
     
@@ -21,6 +23,9 @@ class HistorialReservas extends Component
     public ?Reserva $reservaSeleccionada = null;
     public bool $intentoCancelar = false;
     public string $motivoCancelacion = '';
+    
+    // Variable para atrapar la imagen
+    public $comprobanteFoto;
 
     public function updatingFiltroEstado()
     {
@@ -43,6 +48,7 @@ class HistorialReservas extends Component
         $this->reservaSeleccionada = null;
         $this->intentoCancelar = false;
         $this->motivoCancelacion = '';
+        $this->comprobanteFoto = null; // Limpia la foto seleccionada
         $this->resetErrorBag();
     }
 
@@ -51,6 +57,30 @@ class HistorialReservas extends Component
         $this->intentoCancelar = true;
         $this->motivoCancelacion = '';
         $this->resetErrorBag();
+    }
+
+    public function guardarComprobante(ReservaService $reservaService): void
+    {
+        $this->validate([
+            'comprobanteFoto' => 'required|image|max:2048'
+        ], [
+            'comprobanteFoto.required' => 'Debes seleccionar una imagen.',
+            'comprobanteFoto.image' => 'El archivo debe ser una imagen.',
+            'comprobanteFoto.max' => 'La imagen no debe pesar más de 2MB.'
+        ]);
+
+        try {
+            $reservaService->subirComprobante(
+                $this->reservaSeleccionada->id,
+                Auth::id(),
+                $this->comprobanteFoto
+            );
+
+            $this->cerrarModal();
+            $this->dispatch('notificar', ['tipo' => 'success', 'mensaje' => 'Comprobante enviado a revisión.']);
+        } catch (\Exception $e) {
+            $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Hubo un error al subir el comprobante.']);
+        }
     }
 
     // Cancelación rápida desde la tabla
@@ -64,7 +94,7 @@ class HistorialReservas extends Component
         if ($exito) {
             $this->dispatch('notificar', ['tipo' => 'success', 'mensaje' => 'Reserva cancelada correctamente.']);
         } else {
-            $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'No puedes cancelar. Faltan menos de 24 horas o el estado actual no lo permite.']);
+            $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'No puedes cancelar. El tiempo límite expiró o el estado no lo permite.']);
         }
     }
 
@@ -83,7 +113,7 @@ class HistorialReservas extends Component
             $this->cerrarModal();
             $this->dispatch('notificar', ['tipo' => 'success', 'mensaje' => 'Tu reserva ha sido cancelada correctamente.']);
         } else {
-            $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'No puedes cancelar. Faltan menos de 24 horas o el estado actual no lo permite.']);
+            $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'No puedes cancelar. El tiempo límite expiró o el estado no lo permite.']);
         }
     }
 

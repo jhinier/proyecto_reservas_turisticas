@@ -70,6 +70,14 @@
             font-size: 18px;
             color: #1a4031;
         }
+        .alerta {
+            background-color: #fef3c7;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
         .pie-pagina {
             text-align: center;
             padding: 24px;
@@ -88,7 +96,7 @@
         
         <div class="cuerpo">
             <p class="saludo">Hola <strong>{{ $turista->name }} {{ $turista->apellidos }}</strong>,</p>
-            <p>Tu reserva ha sido registrada con éxito. Aquí tienes el detalle de los servicios agendados:</p>
+            <p>Tu reserva en <strong>{{ $nombreEmprendimiento }}</strong> ha sido registrada con éxito. Aquí tienes el detalle de los servicios agendados:</p>
 
             <table class="tabla-resumen">
                 <thead>
@@ -99,17 +107,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($carrito as $item)
+                    @foreach($reserva->detalles as $detalle)
                     <tr>
                         <td>
-                            <strong>{{ $item['nombre'] }}</strong>
-                            <span class="servicio-info">Inicio: {{ $item['fecha_inicio'] }}</span>
-                            @if(isset($item['hora']) && $item['hora'])
-                                <span class="servicio-info">Hora: {{ \Carbon\Carbon::parse($item['hora'])->format('H:i') }}</span>
+                            <strong>{{ $detalle->servicio->nombre ?? 'Servicio' }}</strong>
+                            <span class="servicio-info">Inicio: {{ \Carbon\Carbon::parse($detalle->fecha_inicio)->format('d/m/Y') }}</span>
+                            @if($detalle->fecha_fin && $detalle->fecha_fin != $detalle->fecha_inicio)
+                                <span class="servicio-info">Fin: {{ \Carbon\Carbon::parse($detalle->fecha_fin)->format('d/m/Y') }}</span>
+                            @endif
+                            @if($detalle->hora_llegada)
+                                <span class="servicio-info">Hora: {{ \Carbon\Carbon::parse($detalle->hora_llegada)->format('H:i') }}</span>
                             @endif
                         </td>
-                        <td style="text-align: center;">{{ $item['cantidad'] }}</td>
-                        <td style="text-align: right;">${{ number_format($item['subtotal'], 2) }}</td>
+                        <td style="text-align: center;">{{ $detalle->cantidad }}</td>
+                        <td style="text-align: right;">${{ number_format($detalle->subtotal, 2) }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -122,7 +133,11 @@
                 </tfoot>
             </table>
 
-            <p>Por favor, conserva este correo como comprobante de tu reserva. Si tienes alguna duda, ponte en contacto con el establecimiento.</p>
+            <div class="alerta">
+                <strong>Atención:</strong> Tienes un plazo máximo de 24 horas para comunicarte al número <strong>{{ $telefono }}</strong>, realizar el pago y subir tu comprobante al sistema. Si el tiempo expira, la reserva se cancela de forma automática.
+            </div>
+
+            <p>Por favor, conserva este correo como comprobante de tu reserva. Si tienes alguna duda, ponte en contacto con {{ $nombreEmprendimiento }}.</p>
         </div>
 
         <div class="pie-pagina">

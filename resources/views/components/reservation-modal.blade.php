@@ -2,16 +2,16 @@
 
 @if($mostrar && $servicio)
     <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-zinc-900/80 backdrop-blur-sm">
-        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg overflow-hidden border border-gray-100">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg overflow-hidden border border-gray-100 dark:border-white/10 dark:bg-zinc-900">
             
             {{-- Header Modal --}}
-            <div class="p-6 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+            <div class="p-6 bg-gray-50 border-b border-gray-100 flex justify-between items-center dark:border-white/10 dark:bg-zinc-950">
                 <div>
-                    <h3 class="font-black text-gray-900 uppercase text-lg tracking-tighter">Configurar Agendamiento</h3>
-                    <p class="text-[10px] text-gray-400 font-bold uppercase">Venta Directa de Empresa</p>
+                    <h3 class="font-black text-gray-900 uppercase text-lg tracking-tighter dark:text-white">Configurar Agendamiento</h3>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase dark:text-slate-400">Venta Directa de Empresa</p>
                 </div>
                 <button {{ $attributes->merge(['wire:click' => $onClose ?? 'cerrarModal']) }} 
-                    class="p-2 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-full transition">
+                    class="p-2 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-full transition dark:hover:bg-red-500/10 dark:hover:text-red-300">
                     <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
@@ -51,10 +51,10 @@
                 <x-time-selector :servicio="$servicio" />
 
                 {{-- Footer Modal con Subtotal --}}
-                <div class="pt-6 border-t border-gray-100 flex items-center justify-between">
+                <div class="pt-6 border-t border-gray-100 flex items-center justify-between dark:border-white/10">
                     <div>
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Subtotal calculado</span>
-                        <span class="text-3xl font-black text-gray-900">${{ number_format($servicio->precio * $cantidad, 2) }}</span>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block dark:text-slate-400">Subtotal calculado</span>
+                        <span class="text-3xl font-black text-gray-900 dark:text-white">${{ number_format($servicio->precio * $cantidad, 2) }}</span>
                     </div>
                     <button {{ $attributes->merge(['wire:click' => $onConfirm ?? 'confirmarAgregar']) }} 
                         class="bg-[#1a4031] hover:bg-black text-white px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest transition-all shadow-xl shadow-green-900/20 active:scale-95">

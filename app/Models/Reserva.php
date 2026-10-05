@@ -17,16 +17,20 @@ class Reserva extends Model
 
     protected $fillable = [
         'user_id',            // Quién compra
+        'emprendimiento_id',  // A qué emprendimiento pertenece
         'estado',             // Estado global de la compra
         'precio_total',       // Suma de todos los detalles
         'reservada_por_rol',  // Auditoría: ¿quién la creó?
         'cancelada_en',
         'cancelada_por_rol',
-        'motivo_cancelacion'
+        'motivo_cancelacion',
+        'comprobante_pago',
+        'fecha_subida_comprobante'
     ];
 
     protected $casts = [
         'cancelada_en' => 'datetime',
+        'fecha_subida_comprobante' => 'datetime',
         'precio_total' => 'decimal:2',
     ];
 

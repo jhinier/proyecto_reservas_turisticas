@@ -139,11 +139,11 @@ class ListaServiciosReservas extends Component
             }
             $subtotal = $servicio->precio * $cantidadElegida;
         } else {
-            // Control de 2 días de anticipación para el resto de servicios
-            $fechaMinimaPermitida = now()->startOfDay()->addDays(2);
+            // Control de 3 días de anticipación para el resto de servicios
+            $fechaMinimaPermitida = now()->startOfDay()->addDays(3);
             
             if ($fechaInicioCarbon->lt($fechaMinimaPermitida)) {
-                $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Las reservas deben hacerse con al menos 2 días de anticipación.']);
+                $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Las reservas deben hacerse con al menos 3 días de anticipación.']);
                 return;
             }
 
@@ -196,12 +196,12 @@ class ListaServiciosReservas extends Component
         $fechaInicio = $this->fechaBusqueda;
         $fechaFin    = $this->fechaFinBusqueda ?: $fechaInicio;
         
-        // Control de 2 días de anticipación para hospedajes y guianzas
+        // Control de 3 días de anticipación para hospedajes y guianzas
         $fechaInicioCarbon = Carbon::parse($fechaInicio)->startOfDay();
-        $fechaMinimaPermitida = now()->startOfDay()->addDays(2);
+        $fechaMinimaPermitida = now()->startOfDay()->addDays(3);
         
         if ($fechaInicioCarbon->lt($fechaMinimaPermitida)) {
-            $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Las reservas deben hacerse con al menos 2 días de anticipación.']);
+            $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Las reservas deben hacerse con al menos 3 días de anticipación.']);
             return;
         }
         

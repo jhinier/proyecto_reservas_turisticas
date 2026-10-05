@@ -45,16 +45,14 @@ class VerServicios extends Component
             ? TipoServicio::findOrFail($this->tipoServicioSeleccionado)
             : TipoServicio::first();
 
-        // 1. Establecemos las fechas por defecto (CAMBIO AQUÍ: 2 días de anticipación o 3 para paquetes)
-        $this->fechaInicio = $this->esPaquete()
-            ? now()->addDays(3)->toDateString()
-            : now()->addDays(2)->toDateString();
+        // 1. Establecemos las fechas por defecto con 3 días de anticipación, evitando domingos y lunes en paquetes
+        $this->fechaInicio = $this->obtenerFechaMinimaPermitida(3);
 
         if ($this->requiereFechaFin()) {
-            $this->fechaFin = now()->addDay()->toDateString();
+            $this->fechaFin = $this->fechaInicio;
         }
         if ($this->requiereHora()) {
-            $this->horaLlegada = '12:00';
+            $this->horaLlegada = '';
         }
 
         // 2. Si vienen fechas en la URL tras realizar una reserva, las sobreescribimos
@@ -87,34 +85,51 @@ class VerServicios extends Component
     }
 
     public function esHospedaje(): bool { return str_contains($this->nombreTipo, 'hospedaje'); }
-    public function esPaquete(): bool   { return str_contains($this->nombreTipo, 'paquete'); }
+    public function esPaquete(): bool   { return str_contains(Str::slug($this->tipoServicio->nombre ?? '', ' '), 'paquete'); }
     public function esAlquiler(): bool  { return str_contains($this->nombreTipo, 'alquiler'); }
     public function esGuianza(): bool   { return str_contains($this->nombreTipo, 'guianza'); }
+    public function esAlimentacion(): bool { return str_contains($this->nombreTipo, 'aliment'); }
     public function requiereFechaFin(): bool { return $this->esHospedaje() || $this->esAlquiler() || $this->esGuianza(); }
-    public function requiereHora(): bool     { return $this->esHospedaje() || $this->esGuianza() || $this->esAlquiler(); }
+    public function requiereHora(): bool     { return $this->esHospedaje() || $this->esGuianza() || $this->esAlquiler() || $this->esAlimentacion(); }
+
+    private function esDiaBloqueado(string $fecha): bool
+    {
+        $dia = Carbon::parse($fecha)->dayOfWeek;
+
+        return $this->esPaquete() && in_array($dia, [Carbon::SUNDAY, Carbon::MONDAY], true);
+    }
+
+    private function obtenerFechaMinimaPermitida(int $diasAnticipacion = 3): string
+    {
+        $fecha = now()->copy()->addDays($diasAnticipacion);
+
+        if ($this->esPaquete()) {
+            while ($this->esDiaBloqueado($fecha->toDateString())) {
+                $fecha->addDay();
+            }
+        }
+
+        return $fecha->toDateString();
+    }
 
     public function buscar(CatalogoReservaService $catalogoService, InventarioService $inventarioService): void
     {
-        // 1. Definimos las reglas de validación base (CAMBIO AQUÍ: Mínimo 2 días)
-        $minDate = now()->addDays(2)->toDateString();
+        // 1. Definimos las reglas de validación base
+        $minDate = $this->obtenerFechaMinimaPermitida(3);
         $reglas = [
-            'fechaInicio' => 'required|date|after_or_equal:' . $minDate
+            'fechaInicio' => ['required', 'date', 'after_or_equal:' . $minDate, function ($attribute, $value, $fail) {
+                if ($this->esPaquete() && $this->esDiaBloqueado($value)) {
+                    $fail('Los paquetes turísticos no pueden reservarse los domingos ni los lunes.');
+                }
+            }],
         ];
-
-        // 2. Ajustamos la regla de fechaInicio si es un paquete
-        if ($this->esPaquete()) {
-            $reglas['fechaInicio'] = 'required|date|after_or_equal:' . now()->addDays(3)->toDateString();
-        }
 
         // 3. Regla para fecha fin (solo si el servicio lo requiere)
         if ($this->requiereFechaFin()) {
             $reglas['fechaFin'] = 'required|date|after_or_equal:fechaInicio';
         }
 
-        // 4. Regla para hora (solo si el servicio lo requiere)
-        if ($this->requiereHora()) {
-            $reglas['horaLlegada'] = 'required|date_format:H:i';
-        }
+        // 4. No se valida la hora en el buscador; se valida solo al añadir al carrito.
 
         // 5. Validamos los datos actuales del componente
         $this->validate($reglas);
@@ -190,7 +205,7 @@ class VerServicios extends Component
         $this->personasTarjetas[$id] = max(1, ($this->personasTarjetas[$id] ?? 1) - 1);
     }
 
-    public function agregarAlCarrito(int $id): void
+    public function agregarAlCarrito(int $id, ?int $cantidadElegida = null, ?int $personasElegidas = null): void
     {
         try {
             $servicio = collect($this->servicios)->firstWhere('id', $id);
@@ -205,8 +220,10 @@ class VerServicios extends Component
                 return;
             }
 
-            $cantidadElegida  = (int) ($this->cantidadesTarjetas[$id] ?? 1);
-            $personasElegidas = (int) ($this->personasTarjetas[$id]   ?? 1);
+            $cantidadElegida  = max(1, (int) ($cantidadElegida ?? ($this->cantidadesTarjetas[$id] ?? 1)));
+            $personasElegidas = max(1, (int) ($personasElegidas ?? ($this->personasTarjetas[$id]   ?? 1)));
+            $capacidadMaxima  = max(1, (int) ($this->capacidadesServicios[$id] ?? 1));
+            $personasElegidas = min($personasElegidas, $capacidadMaxima);
             $cuposLibres      = (int) ($this->disponibilidadServicios[$id] ?? 0);
 
             if ($cuposLibres <= 0) {
@@ -220,7 +237,18 @@ class VerServicios extends Component
             }
 
             if ($this->requiereHora() && empty($this->horaLlegada)) {
-                $this->dispatch('notificar', ['tipo' => 'warning', 'mensaje' => 'Especifica una hora de llegada.']);
+                $this->dispatch('notificar', ['tipo' => 'warning', 'mensaje' => 'Especifica una hora de llegada antes de añadir al carrito.']);
+                return;
+            }
+
+            $fechaMinimaPermitida = $this->obtenerFechaMinimaPermitida(3);
+            if (Carbon::parse($this->fechaInicio)->startOfDay()->lt(Carbon::parse($fechaMinimaPermitida)->startOfDay())) {
+                $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Las reservas deben hacerse con al menos 3 días de anticipación.']);
+                return;
+            }
+
+            if ($this->esPaquete() && $this->esDiaBloqueado($this->fechaInicio)) {
+                $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Los paquetes turísticos no pueden reservarse los domingos ni los lunes.']);
                 return;
             }
 
@@ -255,8 +283,7 @@ class VerServicios extends Component
 
             } else {
                 $subtotal = $servicio->precio * $cantidadElegida;
-                // --- CAMBIO AÑADIDO AQUÍ: Guardamos la hora para alimentación u otros ---
-                $horaFinal = $this->horaLlegada; 
+                $horaFinal = $this->horaLlegada;
             }
 
             $this->carrito[] = [
@@ -270,6 +297,8 @@ class VerServicios extends Component
                 'fecha_inicio'       => $this->fechaInicio,
                 'fecha_fin'          => $fechaFin,
                 'hora'               => $horaFinal,
+                'precio'             => $servicio->precio,
+                'precio_unitario'    => $servicio->precio,
                 'subtotal'           => $subtotal,
             ];
 
@@ -282,10 +311,12 @@ class VerServicios extends Component
 
             $this->dispatch('notificar', ['tipo' => 'success', 'mensaje' => '¡Servicio añadido!']);
             $this->dispatch('servicio-agregado');
+            return;
 
         } catch (\Exception $e) {
             Log::error('Error en agregarAlCarrito: ' . $e->getMessage());
             $this->dispatch('notificar', ['tipo' => 'error', 'mensaje' => 'Error al procesar.']);
+            return;
         }
     }
 

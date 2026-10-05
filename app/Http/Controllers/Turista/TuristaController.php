@@ -18,7 +18,7 @@ class TuristaController extends Controller
                     ->get();
 
         return view(
-            'livewire.Turista.publicacion.sitios',
+            'livewire.turista.publicacion.sitios',
             compact('sitios')
         );
     }
@@ -30,7 +30,7 @@ class TuristaController extends Controller
                     ->paginate(9);
 
         return view(
-            'livewire.Turista.publicacion.actividades',
+            'livewire.turista.publicacion.actividades',
             compact('actividades')
         );
     }
@@ -44,7 +44,7 @@ class TuristaController extends Controller
         ])->latest()->get();
 
         return view(
-            'livewire.Turista.publicacion.festividades', 
+            'livewire.turista.publicacion.festividades',
             compact('festividades')
         );
     }

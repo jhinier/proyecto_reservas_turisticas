@@ -7,6 +7,7 @@ use Livewire\WithFileUploads;
 use App\Models\Servicio;
 use App\Services\ImagenEmprendimientoService;
 use Livewire\Attributes\On;
+use Illuminate\Validation\ValidationException;
 
 class GestorGaleria extends Component
 {
@@ -48,7 +49,7 @@ class GestorGaleria extends Component
     /**
      * Remueve una imagen de la lista de previsualización antes de subirla.
      */
-    public function removerTemporal($index)
+    public function removerTemporal(int $index)
     {
         if (isset($this->nuevasImagenes[$index])) {
             unset($this->nuevasImagenes[$index]);
@@ -61,14 +62,25 @@ class GestorGaleria extends Component
      */
     public function subirFotos(ImagenEmprendimientoService $service)
     {
-        // 1. Validación con mensajes en español y límite de 5MB
+        $totalActual = $this->servicio?->imagenes?->count() ?? 0;
+
+        // 1. Validación con mensajes en español, límite de tamaño y máximo de 5 fotos en total para la galería
         $this->validate([
+            'nuevasImagenes' => ['array', 'max:5'],
             'nuevasImagenes.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120'
         ], [
+            'nuevasImagenes.array' => 'La galería debe contener imágenes válidas.',
+            'nuevasImagenes.max' => 'Solo puedes subir hasta 5 fotos en esta galería.',
             'nuevasImagenes.*.image' => 'El archivo debe ser una imagen válida.',
             'nuevasImagenes.*.mimes' => 'Formato no permitido (Solo JPG, PNG, WEBP).',
             'nuevasImagenes.*.max'   => 'Una de las imágenes pesa más de 5MB.',
         ]);
+
+        if (($totalActual + count($this->nuevasImagenes)) > 5) {
+            throw ValidationException::withMessages([
+                'nuevasImagenes' => 'La galería admite solo 5 fotos en total. Ya tienes ' . $totalActual . ' guardadas.',
+            ]);
+        }
 
         // 2. Llamada al servicio para procesar la subida
         $service->subirImagenes($this->servicio->id, $this->nuevasImagenes);
