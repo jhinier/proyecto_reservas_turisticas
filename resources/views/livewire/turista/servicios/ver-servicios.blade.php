@@ -1,5 +1,5 @@
 {{-- Se aplica un margen negativo (-mt-6 md:-mt-8) para anular el padding que pone el layout principal y pegar la imagen al menú --}}
-<div class="w-full min-h-screen bg-[#f4f9f4] -mt-6 md:-mt-8 flex flex-col">
+<div class="w-full min-h-screen bg-[#f4f9f4] -mt-6 md:-mt-8 flex flex-col dark:bg-[#07110d]">
 
     {{-- Cabecera --}}
     <div class="w-full max-w-screen-2xl mx-auto md:px-16 lg:px-32 xl:px-200">
@@ -19,7 +19,7 @@
                 </h1>
 
                 {{-- Buscador semitransparente y textos finos --}}
-                 <div class="bg-white/100 backdrop-blur-md rounded-xl shadow-lg p-4 md:p-6 w-full max-w-4xl border border-white/60">
+                 <div class="bg-white/100 backdrop-blur-md rounded-xl shadow-lg p-4 md:p-6 w-full max-w-4xl border border-white/60 dark:border-white/10 dark:bg-zinc-900/95">
                     
 
                     <form wire:submit.prevent="buscar" class="flex flex-col md:flex-row gap-3 items-center">
@@ -137,8 +137,8 @@
         @if($busquedaRealizada)
             
             <div class="mb-8">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-1.5">{{ $fraseTitulo }}</h2>
-                <p class="text-sm md:text-base text-gray-600 font-normal">{{ $fraseSub }}</p>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-1.5 dark:text-white">{{ $fraseTitulo }}</h2>
+                <p class="text-sm md:text-base text-gray-600 font-normal dark:text-slate-300">{{ $fraseSub }}</p>
                 
                 
             </div>

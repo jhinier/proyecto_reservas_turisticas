@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section class="min-h-screen bg-g<section class="min-h-screen bg-gray-100 pb-24 pt-8">
+<section class="min-h-screen bg-gray-100 pb-24 pt-8 dark:bg-[#07110d]">
 
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
 
@@ -13,11 +13,11 @@
                 Explora
             </p>
 
-            <h1 class="text-5xl font-black text-gray-900 mt-4">
+            <h1 class="text-5xl font-black text-gray-900 mt-4 dark:text-white">
                 Sitios Turísticos
             </h1>
 
-            <p class="text-gray-500 mt-6 max-w-2xl mx-auto text-lg">
+            <p class="text-gray-500 mt-6 max-w-2xl mx-auto text-lg dark:text-slate-300">
                 Descubre los lugares más emblemáticos de La Candelaria.
             </p>
 
@@ -29,7 +29,7 @@
             @forelse ($sitios as $sitio)
 
                 <div
-                    class="bg-white rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2">
+                    class="bg-white rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2 dark:border dark:border-white/10 dark:bg-zinc-900">
 
                     {{-- CARRUSEL --}}
                     <div class="relative h-72 overflow-hidden">
@@ -45,7 +45,7 @@
                                         x-transition
                                         src="{{ asset('storage/' . $img->imagen) }}"
                                         alt="{{ $sitio->publicacion->nombre }}"
-                                        class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                                        class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110">
 
                                 @endforeach
 
@@ -108,11 +108,11 @@
                         <div class="p-8">
 
                         <span
-                            class="bg-emerald-100 text-emerald-700 text-xs font-bold px-4 py-2 rounded-full">
+                            class="bg-emerald-100 text-emerald-700 text-xs font-bold px-4 py-2 rounded-full dark:bg-emerald-400/10 dark:text-emerald-300">
                             Sitio Turístico
                         </span>
 
-                        <h2 class="text-2xl font-bold text-gray-900 mt-5">
+                        <h2 class="text-2xl font-bold text-gray-900 mt-5 dark:text-white">
 
                             {{ $sitio->publicacion->nombre }}
 
@@ -154,7 +154,7 @@
 
                 <div class="col-span-full text-center py-20">
 
-                    <h2 class="text-2xl font-bold text-gray-500">
+                    <h2 class="text-2xl font-bold text-gray-500 dark:text-slate-400">
                         No existen sitios turísticos registrados.
                     </h2>
 

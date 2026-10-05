@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section class="min-h-screen bg-g<section class="min-h-screen bg-gray-100 pb-24 pt-8">
+<section class="min-h-screen bg-gray-100 pb-24 pt-8 dark:bg-[#07110d]">
 
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
 
@@ -13,11 +13,11 @@
                 Cultura y Tradición
             </p>
 
-            <h1 class="text-5xl font-black text-slate-800 mt-4">
+            <h1 class="text-5xl font-black text-slate-800 mt-4 dark:text-white">
                 Festividades
             </h1>
 
-            <p class="text-slate-500 mt-6 max-w-2xl mx-auto text-lg">
+            <p class="text-slate-500 mt-6 max-w-2xl mx-auto text-lg dark:text-slate-300">
                 Descubre eventos, tradiciones y celebraciones culturales
             </p>
 
@@ -28,7 +28,7 @@
 
             @foreach($festividades as $festividad)
 
-                <div class="bg-white rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2 border border-slate-100">
+                <div class="bg-white rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2 border border-slate-100 dark:border-white/10 dark:bg-zinc-900">
 
                     {{-- CARRUSEL --}}
                     <div class="relative h-64 overflow-hidden">
@@ -106,12 +106,12 @@
                     {{-- CONTENIDO --}}
                     <div class="p-8">
 
-                        <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-4 py-2 rounded-full">
+                        <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-4 py-2 rounded-full dark:bg-emerald-400/10 dark:text-emerald-300">
                             Festividad
                         </span>
 
                         {{-- Nombre --}}
-                        <h2 class="text-2xl font-bold text-slate-800 mt-5">
+                        <h2 class="text-2xl font-bold text-slate-800 mt-5 dark:text-white">
                             {{ $festividad->publicacion->nombre }}
                         </h2>
 
@@ -121,7 +121,7 @@
                             <div class="flex flex-col gap-2 text-sm">
 
                                 <span
-                                    class="bg-emerald-50 text-emerald-700 px-4 py-2 rounded-xl font-semibold">
+                                    class="bg-emerald-50 text-emerald-700 px-4 py-2 rounded-xl font-semibold dark:bg-emerald-400/10 dark:text-emerald-300">
 
                                     📅 Inicio:
                                     {{ \Carbon\Carbon::parse($festividad->fecha_inicio)->format('d/m/Y') }}
@@ -129,7 +129,7 @@
                                 </span>
 
                                 <span
-                                    class="bg-red-50 text-red-600 px-4 py-2 rounded-xl font-semibold">
+                                    class="bg-red-50 text-red-600 px-4 py-2 rounded-xl font-semibold dark:bg-red-500/10 dark:text-red-300">
 
                                     🏁 Fin:
                                     {{ \Carbon\Carbon::parse($festividad->fecha_fin)->format('d/m/Y') }}

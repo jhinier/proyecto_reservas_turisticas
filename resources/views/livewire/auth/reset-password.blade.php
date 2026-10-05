@@ -28,7 +28,7 @@
         <div class="flex items-center justify-between px-6 lg:px-16 py-5">
             <a href="{{ route('home') }}" class="flex items-center gap-4">
                 <img 
-                    src="{{ asset('img/logo1.png') }}"
+                    src="{{ asset('img/Logo1.png') }}"
                     class="w-10 h-10 lg:w-14 lg:h-14 object-contain"
                     alt="Logo"
                 >

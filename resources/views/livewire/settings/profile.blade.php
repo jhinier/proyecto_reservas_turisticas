@@ -3,11 +3,30 @@
 
     <flux:heading class="sr-only">{{ __('Configuración de perfil') }}</flux:heading>
 
-    <x-settings.layout :heading="__('Perfil')" :subheading="__('Actualiza tu nombre y dirección de correo electrónico')">
+    <x-settings.layout
+        :heading="__('Perfil')"
+        :subheading="auth()->user()->hasRole('emprendimiento')
+            ? __('Actualiza tu nombre, correo electrónico y teléfono')
+            : __('Actualiza tu nombre y dirección de correo electrónico')"
+    >
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
             <flux:input wire:model="name" :label="__('Nombres')" type="text" required autofocus autocomplete="given-name" />
 
             <flux:input wire:model="apellidos" :label="__('Apellidos')" type="text" required autocomplete="family-name" />
+
+            @if (auth()->user()->hasRole('emprendimiento'))
+                <flux:input
+                    wire:model="telefono"
+                    :label="__('Número de teléfono')"
+                    type="tel"
+                    required
+                    maxlength="10"
+                    inputmode="numeric"
+                    pattern="[0-9]{10}"
+                    autocomplete="tel"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)"
+                />
+            @endif
 
             <div>
                 <flux:input wire:model="email" :label="__('Correo electrónico')" type="email" required autocomplete="email" />

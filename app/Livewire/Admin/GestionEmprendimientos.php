@@ -140,7 +140,7 @@ class GestionEmprendimientos extends Component
             'user_name' => 'required|string|max:255',
             'user_apellidos' => 'required|string|max:255',
             'user_cedula' => ['required', 'digits:10', Rule::unique('users', 'cedula')->whereNull('deleted_at')],
-            'user_telefono' => 'required',
+            'user_telefono' => 'required|numeric|digits:10',
             'user_email' => ['required', 'email', Rule::unique('users', 'email')->whereNull('deleted_at')],
         ]);
 
@@ -180,7 +180,7 @@ class GestionEmprendimientos extends Component
             'user_name' => 'required|string|max:255',
             'user_apellidos' => 'required|string|max:255',
             'user_cedula' => 'required|digits:10',
-            'user_telefono' => 'required',
+            'user_telefono' => 'required|numeric|digits:10',
             'user_email' => 'required|email',
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'enlaces' => 'nullable|array',

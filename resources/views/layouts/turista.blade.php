@@ -147,12 +147,285 @@
     .goog-te-gadget-simple .goog-te-menu-value span:last-child {
         border: none !important;
     }
+
+    .dark .tourist-app .goog-te-combo,
+    .dark .tourist-app .goog-te-gadget-simple {
+        color: #d1fae5 !important;
+        border-color: rgba(134, 239, 172, 0.28) !important;
+        background-color: rgba(20, 83, 45, 0.35) !important;
+        box-shadow: none !important;
+    }
+
+    .dark .tourist-app #google_translate_element .goog-te-combo,
+    .dark .tourist-app #google_translate_element .goog-te-combo *,
+    .dark .tourist-app #google_translate_element .goog-te-gadget-simple,
+    .dark .tourist-app #google_translate_element .goog-te-gadget-simple *,
+    .dark .tourist-app #google_translate_element .goog-te-menu-value,
+    .dark .tourist-app #google_translate_element .goog-te-menu-value span {
+        color: #d1fae5 !important;
+    }
+
+    .dark .tourist-app #google_translate_element .goog-te-combo {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23d1fae5' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+    }
+
+    .dark .tourist-app .goog-te-combo option {
+        background-color: #18181b !important;
+        color: #f8fafc !important;
+    }
+
+    .dark .tourist-app main,
+    .dark .tourist-app main [class*="bg-[#f4f9f4]"] {
+        background-color: #07110d !important;
+    }
+
+    .dark .tourist-app main .bg-white,
+    .dark .tourist-app main [class*="bg-white/90"],
+    .dark .tourist-app main [class*="bg-white/100"] {
+        background-color: #18181b !important;
+    }
+
+    .dark .tourist-app main .h-2.rounded-full.bg-white {
+        background-color: #ffffff !important;
+    }
+
+    .dark .tourist-app main .bg-gray-50,
+    .dark .tourist-app main .bg-slate-50 {
+        background-color: #162018 !important;
+    }
+
+    .dark .tourist-app main .bg-gray-100,
+    .dark .tourist-app main .bg-slate-100 {
+        background-color: #101713 !important;
+    }
+
+    .dark .tourist-app main .bg-gray-200,
+    .dark .tourist-app main .bg-slate-200 {
+        background-color: #263126 !important;
+    }
+
+    .dark .tourist-app main .text-gray-900,
+    .dark .tourist-app main .text-gray-800,
+    .dark .tourist-app main .text-slate-900,
+    .dark .tourist-app main .text-slate-800,
+    .dark .tourist-app main .text-black,
+    .dark .tourist-app main [class*="text-[#06281E]"],
+    .dark .tourist-app main [class*="text-[#123524]"] {
+        color: #f8fafc !important;
+    }
+
+    .dark .tourist-app main .text-gray-700,
+    .dark .tourist-app main .text-slate-700,
+    .dark .tourist-app main [class*="text-[#464646]"] {
+        color: #e2e8f0 !important;
+    }
+
+    .dark .tourist-app main .text-gray-600,
+    .dark .tourist-app main .text-gray-500,
+    .dark .tourist-app main .text-slate-600,
+    .dark .tourist-app main .text-slate-500 {
+        color: #cbd5e1 !important;
+    }
+
+    .dark .tourist-app main .text-gray-400,
+    .dark .tourist-app main .text-slate-400 {
+        color: #94a3b8 !important;
+    }
+
+    .dark .tourist-app main .border-gray-100,
+    .dark .tourist-app main .border-gray-200,
+    .dark .tourist-app main .border-gray-300,
+    .dark .tourist-app main .border-slate-100,
+    .dark .tourist-app main .border-slate-200,
+    .dark .tourist-app main .border-slate-300 {
+        border-color: rgba(148, 163, 184, 0.28) !important;
+    }
+
+    .dark .tourist-app main input,
+    .dark .tourist-app main textarea,
+    .dark .tourist-app main select {
+        background-color: #0f172a !important;
+        border-color: rgba(148, 163, 184, 0.35) !important;
+        color: #f8fafc !important;
+    }
+
+    .dark .tourist-app main input::placeholder,
+    .dark .tourist-app main textarea::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    .dark .tourist-app main .shadow-sm,
+    .dark .tourist-app main .shadow-lg,
+    .dark .tourist-app main .shadow-xl,
+    .dark .tourist-app main .shadow-2xl {
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35) !important;
+    }
+
+    .dark .tourist-app main .bg-emerald-50,
+    .dark .tourist-app main .bg-emerald-100,
+    .dark .tourist-app main .bg-green-50,
+    .dark .tourist-app main .bg-green-100 {
+        background-color: rgba(34, 197, 94, 0.14) !important;
+    }
+
+    .dark .tourist-app main .text-emerald-700,
+    .dark .tourist-app main .text-green-700 {
+        color: #86efac !important;
+    }
+
+    .dark .tourist-app main .bg-red-50,
+    .dark .tourist-app main .bg-red-100 {
+        background-color: rgba(239, 68, 68, 0.14) !important;
+    }
+
+    .dark .tourist-app main .text-red-600,
+    .dark .tourist-app main .text-red-700,
+    .dark .tourist-app main .text-red-800,
+    .dark .tourist-app main .text-red-900 {
+        color: #fca5a5 !important;
+    }
+
+    .dark .tourist-app main .bg-yellow-50,
+    .dark .tourist-app main .bg-yellow-100,
+    .dark .tourist-app main .bg-orange-50,
+    .dark .tourist-app main .bg-orange-100 {
+        background-color: rgba(245, 158, 11, 0.16) !important;
+    }
+
+    .dark .tourist-app main .text-yellow-600,
+    .dark .tourist-app main .text-yellow-700,
+    .dark .tourist-app main .text-yellow-800,
+    .dark .tourist-app main .text-yellow-900,
+    .dark .tourist-app main .text-orange-700 {
+        color: #fde68a !important;
+    }
+
+    .dark .tourist-app main .bg-blue-50,
+    .dark .tourist-app main .bg-blue-100,
+    .dark .tourist-app main .bg-indigo-50,
+    .dark .tourist-app main .bg-indigo-100 {
+        background-color: rgba(59, 130, 246, 0.16) !important;
+    }
+
+    .dark .tourist-app main .text-blue-600,
+    .dark .tourist-app main .text-blue-700,
+    .dark .tourist-app main .text-blue-800,
+    .dark .tourist-app main .text-indigo-700 {
+        color: #93c5fd !important;
+    }
+
+    .dark .tourist-app nav .bg-white,
+    .dark .tourist-app nav [class*="bg-white/90"],
+    .dark .tourist-app nav .bg-slate-50,
+    .dark .tourist-app nav .bg-slate-100 {
+        background-color: #18181b !important;
+    }
+
+    .dark .tourist-app nav .text-slate-800,
+    .dark .tourist-app nav .text-slate-700,
+    .dark .tourist-app nav .text-gray-700 {
+        color: #e2e8f0 !important;
+    }
+
+    .dark .tourist-app nav .text-slate-600,
+    .dark .tourist-app nav .text-slate-500,
+    .dark .tourist-app nav .text-gray-500 {
+        color: #94a3b8 !important;
+    }
+
+    .dark .tourist-app nav .border-slate-100,
+    .dark .tourist-app nav .border-slate-200,
+    .dark .tourist-app nav .border-gray-200 {
+        border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    .dark .tourist-app nav a:hover,
+    .dark .tourist-app nav button:hover {
+        color: #86efac;
+    }
+
+    .dark .tourist-app nav #serviciosMenu a,
+    .dark .tourist-app nav #serviciosMenuMobile a {
+        color: #e2e8f0 !important;
+    }
+
+    .dark .tourist-app nav #serviciosMenu li:first-child a,
+    .dark .tourist-app nav #serviciosMenuMobile li:first-child a {
+        color: #86efac !important;
+    }
+
+    .dark .tourist-app nav #serviciosMenu a:hover,
+    .dark .tourist-app nav #serviciosMenu a:focus-visible,
+    .dark .tourist-app nav #serviciosMenuMobile a:hover,
+    .dark .tourist-app nav #serviciosMenuMobile a:focus-visible {
+        background-color: rgba(16, 185, 129, 0.14) !important;
+        color: #bbf7d0 !important;
+    }
+
+    .dark .tourist-app nav #userMenu,
+    .dark .tourist-app nav #userMenu li,
+    .dark .tourist-app nav #userMenu div {
+        background-color: #18181b !important;
+    }
+
+    .dark .tourist-app nav #userMenu a,
+    .dark .tourist-app nav #userMenu a *,
+    .dark .tourist-app nav #userMenu a font,
+    .dark .tourist-app nav #userMenu a span {
+        color: #e2e8f0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    .dark .tourist-app nav #userMenu a:hover,
+    .dark .tourist-app nav #userMenu a:focus-visible {
+        background-color: rgba(16, 185, 129, 0.14) !important;
+        color: #bbf7d0 !important;
+    }
+
+    .dark .tourist-app nav #userMenu a:hover *,
+    .dark .tourist-app nav #userMenu a:focus-visible *,
+    .dark .tourist-app nav #userMenu a:hover font,
+    .dark .tourist-app nav #userMenu a:focus-visible font,
+    .dark .tourist-app nav #userMenu a:hover span,
+    .dark .tourist-app nav #userMenu a:focus-visible span {
+        color: #bbf7d0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    .dark .tourist-app nav #userMenu form a,
+    .dark .tourist-app nav #userMenu form a *,
+    .dark .tourist-app nav #userMenu form a font,
+    .dark .tourist-app nav #userMenu form a span {
+        color: #f87171 !important;
+    }
+
+    .dark .tourist-app nav #userMenu form a:hover,
+    .dark .tourist-app nav #userMenu form a:focus-visible {
+        background-color: rgba(239, 68, 68, 0.14) !important;
+        color: #fca5a5 !important;
+    }
+
+    .dark .tourist-app nav #userMenu form a:hover *,
+    .dark .tourist-app nav #userMenu form a:focus-visible *,
+    .dark .tourist-app nav #userMenu form a:hover font,
+    .dark .tourist-app nav #userMenu form a:focus-visible font,
+    .dark .tourist-app nav #userMenu form a:hover span,
+    .dark .tourist-app nav #userMenu form a:focus-visible span {
+        color: #fca5a5 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
 </style>
 
     @livewireStyles
     @fluxAppearance
 </head>
-<body class="bg-[#f4f9f4] min-h-screen flex flex-col">
+<body class="tourist-app bg-[#f4f9f4] min-h-screen flex flex-col text-slate-900 transition-colors dark:bg-[#07110d] dark:text-slate-100">
 
     @php
         $isHome = request()->routeIs('home');
@@ -160,15 +433,19 @@
 
         $navBg = $isHome
             ? 'bg-zinc-900/60 border-b border-white/10'
-            : 'bg-white/90 border-b border-slate-200 shadow-sm';
+            : 'bg-white/90 border-b border-slate-200 shadow-sm dark:bg-zinc-950/90 dark:border-white/10';
 
         $logoText = $isHome
             ? 'text-[#77f062]'
-            : 'text-emerald-700';
+            : 'text-emerald-700 dark:text-emerald-300';
 
         $menuText = $isHome
             ? 'text-white hover:text-[#77f062]'
-            : 'text-slate-700 hover:text-emerald-700';
+            : 'text-slate-700 hover:text-emerald-700 dark:text-slate-200 dark:hover:text-emerald-300';
+
+        $mainBg = $isSettingsRoute
+            ? 'bg-slate-50 dark:bg-[#07110d]'
+            : 'bg-[#f4f9f4] dark:bg-[#07110d]';
     @endphp
 
     <nav 
@@ -188,12 +465,13 @@
                     <h1 class="text-lg lg:text-xl font-black uppercase tracking-wide leading-none {{ $logoText }}">
                         Explora Candelaria
                     </h1>
-                    <p class="text-[10px] lg:text-xs text-slate-500 tracking-[0.2em] uppercase mt-1">
+                    <p class="text-[10px] lg:text-xs text-slate-500 dark:text-slate-400 tracking-[0.2em] uppercase mt-1">
                         Descubre · Reserva · Vive
                     </p>
                 </div>
             </a>
             <div id="google_translate_element" wire:ignore class="hidden sm:block pt-1 shrink-0"></div>
+        </div>
 
         <ul class="hidden items-center gap-6 lg:flex">
             <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'font-bold text-emerald-600 underline underline-offset-4' : 'font-medium ' . $menuText }}">Inicio</a></li>
@@ -227,7 +505,7 @@
                     x-trap="serviciosOpenWithKeyboard"
                     x-on:click.outside="serviciosDropDownIsOpen = false, serviciosOpenWithKeyboard = false"
                     id="serviciosMenu"
-                    class="absolute left-0 top-12 z-50 flex w-60 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white py-2 shadow-xl"
+                    class="absolute left-0 top-12 z-50 flex w-60 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white py-2 shadow-xl dark:border-white/10 dark:bg-zinc-900"
                 >
                     <li class="border-b border-slate-100"><a href="{{ route('turista.servicios.index') }}" class="block px-4 py-3 text-sm font-bold text-emerald-700 hover:bg-slate-50">Ver todos los servicios</a></li>
                     <li><a href="{{ route('turista.servicios.index', ['tipoServicioSeleccionado' => 4]) }}" class="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50">Hospedaje</a></li>
@@ -287,7 +565,7 @@
         <button
             x-on:click="mobileMenuIsOpen = !mobileMenuIsOpen"
             x-bind:aria-expanded="mobileMenuIsOpen"
-            x-bind:class="mobileMenuIsOpen ? 'fixed top-6 right-6 z-20 text-slate-800' : '{{ $menuText }}'"
+            x-bind:class="mobileMenuIsOpen ? 'fixed top-6 right-6 z-20 text-slate-800 dark:text-white' : '{{ $menuText }}'"
             type="button"
             class="flex lg:hidden focus:outline-none"
             aria-label="mobile menu"
@@ -381,7 +659,7 @@
         </ul>
     </nav>
 
-    <main class="{{ $isHome ? '' : 'pt-28' }} min-h-screen flex-1 {{ $isSettingsRoute ? 'bg-slate-50' : 'bg-[#f4f9f4]' }}">
+    <main class="{{ $isHome ? '' : 'pt-28' }} min-h-screen flex-1 {{ $mainBg }} transition-colors">
         @yield('content')
 
         @if ($isSettingsRoute)
@@ -393,14 +671,7 @@
         @endif
     </main>
 
-    {{-- FOOTThe file is still truncated. Let me append the missing footer section:
-
-<edit_file>
-<path>
-c:/laragon/www/proyecto_reservas_turisticas/resources/views/layouts/turista.blade.php
-</path>
-<old_str>    {{-- FOOTER</old_str>
-<new_str>    {{-- FOOTER INSTITUCIONAL DEL GAD (Por defecto) --}}
+    {{-- FOOTER INSTITUCIONAL DEL GAD (Por defecto) --}}
     @php
         $footerEmprendimiento = null;
 
@@ -433,6 +704,75 @@ c:/laragon/www/proyecto_reservas_turisticas/resources/views/layouts/turista.blad
 
     <!-- Scripts del traductor de Google -->
     <script type="text/javascript">
+        function actualizarEtiquetaIdioma() {
+            const container = document.getElementById('google_translate_element');
+            if (!container) return false;
+
+            let actualizado = false;
+            const combos = document.querySelectorAll('#google_translate_element .goog-te-combo, .goog-te-combo');
+
+            combos.forEach((combo) => {
+                const defaultOption = combo.querySelector('option[value=""]') || combo.options[0];
+                if (defaultOption && /seleccionar|select/i.test(defaultOption.textContent.trim())) {
+                    defaultOption.textContent = 'Español';
+                    defaultOption.text = 'Español';
+                    defaultOption.label = 'Español';
+                    defaultOption.innerHTML = 'Español';
+                    actualizado = true;
+                }
+                combo.setAttribute('aria-label', 'Español');
+                combo.setAttribute('title', 'Español');
+            });
+
+            container.querySelectorAll('.goog-te-menu-value span').forEach((span) => {
+                if (span.textContent.trim().toLowerCase().includes('seleccionar')) {
+                    span.textContent = 'Español';
+                    actualizado = true;
+                }
+            });
+
+            const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+            const textNodes = [];
+            while (walker.nextNode()) {
+                textNodes.push(walker.currentNode);
+            }
+
+            textNodes.forEach((node) => {
+                if (/seleccionar\s+idioma/i.test(node.nodeValue)) {
+                    node.nodeValue = node.nodeValue.replace(/seleccionar\s+idioma/ig, 'Español');
+                    actualizado = true;
+                }
+            });
+
+            return actualizado;
+        }
+
+        function programarEtiquetaIdioma() {
+            const container = document.getElementById('google_translate_element');
+            if (container && !container.dataset.labelObserver) {
+                new MutationObserver(actualizarEtiquetaIdioma).observe(container, {
+                    childList: true,
+                    subtree: true,
+                    characterData: true,
+                });
+                container.dataset.labelObserver = '1';
+            }
+
+            [0, 100, 500, 1200, 2500].forEach((delay) => {
+                window.setTimeout(actualizarEtiquetaIdioma, delay);
+            });
+
+            window.clearInterval(window.__googleTranslateLabelTimer);
+            let intentos = 0;
+            window.__googleTranslateLabelTimer = window.setInterval(() => {
+                actualizarEtiquetaIdioma();
+                intentos++;
+                if (intentos >= 40) {
+                    window.clearInterval(window.__googleTranslateLabelTimer);
+                }
+            }, 250);
+        }
+
         function googleTranslateElementInit() {
             let container = document.getElementById('google_translate_element');
             if (container && container.innerHTML === '') {
@@ -442,18 +782,22 @@ c:/laragon/www/proyecto_reservas_turisticas/resources/views/layouts/turista.blad
                     layout: google.translate.TranslateElement.InlineLayout.SIMPLE
                 }, 'google_translate_element');
             }
+            programarEtiquetaIdioma();
         }
 
         document.addEventListener('livewire:navigated', () => {
             if (window.google && window.google.translate) {
                 googleTranslateElementInit();
             }
+            programarEtiquetaIdioma();
         });
+
+        document.addEventListener('DOMContentLoaded', programarEtiquetaIdioma);
+        window.addEventListener('load', programarEtiquetaIdioma);
     </script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     @fluxScripts
     @livewireScripts
 </body>
-</html></new_str>
-</edit_file>
+</html>

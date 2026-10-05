@@ -16,6 +16,8 @@ class GestorReservas extends Component
 {
     use WithPagination;
 
+    protected $listeners = ['abrirDetalleReserva' => 'verDetalles'];
+
     public string $filtroEstado = '';
     public string $filtroCategoria = '';
     public string $buscarCedula = '';

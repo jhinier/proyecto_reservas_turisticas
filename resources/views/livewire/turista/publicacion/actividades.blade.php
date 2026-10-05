@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section class="min-h-screen bg-g<section class="min-h-screen bg-gray-100 pb-24 pt-8">
+<section class="min-h-screen bg-gray-100 pb-24 pt-8 dark:bg-[#07110d]">
 
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
 
@@ -13,11 +13,11 @@
                 Aventuras & Experiencias
             </p>
 
-            <h1 class="text-5xl font-black text-gray-900 mt-4">
+            <h1 class="text-5xl font-black text-gray-900 mt-4 dark:text-white">
                 Actividades Turísticas
             </h1>
 
-            <p class="text-gray-500 mt-6 max-w-3xl mx-auto text-lg leading-relaxed">
+            <p class="text-gray-500 mt-6 max-w-3xl mx-auto text-lg leading-relaxed dark:text-slate-300">
                 Vive experiencias inolvidables,
                 explora la naturaleza y disfruta de actividades únicas.
             </p>
@@ -29,7 +29,7 @@
 
             @forelse ($actividades as $actividad)
 
-                <div class="group bg-white rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2">
+                <div class="group bg-white rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 hover:-translate-y-2 dark:border dark:border-white/10 dark:bg-zinc-900">
 
                     {{-- CARRUSEL --}}
                     <div class="relative h-80 overflow-hidden">
@@ -120,7 +120,7 @@
 
                         <div class="flex items-center justify-between gap-4">
 
-                            <h2 class="text-2xl font-bold text-gray-900 line-clamp-1">
+                            <h2 class="text-2xl font-bold text-gray-900 line-clamp-1 dark:text-white">
 
                                 {{ $actividad->publicacion->nombre }}
 
@@ -145,7 +145,7 @@
 
                             </span>
 
-                            <span class="font-semibold text-gray-600">
+                            <span class="font-semibold text-gray-600 dark:text-slate-300">
 
                                 ⏱ {{ $actividad->duracion_estimada }}
 
@@ -193,7 +193,7 @@
 
                 <div class="col-span-full text-center py-20">
 
-                    <h2 class="text-3xl font-bold text-gray-400">
+                    <h2 class="text-3xl font-bold text-gray-400 dark:text-slate-400">
 
                         No existen actividades registradas.
 

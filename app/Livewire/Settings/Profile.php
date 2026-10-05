@@ -28,6 +28,8 @@ class Profile extends Component
 
     public string $email = '';
 
+    public string $telefono = '';
+
     /**
      * Mount the component.
      */
@@ -36,6 +38,7 @@ class Profile extends Component
         $this->name = Auth::user()->name;
         $this->apellidos = Auth::user()->apellidos;
         $this->email = Auth::user()->email;
+        $this->telefono = (string) (Auth::user()->telefono ?? '');
     }
 
     /**
@@ -45,7 +48,16 @@ class Profile extends Component
     {
         $user = Auth::user();
 
-        $validated = $this->validate($this->profileRules($user->id));
+        $rules = $this->profileRules($user->id);
+
+        if ($user->hasRole('emprendimiento')) {
+            $rules['telefono'] = ['required', 'digits:10'];
+        }
+
+        $validated = $this->validate($rules, [
+            'telefono.required' => 'El número de teléfono es obligatorio.',
+            'telefono.digits' => 'El número de teléfono debe tener exactamente 10 dígitos.',
+        ]);
 
         $user->fill($validated);
 

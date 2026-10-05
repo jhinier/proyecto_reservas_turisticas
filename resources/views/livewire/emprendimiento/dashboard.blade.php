@@ -17,9 +17,11 @@
                 <span class="text-gray-300 dark:text-gray-600">&bull;</span>
                 <span class="text-[#00A344] dark:text-[#77f062] font-black">Panel operativo</span>
             </div>
-            <h1 class="text-2xl font-black text-[#06281E] dark:text-white uppercase tracking-wide mt-1">Resumen de actividad</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium">
-                <span>Bienvenido, <span class="text-[#06281E] dark:text-white font-bold">{{ Auth::user()->name }}</span> <span class="text-gray-400 font-normal mx-1">de</span> <span class="text-[#00A344] font-bold">{{ Auth::user()->emprendimiento->nombre ?? 'Tu Emprendimiento' }}</span></span>
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#06281E] dark:text-white tracking-tight mt-2 leading-tight">
+                Bienvenido, <span>{{ Auth::user()->name }}</span> <span class="text-gray-400 dark:text-gray-500 font-normal">de</span> <span class="text-[#00A344] dark:text-[#7ed957]">{{ Auth::user()->emprendimiento->nombre ?? 'Tu Emprendimiento' }}</span>
+            </h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium">
+                <span class="text-base sm:text-lg font-black text-[#06281E] dark:text-white uppercase tracking-wide">Resumen de actividad</span>
                 <span class="text-gray-300 dark:text-gray-600 hidden sm:inline">|</span>
                 <span class="flex items-center gap-1.5 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full text-[10px] text-[#00A344] dark:text-[#7ed957] font-bold uppercase tracking-widest border border-gray-200 dark:border-white/5">
                     <span class="size-2 rounded-full bg-[#00D65B] dark:bg-[#7ed957] animate-pulse"></span>

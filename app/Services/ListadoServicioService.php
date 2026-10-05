@@ -34,7 +34,8 @@ class ListadoServicioService
             ->where('emprendimiento_tipo_servicio_id', $pivotId)
             ->with([
                 'imagenes:id,servicio_id,imagen',
-                'categoriaPivot:id,tipo_servicio_id'
+                'categoriaPivot:id,tipo_servicio_id',
+                'detallePaqueteTuristico',
             ])
             ->latest()
             ->paginate($perPage);

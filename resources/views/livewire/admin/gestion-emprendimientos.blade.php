@@ -292,9 +292,9 @@
                             <flux:input wire:model="user_name" label="Nombres" />
                             <flux:input wire:model="user_apellidos" label="Apellidos" />
                         </div>
-                        <flux:input wire:model="user_cedula" label="Cédula" /> 
+                        <flux:input wire:model="user_cedula" label="Cédula" maxlength="10" inputmode="numeric" pattern="[0-9]{10}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" />
                         <flux:input wire:model="user_email" label="Correo Electrónico" />
-                        <flux:input wire:model="user_telefono" label="Teléfono / WhatsApp" />
+                        <flux:input wire:model="user_telefono" label="Teléfono / WhatsApp" maxlength="10" inputmode="numeric" pattern="[0-9]{10}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" />
                     </div>
                 </div>
 

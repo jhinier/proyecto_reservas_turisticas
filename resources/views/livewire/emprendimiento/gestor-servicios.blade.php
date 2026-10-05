@@ -29,25 +29,28 @@
     </nav>
 
     {{-- Contenido Dinámico --}}
-    <div class="relative min-h-[400px]">
+    <div class="relative min-h-[400px] min-w-0">
         @if($this->categoriaActiva)
             @if($this->categoriaActiva['nombre'] === 'Paquetes Turísticos')
                 <livewire:emprendimiento.lista-paquetes 
                     :pivotId="$this->categoriaActiva['pivot_id']" 
                     :nombreCategoria="$this->categoriaActiva['nombre']"
                     :rutaCrear="$this->categoriaActiva['ruta_crear']"
-                    wire:key="paquetes-{{ $this->categoriaActiva['pivot_id'] }}" />
+                    :vista="$vista"
+                    wire:key="paquetes-{{ $this->categoriaActiva['pivot_id'] }}-{{ $vista }}" />
             @else
                 <livewire:emprendimiento.lista-servicios 
                     :pivotId="$this->categoriaActiva['pivot_id']"
                     :nombreCategoria="$this->categoriaActiva['nombre']"
                     :rutaCrear="$this->categoriaActiva['ruta_crear']"
-                    wire:key="servicios-{{ $this->categoriaActiva['pivot_id'] }}" />
+                    :vista="$vista"
+                    wire:key="servicios-{{ $this->categoriaActiva['pivot_id'] }}-{{ $vista }}" />
             @endif
         @endif
     </div>
 
     {{-- Modales e Inyecciones --}}
     <x-modal-confirm-delete />
+    <livewire:emprendimiento.detalle-servicio />
     <livewire:emprendimiento.gestor-galeria />
 </div>

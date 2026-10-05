@@ -72,6 +72,7 @@ Route::get('/festividad/{festividad}',[LandingController::class, 'detalleFestivi
 
 // Registro con confirmación por correo
 Route::post('/registro', [RegistroController::class, 'store'])->name('registro.store');
+Route::get('/registro/estado', [RegistroController::class, 'estado'])->name('registro.estado');
 Route::get('/registro/confirmar/{token}', [RegistroController::class, 'confirmar'])->name('registro.confirmar');
 
 // 2. RUTAS PROTEGIDAS (Solo usuarios logueados)

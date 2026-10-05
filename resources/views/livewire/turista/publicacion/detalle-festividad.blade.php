@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section class="bg-gray-100 min-h-screen pb-20">
+<section class="bg-gray-100 min-h-screen pb-20 dark:bg-[#07110d]">
 
     {{-- HERO --}}
     <div class="relative h-[500px]">
@@ -53,15 +53,15 @@
     <div class="max-w-6xl mx-auto px-6 mt-16">
 
         {{-- DESCRIPCIÓN --}}
-        <div class="bg-white rounded-3xl shadow-xl p-10">
+        <div class="bg-white rounded-3xl shadow-xl p-10 dark:border dark:border-white/10 dark:bg-zinc-900">
 
-            <h2 class="text-3xl font-bold mb-8">
+            <h2 class="text-3xl font-bold mb-8 dark:text-white">
 
                 Descripción
 
             </h2>
 
-            <div class="text-gray-600 text-lg leading-9 text-justify">
+            <div class="text-gray-600 text-lg leading-9 text-justify dark:text-slate-300">
 
                 {!! nl2br(e($festividad->publicacion->descripcion)) !!}
 
@@ -70,9 +70,9 @@
         </div>
 
         {{-- ACTIVIDADES --}}
-        <div class="bg-white rounded-3xl shadow-xl p-10 mt-10">
+        <div class="bg-white rounded-3xl shadow-xl p-10 mt-10 dark:border dark:border-white/10 dark:bg-zinc-900">
 
-            <h2 class="text-3xl font-bold mb-8">
+            <h2 class="text-3xl font-bold mb-8 dark:text-white">
 
                 Actividades Programadas
 
@@ -83,17 +83,17 @@
                 @forelse($festividad->actividades as $actividad)
 
                     <div
-                        class="border border-gray-200 rounded-2xl p-6">
+                        class="border border-gray-200 rounded-2xl p-6 dark:border-white/10 dark:bg-white/5">
 
                         <h3
-                            class="font-bold text-xl text-slate-800">
+                            class="font-bold text-xl text-slate-800 dark:text-white">
 
                             {{ $actividad->nombre }}
 
                         </h3>
 
                         <div
-                            class="mt-4 space-y-2 text-gray-600">
+                            class="mt-4 space-y-2 text-gray-600 dark:text-slate-300">
 
                             <p>
                                 📍 {{ $actividad->lugar }}
@@ -113,7 +113,7 @@
 
                 @empty
 
-                    <p class="text-gray-500 italic">
+                    <p class="text-gray-500 italic dark:text-slate-400">
 
                         No existen actividades registradas.
 
@@ -129,9 +129,9 @@
         @if($festividad->publicacion->imagenes->count())
 
         <div
-            class="bg-white rounded-3xl shadow-xl p-10 mt-10">
+            class="bg-white rounded-3xl shadow-xl p-10 mt-10 dark:border dark:border-white/10 dark:bg-zinc-900">
 
-            <h2 class="text-3xl font-bold mb-8">
+            <h2 class="text-3xl font-bold mb-8 dark:text-white">
 
                 Galería
 

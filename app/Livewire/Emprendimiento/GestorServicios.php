@@ -5,6 +5,7 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use App\Services\ListadoServicioService;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,12 +15,23 @@ class GestorServicios extends Component
     #[Url(as: 'tab')]
     public ?int $pestanaActivaId = null;
 
+    #[Url(as: 'vista', except: 'tarjetas')]
+    public string $vista = 'tarjetas';
+
     public array $categoriasActivas = [];
 
     public function mount(ListadoServicioService $queryService): void
     {
+        if (! in_array($this->vista, ['tarjetas', 'lista'], true)) {
+            $this->vista = 'tarjetas';
+        }
+
         $emprendimiento = Auth::user()->emprendimiento;
         $categorias = $queryService->obtenerCategoriasActivas($emprendimiento);
+        $categorias = $categorias
+            ->reject(fn ($categoria) => $categoria->nombre === 'Guianza')
+            ->concat($categorias->filter(fn ($categoria) => $categoria->nombre === 'Guianza'))
+            ->values();
 
         if ($categorias->isEmpty()) {
             $this->redirectRoute('emprendimiento.servicios.seleccion', navigate: true);
@@ -59,6 +71,14 @@ class GestorServicios extends Component
     public function seleccionarPestana(int $pivotId): void
     {
         $this->pestanaActivaId = $pivotId;
+    }
+
+    #[On('cambiar-vista-servicios')]
+    public function cambiarVista(string $vista): void
+    {
+        if (in_array($vista, ['tarjetas', 'lista'], true)) {
+            $this->vista = $vista;
+        }
     }
 
     #[Computed]

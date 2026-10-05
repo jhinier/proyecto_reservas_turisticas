@@ -1,7 +1,9 @@
-<div class="space-y-6">
+<div class="min-w-0 space-y-6">
     
-    {{-- Botón Nuevo dinámico --}}
-    <div class="flex justify-end pt-2 pb-4">
+    {{-- Selector de vista y botón Nuevo --}}
+    <div class="flex flex-col gap-3 pb-4 pt-2 sm:flex-row sm:items-center sm:justify-end">
+        <x-selector-vista-servicios :vista="$vista" />
+
         <a href="{{ route($rutaCrear, ['pivotId' => $pivotId]) }}" 
            class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#00D65B] px-6 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#06281E] hover:bg-[#00c052] transition-colors shadow-sm outline-none shrink-0 w-full sm:w-auto">
             <svg class="size-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" /></svg>
@@ -9,17 +11,91 @@
         </a>
     </div>
 
-    {{-- Rejilla de Cards --}}
+    {{-- Servicios --}}
     @if($servicios->isEmpty())
         <x-mensaje-sin-registros :nombrePestana="$nombreCategoria" />
     @else
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            @foreach($servicios as $servicio)
-                <x-servicio-card 
-                :servicio="$servicio" 
-                wire:key="servicio-{{ $servicio->id }}" />
-            @endforeach
-        </div>
+        @if($vista === 'lista')
+            <div class="w-full max-w-full overflow-x-auto rounded-lg border border-outline bg-white shadow-sm dark:border-white/10 dark:bg-zinc-900">
+                <table class="w-full min-w-[920px] text-left text-sm text-on-surface dark:text-on-surface-dark">
+                    <thead class="border-b border-outline bg-surface-alt text-xs font-semibold uppercase text-on-surface-strong dark:border-white/10 dark:bg-zinc-800 dark:text-white">
+                        <tr>
+                            <th scope="col" class="p-4">Servicio</th>
+                            <th scope="col" class="p-4">Descripción</th>
+                            <th scope="col" class="p-4">Precio</th>
+                            <th scope="col" class="p-4">Imágenes</th>
+                            <th scope="col" class="p-4 text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline dark:divide-white/10">
+                        @foreach($servicios as $servicio)
+                            @php($presentador = $servicio->presenter())
+                            <tr class="bg-white transition-colors hover:bg-gray-50 dark:bg-zinc-900 dark:hover:bg-white/5" wire:key="servicio-lista-{{ $servicio->id }}">
+                                <td class="p-4 align-middle">
+                                    <div class="flex min-w-[220px] items-center gap-3">
+                                        <div class="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-zinc-800">
+                                            @if($presentador->imagenUrl())
+                                                <img src="{{ $presentador->imagenUrl() }}" alt="{{ $servicio->nombre }}" class="h-full w-full object-cover">
+                                            @else
+                                                <x-icon-servicio-card :tipo="$presentador->tipoId()" class="size-6 text-[#00A344] dark:text-[#00D65B]" />
+                                            @endif
+                                        </div>
+                                        <div class="min-w-0">
+                                            <p class="font-semibold text-[#06281E] dark:text-white">{{ $servicio->nombre }}</p>
+                                            <p class="mt-0.5 text-[11px] text-gray-500 dark:text-gray-400">{{ $nombreCategoria }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="max-w-[360px] p-4 align-middle">
+                                    <p class="line-clamp-2 whitespace-normal text-xs leading-relaxed text-gray-600 dark:text-gray-300" title="{{ $servicio->descripcion }}">
+                                        {{ $servicio->descripcion ?? 'Sin descripción detallada.' }}
+                                    </p>
+                                </td>
+                                <td class="whitespace-nowrap p-4 align-middle font-bold text-[#00A344] dark:text-[#00D65B]">
+                                    {{ $presentador->precio() }}
+                                </td>
+                                <td class="whitespace-nowrap p-4 align-middle">
+                                    @if($servicio->permite_galeria)
+                                        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-gray-200" title="{{ $servicio->imagenes->count() }} imágenes registradas">
+                                            <svg class="size-4 text-[#00A344] dark:text-[#00D65B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                            {{ $servicio->imagenes->count() }}
+                                        </span>
+                                    @else
+                                        <span class="text-xs text-gray-400 dark:text-gray-500">Sin galería</span>
+                                    @endif
+                                </td>
+                                <td class="p-4 align-middle">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button type="button"
+                                                @click="$dispatch('abrir-detalle-servicio', { servicioId: {{ $servicio->id }} })"
+                                                title="Ver detalle"
+                                                aria-label="Ver detalle de {{ $servicio->nombre }}"
+                                                class="inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-gray-300 bg-white text-[#31552b] transition-all hover:-translate-y-0.5 hover:border-[#06281E] hover:bg-[#06281E] hover:text-white hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00A344] dark:border-zinc-600 dark:bg-zinc-800 dark:text-green-300 dark:hover:bg-white dark:hover:text-[#06281E]">
+                                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                        </button>
+                                        <x-botones-servicio-card :servicio="$servicio" :solo-iconos="true" />
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                @foreach($servicios as $servicio)
+                    <x-servicio-card
+                    :servicio="$servicio"
+                    wire:key="servicio-{{ $servicio->id }}" />
+                @endforeach
+            </div>
+        @endif
+
         <div class="mt-8">
             {{ $servicios->links() }}
         </div>

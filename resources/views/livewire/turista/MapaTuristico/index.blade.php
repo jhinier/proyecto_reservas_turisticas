@@ -9,17 +9,28 @@
             border-radius:20px;
             box-shadow:0 10px 25px rgba(0,0,0,.15);
         }
+
+        .dark #map {
+            box-shadow: 0 18px 45px rgba(0,0,0,.45);
+        }
+
+        .dark .leaflet-control-layers,
+        .dark .leaflet-popup-content-wrapper,
+        .dark .leaflet-popup-tip {
+            background: #18181b;
+            color: #e5e7eb;
+        }
     </style>
 
     <div class="mx-auto max-w-7xl p-6">
 
         <!-- TÍTULO -->
         <div class="mb-6">
-            <h1 class="text-3xl font-bold text-emerald-700">
+            <h1 class="text-3xl font-bold text-emerald-700 dark:text-emerald-300">
                 🗺️ Mapa Turístico de La Candelaria
             </h1>
 
-            <p class="text-gray-500 mt-2">
+            <p class="text-gray-500 mt-2 dark:text-slate-300">
                 Explora los atractivos turísticos de manera interactiva.
             </p>
         </div>
@@ -37,7 +48,7 @@
             <div class="col-span-4">
 
                 <div id="panelLugar"
-                     class="bg-white rounded-2xl shadow-lg h-[700px] p-6 overflow-y-auto">
+                     class="bg-white rounded-2xl shadow-lg h-[700px] p-6 overflow-y-auto dark:border dark:border-white/10 dark:bg-zinc-900">
 
                     <div class="flex flex-col items-center justify-center h-full text-center">
 
@@ -45,11 +56,11 @@
                             🗺️
                         </div>
 
-                        <h2 class="text-2xl font-bold text-gray-700">
+                        <h2 class="text-2xl font-bold text-gray-700 dark:text-white">
                             Explora el mapa
                         </h2>
 
-                        <p class="text-gray-500 mt-4">
+                        <p class="text-gray-500 mt-4 dark:text-slate-300">
 
                             Haz clic sobre cualquier marcador para visualizar toda la información del atractivo turístico.
 

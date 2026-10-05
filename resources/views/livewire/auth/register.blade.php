@@ -81,13 +81,17 @@
             </div>
 
             @if (session('status'))
-                <div class="mb-4 rounded-xl border border-emerald-400/60 bg-emerald-500/15 px-4 py-3 text-sm text-emerald-100 shadow-lg backdrop-blur-sm">
-                    {{ session('status') }}
+                <div id="registro-status-message" class="mb-4 rounded-xl border border-emerald-400/60 bg-emerald-500/15 px-4 py-3 text-sm text-emerald-100 shadow-lg backdrop-blur-sm">
+                    <p>{{ session('status') }}</p>
                 </div>
             @endif
 
             <form method="POST" action="{{ route('registro.store') }}" class="space-y-8">
                 @csrf
+
+                @if(request()->boolean('reserva') || session()->has('reserva_login_pendiente'))
+                    <input type="hidden" name="reserva" value="1">
+                @endif
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                     
@@ -114,7 +118,7 @@
 
                         <div>
                             <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Cédula</label>
-                            <input type="text" name="cedula" value="{{ old('cedula') }}" required autocomplete="cedula" placeholder="Número de cédula (10 dígitos)"
+                            <input type="text" name="cedula" value="{{ old('cedula') }}" required autocomplete="cedula" maxlength="10" inputmode="numeric" pattern="[0-9]{10}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" placeholder="Número de cédula (10 dígitos)"
                                 class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm">
                             @error('cedula') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
                         </div>
@@ -129,7 +133,7 @@
 
                             <div>
                                 <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Teléfono</label>
-                                <input type="text" name="telefono" value="{{ old('telefono') }}" required autocomplete="telefono" placeholder="0900000000"
+                                <input type="text" name="telefono" value="{{ old('telefono') }}" required autocomplete="telefono" maxlength="10" inputmode="numeric" pattern="[0-9]{10}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" placeholder="0900000000"
                                     class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm">
                                 @error('telefono') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
                             </div>
@@ -297,6 +301,62 @@
     }
 </script>
 <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+@if(session()->has('registro_pending_token') || session()->has('registro.pending.token'))
+    <script>
+        (() => {
+            const estadoUrl = new URL(@json(route('registro.estado', [], false)), window.location.origin);
+            const registroToken = @json(session('registro_pending_token', session('registro.pending.token')));
+            let consultando = false;
+            let redireccionando = false;
+
+            if (registroToken) {
+                estadoUrl.searchParams.set('token', registroToken);
+            }
+
+            const revisarConfirmacion = async () => {
+                if (consultando || redireccionando) {
+                    return;
+                }
+
+                consultando = true;
+
+                try {
+                    const respuesta = await fetch(estadoUrl.toString(), {
+                        credentials: 'same-origin',
+                        headers: {
+                            Accept: 'application/json',
+                        },
+                    });
+
+                    if (!respuesta.ok) {
+                        return;
+                    }
+
+                    const estado = await respuesta.json();
+
+                    if (estado.confirmed && estado.redirect) {
+                        redireccionando = true;
+                        const mensaje = document.getElementById('registro-status-message');
+
+                        if (mensaje) {
+                            mensaje.innerHTML = '<p class="font-semibold">Se ha creado su cuenta.</p><p class="mt-1 text-xs text-emerald-50/90">Inicie sesion para continuar.</p>';
+                        }
+
+                        setTimeout(() => {
+                            window.location.href = estado.redirect;
+                        }, 1800);
+                    }
+                } finally {
+                    consultando = false;
+                }
+            };
+
+            revisarConfirmacion();
+            setInterval(revisarConfirmacion, 3000);
+        })();
+    </script>
+@endif
 
 </body>
 </html>

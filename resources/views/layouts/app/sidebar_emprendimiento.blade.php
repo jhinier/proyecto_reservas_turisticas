@@ -42,8 +42,9 @@
 
         /* Modo oscuro para el fondo del Sidebar */
         html.dark [data-flux-sidebar] {
-            background: #065f46!important;
-            border-right: 1px solid rgba(6,78,59,0.20)!important;
+            background: #000b08!important;
+            border-right: 1px solid rgba(16,185,129,0.12)!important;
+            box-shadow: 10px 0 38px rgba(0,0,0,0.46)!important;
         }
 
         /* HEADER SIDEBAR */
@@ -53,8 +54,8 @@
             background: rgba(6,78,59,0.20)!important; /* emerald-900/20 */
         }
         html.dark [data-flux-sidebar-header] {
-            background: rgba(6,78,59,0.20)!important;
-            border-bottom: 1px solid rgba(4,120,87,0.50)!important;
+            background: rgba(1,23,19,0.78)!important;
+            border-bottom: 1px solid rgba(16,185,129,0.13)!important;
         }
 
         .logo-wrapper{
@@ -86,7 +87,7 @@
             letter-spacing:0.20em!important;
             margin-top:0.3rem!important;
         }
-        html.dark .brand-subtitle { color: rgba(187,247,208,0.60)!important; }
+        html.dark .brand-subtitle { color: rgba(187,247,208,0.75)!important; }
 
         /* TEXTOS DE FLUX SOBRESCRITOS: only affect nav items inside sidebar, not popups */
         [data-flux-sidebar] nav .text-zinc-800,
@@ -118,7 +119,7 @@
             padding: 1.7rem 1.5rem 0.8rem!important;
         }
         html.dark [data-flux-sidebar-group-heading]{
-            color:rgba(187,247,208,0.40)!important;
+            color:rgba(187,247,208,0.52)!important;
         }
 
         /* LINEA SEPARADORA */
@@ -128,7 +129,7 @@
             background: rgba(4,120,87,0.40)!important; /* emerald-700/40 */
             border-radius:999px;
         }
-        html.dark .sidebar-separator { background: rgba(4,120,87,0.40)!important; }
+        html.dark .sidebar-separator { background: rgba(16,185,129,0.16)!important; }
 
         /* ITEMS DEL MENÚ (BOTONES) */
         [data-flux-sidebar-item],
@@ -165,7 +166,7 @@
         }
         html.dark [data-flux-sidebar-item]:hover,
         html.dark [data-flux-sidebar] a[data-flux-sidebar-item]:hover{
-            background: rgba(255,255,255,0.10)!important;
+            background: rgba(16,185,129,0.13)!important;
             color: #ffffff!important;
         }
 
@@ -181,9 +182,9 @@
         html.dark [data-flux-sidebar-item][data-current],
         html.dark [data-flux-sidebar-item][aria-current="page"],
         html.dark [data-flux-sidebar] a[data-flux-sidebar-item][data-current]{
-            background: rgba(255,255,255,0.15)!important;
+            background: rgba(16,185,129,0.18)!important;
             color: #ffffff!important;
-            border-left: 5px solid rgba(255,255,255,0.70) !important;
+            border-left: 5px solid rgba(110,231,183,0.95) !important;
         }
 
         /* ICONOS */
@@ -216,8 +217,8 @@
             padding:1rem 1.2rem!important;
         }
         html.dark [data-flux-sidebar] > *:last-child{
-            border-top: 1px solid rgba(4,120,87,0.50)!important;
-            background: rgba(6,78,59,0.30)!important;
+            border-top: 1px solid rgba(16,185,129,0.13)!important;
+            background: rgba(1,23,19,0.82)!important;
         }
 
         /* Apply profile styles only for the profile shown inside the sidebar
@@ -302,6 +303,12 @@
                 background: #065f46!important; /* emerald-800 */
                 border-right: 1px solid rgba(6,78,59,0.20)!important;
                 box-shadow: 4px 0 25px rgba(0,0,0,0.08)!important;
+            }
+
+            html.dark [data-flux-sidebar] {
+                background: #000b08!important;
+                border-right: 1px solid rgba(16,185,129,0.12)!important;
+                box-shadow: 10px 0 38px rgba(0,0,0,0.46)!important;
             }
         }
     </style>

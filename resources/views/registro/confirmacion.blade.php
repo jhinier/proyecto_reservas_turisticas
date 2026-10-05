@@ -56,8 +56,7 @@
         <h1>{{ $titulo }}</h1>
         <p>{{ $mensaje }}</p>
         <div class="actions">
-            <a href="{{ route('dashboard') }}">Ir a mi cuenta</a>
-            <a class="secondary" href="{{ route('home') }}">Volver al inicio</a>
+            <a href="{{ route('home') }}">Ir a la pagina</a>
         </div>
     </main>
 </body>

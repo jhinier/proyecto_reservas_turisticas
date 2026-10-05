@@ -26,7 +26,8 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->whereNull('deleted_at')],
-            'cedula' => ['required', 'string', Rule::unique('users', 'cedula')->whereNull('deleted_at'), new CedulaEcuatoriana()],
+            'cedula' => ['required', 'numeric', 'digits:10', Rule::unique('users', 'cedula')->whereNull('deleted_at'), new CedulaEcuatoriana()],
+            'telefono' => ['required', 'numeric', 'digits:10'],
             'password' => ['required', 'string', Password::min(8)->mixedCase()->symbols(), 'confirmed'],
             'edad' => ['required', 'integer', 'min:18'],
         ], [

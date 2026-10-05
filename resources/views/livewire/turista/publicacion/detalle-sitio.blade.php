@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section class="bg-gray-100 min-h-screen pb-20">
+<section class="bg-gray-100 min-h-screen pb-20 dark:bg-[#07110d]">
 
     {{-- HERO --}}
     <div class="relative h-[500px]">
@@ -33,16 +33,16 @@
     {{-- CONTENIDO --}}
     <div class="max-w-6xl mx-auto px-6 mt-16">
 
-        <div class="bg-white rounded-3xl shadow-xl p-10">
+        <div class="bg-white rounded-3xl shadow-xl p-10 dark:border dark:border-white/10 dark:bg-zinc-900">
 
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 dark:text-white">
 
                 Descripción
 
             </h2>
 
             <div
-                class="text-gray-600 leading-9 text-lg text-justify">
+                class="text-gray-600 leading-9 text-lg text-justify dark:text-slate-300">
 
                 {!! nl2br(e($sitio->publicacion->descripcion)) !!}
 
@@ -54,10 +54,10 @@
         @if($sitio->publicacion->imagenes->count())
 
         <div
-            class="bg-white rounded-3xl shadow-xl p-10 mt-10">
+            class="bg-white rounded-3xl shadow-xl p-10 mt-10 dark:border dark:border-white/10 dark:bg-zinc-900">
 
             <h2
-                class="text-3xl font-bold text-gray-900 mb-8">
+                class="text-3xl font-bold text-gray-900 mb-8 dark:text-white">
 
                 Galería
 

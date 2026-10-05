@@ -43,6 +43,11 @@ class CalendarioLateral extends Component
         $this->abierto = false; 
     }
 
+    public function mostrarDetalle(int $reservaId): void
+    {
+        $this->dispatch('abrirDetalleReserva', reservaId: $reservaId);
+    }
+
     public function irAHoy()
     {
         $hoy = Carbon::today();

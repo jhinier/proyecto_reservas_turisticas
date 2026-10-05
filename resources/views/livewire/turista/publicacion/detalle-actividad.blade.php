@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section class="bg-gray-100 min-h-screen pb-20">
+<section class="bg-gray-100 min-h-screen pb-20 dark:bg-[#07110d]">
 
     {{-- HERO --}}
     <div class="relative h-[500px]">
@@ -51,15 +51,15 @@
     <div class="max-w-6xl mx-auto px-6 mt-16">
 
         {{-- DESCRIPCIÓN --}}
-        <div class="bg-white rounded-3xl shadow-xl p-10">
+        <div class="bg-white rounded-3xl shadow-xl p-10 dark:border dark:border-white/10 dark:bg-zinc-900">
 
-            <h2 class="text-3xl font-bold mb-8">
+            <h2 class="text-3xl font-bold mb-8 dark:text-white">
 
                 Descripción
 
             </h2>
 
-            <div class="text-gray-600 text-lg leading-9 text-justify">
+            <div class="text-gray-600 text-lg leading-9 text-justify dark:text-slate-300">
 
                 {!! nl2br(e($actividad->publicacion->descripcion)) !!}
 
@@ -70,15 +70,15 @@
         {{-- RECOMENDACIONES --}}
         @if($actividad->recomendaciones)
 
-        <div class="bg-white rounded-3xl shadow-xl p-10 mt-10">
+        <div class="bg-white rounded-3xl shadow-xl p-10 mt-10 dark:border dark:border-white/10 dark:bg-zinc-900">
 
-            <h2 class="text-3xl font-bold mb-8">
+            <h2 class="text-3xl font-bold mb-8 dark:text-white">
 
                 Recomendaciones
 
             </h2>
 
-            <div class="text-gray-600 text-lg leading-9">
+            <div class="text-gray-600 text-lg leading-9 dark:text-slate-300">
 
                 {{ $actividad->recomendaciones }}
 
@@ -91,9 +91,9 @@
         {{-- GALERÍA --}}
         @if($actividad->publicacion->imagenes->count())
 
-        <div class="bg-white rounded-3xl shadow-xl p-10 mt-10">
+        <div class="bg-white rounded-3xl shadow-xl p-10 mt-10 dark:border dark:border-white/10 dark:bg-zinc-900">
 
-            <h2 class="text-3xl font-bold mb-8">
+            <h2 class="text-3xl font-bold mb-8 dark:text-white">
 
                 Galería
 

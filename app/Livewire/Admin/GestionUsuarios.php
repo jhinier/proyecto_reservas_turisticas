@@ -29,8 +29,8 @@ class GestionUsuarios extends Component
             'name'     => 'required|string|max:255',
             'email'    => ['required', 'email', Rule::unique('users', 'email')->whereNull('deleted_at')],
             'password' => 'required|min:8',
-            'cedula'   => ['required', 'string', 'max:10', Rule::unique('users', 'cedula')->whereNull('deleted_at')],
-            'telefono' => 'required|string|max:15',
+            'cedula'   => ['required', 'numeric', 'digits:10', Rule::unique('users', 'cedula')->whereNull('deleted_at')],
+            'telefono' => 'required|numeric|digits:10',
             'role'     => 'required|exists:roles,name', // Evita que inyecten un rol falso
         ];
     }

@@ -21,12 +21,14 @@ class ListaPaquetes extends Component
     public int $pivotId;
     public string $nombreCategoria;
     public string $rutaCrear;
+    public string $vista = 'tarjetas';
 
-    public function mount(int $pivotId, string $nombreCategoria, string $rutaCrear)
+    public function mount(int $pivotId, string $nombreCategoria, string $rutaCrear, string $vista = 'tarjetas')
     {
         $this->pivotId = $pivotId;
         $this->nombreCategoria = $nombreCategoria;
         $this->rutaCrear = $rutaCrear;
+        $this->vista = $vista;
     }
 
     #[On('eliminarPaquete')]

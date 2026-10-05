@@ -7,7 +7,6 @@ use App\Mail\VerificacionRegistroMail;
 use App\Models\User;
 use App\Rules\CedulaEcuatoriana;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -58,8 +57,20 @@ class RegistroController extends Controller
             'password.confirmed' => 'Las contraseñas no coinciden.',
         ])->validate();
 
+        $reservaCarrito = $request->session()->get('reserva_turista_carrito', []);
+        $reservaDatos = $request->session()->get('reserva_turista_datos', []);
+        $reservaPendiente = $this->registroEsParaReserva($request);
+
+        if ($reservaPendiente) {
+            $request->session()->put('url.intended', route('turista.reservas.checkout'));
+            $request->session()->put('reserva_login_pendiente', true);
+        }
+
         $token = Str::random(64);
         $cacheKey = 'registro.pending.' . $token;
+
+        $request->session()->put('registro_pending_token', $token);
+        $request->session()->put('registro.pending.token', $token);
 
         Cache::put($cacheKey, [
             'name' => $data['name'],
@@ -69,6 +80,9 @@ class RegistroController extends Controller
             'telefono' => $data['telefono'],
             'email' => $data['email'],
             'password' => $data['password'],
+            'reserva_pendiente' => $reservaPendiente,
+            'reserva_carrito' => $reservaCarrito,
+            'reserva_datos' => $reservaDatos,
             'created_at' => now(),
         ], now()->addMinutes(30));
 
@@ -86,7 +100,7 @@ class RegistroController extends Controller
         );
     }
 
-    public function confirmar(string $token)
+    public function confirmar(Request $request, string $token)
     {
         $cacheKey = 'registro.pending.' . $token;
         $datos = Cache::get($cacheKey);
@@ -117,13 +131,99 @@ class RegistroController extends Controller
 
         $user->assignRole('turista');
 
-        Auth::login($user);
-
         Cache::forget($cacheKey);
+
+        Cache::put('registro.confirmed.' . $token, [
+            'user_id' => $user->id,
+            'reserva_pendiente' => (bool) ($datos['reserva_pendiente'] ?? false),
+            'reserva_carrito' => $datos['reserva_carrito'] ?? [],
+            'reserva_datos' => $datos['reserva_datos'] ?? [],
+        ], now()->addMinutes(30));
 
         return view('registro.confirmacion', [
             'titulo' => 'Cuenta creada correctamente',
-            'mensaje' => 'Tu correo fue confirmado. Ya puedes empezar a usar tu cuenta.',
+            'mensaje' => 'Tu correo fue confirmado. Ahora inicia sesion para usar tu cuenta.',
         ]);
+    }
+
+    public function estado(Request $request)
+    {
+        $token = (string) $request->query(
+            'token',
+            $request->session()->get('registro_pending_token', $request->session()->get('registro.pending.token'))
+        );
+
+        if (! $token) {
+            return response()->json(['confirmed' => false]);
+        }
+
+        $datos = Cache::get('registro.confirmed.' . $token);
+
+        if (! $datos) {
+            return response()->json(['confirmed' => false]);
+        }
+
+        $reservaCarritoSesion = $request->session()->get('reserva_turista_carrito', []);
+        $reservaDatosSesion = $request->session()->get('reserva_turista_datos', []);
+
+        if (($datos['reserva_pendiente'] ?? false) && empty($datos['reserva_carrito']) && ! empty($reservaCarritoSesion)) {
+            $datos['reserva_pendiente'] = true;
+            $datos['reserva_carrito'] = $reservaCarritoSesion;
+            $datos['reserva_datos'] = $reservaDatosSesion;
+        }
+
+        if (! empty($datos['reserva_carrito']) && empty($datos['reserva_datos']) && ! empty($reservaDatosSesion)) {
+            $datos['reserva_datos'] = $reservaDatosSesion;
+        }
+
+        $user = User::find($datos['user_id'] ?? null);
+
+        if (! $user) {
+            return response()->json(['confirmed' => false]);
+        }
+
+        $request->session()->forget(['registro_pending_token', 'registro.pending.token']);
+
+        if ($this->debeContinuarReserva($datos)) {
+            $request->session()->put('reserva_turista_carrito', $datos['reserva_carrito']);
+            $request->session()->put('reserva_turista_datos', $datos['reserva_datos']);
+            $request->session()->put('url.intended', route('turista.reservas.checkout'));
+            $request->session()->put('reserva_login_pendiente', true);
+
+            Cache::forget('registro.confirmed.' . $token);
+
+            return response()->json([
+                'confirmed' => true,
+                'redirect' => route('login', ['reserva' => 1], false),
+            ]);
+        }
+
+        $request->session()->forget(['url.intended', 'reserva_login_pendiente']);
+
+        Cache::forget('registro.confirmed.' . $token);
+
+        return response()->json([
+            'confirmed' => true,
+            'redirect' => route('login', [], false),
+        ]);
+    }
+
+    private function registroEsParaReserva(Request $request): bool
+    {
+        $intendedUrl = (string) $request->session()->get('url.intended', '');
+        $intendedPath = (string) parse_url($intendedUrl, PHP_URL_PATH);
+
+        return $request->boolean('reserva')
+            || $request->session()->has('reserva_login_pendiente')
+            || str_contains($intendedPath, '/checkout')
+            || str_contains($intendedPath, '/reserva')
+            || str_contains($intendedPath, '/reservas')
+            || str_contains($intendedPath, '/reservar');
+    }
+
+    private function debeContinuarReserva(array $datos): bool
+    {
+        return (bool) ($datos['reserva_pendiente'] ?? false)
+            && ! empty($datos['reserva_carrito'] ?? []);
     }
 }
