@@ -1,4 +1,4 @@
-<div class="w-full px-4 pt-2 pb-8" wire:key="main-wizard-container">
+<div class="w-full pb-8" wire:key="main-wizard-container">
     @if (session('status'))
         <div class="mb-6 relative w-full overflow-hidden rounded-radius border border-green-500 bg-surface text-on-surface dark:bg-zinc-900 dark:text-zinc-100 shadow-sm" role="alert">
             <div class="flex w-full items-center gap-2 bg-success/10 p-4 dark:bg-green-900/20">
@@ -20,14 +20,14 @@
         </div>
     @endif
 
-    <h1 class="mb-6 text-2xl font-bold text-zinc-900 dark:text-white">Nuevo Emprendimiento</h1>
+    <h1 class="mb-6 text-2xl font-bold text-zinc-900 dark:text-white sm:text-3xl">Nuevo Emprendimiento</h1>
 
     <div class="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-[#18181B]">
         <div class="flex flex-col lg:flex-row">
             
-            <div class="w-full border-b border-zinc-100 bg-zinc-50/50 p-6 lg:w-80 lg:border-b-0 lg:border-r lg:p-10 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <div class="w-full border-b border-zinc-100 bg-zinc-50/50 p-4 sm:p-6 lg:w-80 lg:border-b-0 lg:border-r lg:p-10 dark:bg-zinc-900/50 dark:border-zinc-800">
                 <nav>
-                    <ol class="flex flex-row justify-around gap-2 lg:flex-col lg:gap-14" aria-label="registration progress">
+                    <ol class="flex flex-row justify-between gap-2 lg:flex-col lg:gap-14" aria-label="registration progress">
                         @foreach(['Emprendedor' => 'DATOS PERSONALES', 'Negocio' => 'INFORMACIÓN GENERAL', 'Finalizar' => 'CONFIRMAR'] as $label => $sub)
                             @php $i = $loop->iteration; @endphp
                             <li class="flex flex-col items-center gap-2 lg:flex-row lg:gap-4" wire:key="step-indicator-{{ $i }}">
@@ -48,7 +48,7 @@
                 </nav>
             </div>
 
-            <div class="flex-1 p-6 lg:p-12">
+            <div class="flex-1 p-4 sm:p-6 lg:p-12">
                 <div class="min-h-[420px]" wire:key="step-content-{{ $step }}">
                     
                     @if ($step === 1)
@@ -111,7 +111,7 @@
                                 <label class="flex w-fit items-center gap-1 pl-0.5 text-sm font-medium {{ $errors->has('imagen') ? 'text-danger dark:text-red-400' : 'text-zinc-700 dark:text-zinc-300' }}">
                                     Logo o Imagen Principal
                                 </label>
-                                <div class="flex items-center gap-4 mt-2">
+                                <div class="flex flex-col gap-4 mt-2 sm:flex-row sm:items-center">
                                     <div class="relative w-full max-w-sm">
                                         <input type="file" wire:model="imagen" accept="image/*" class="w-full rounded-radius border {{ $errors->has('imagen') ? 'border-danger dark:border-red-500' : 'border-outline dark:border-zinc-700' }} bg-surface-alt px-3 py-2 text-sm text-zinc-600 file:mr-4 file:rounded-full file:border-0 file:bg-primary/10 file:px-4 file:py-1 file:text-sm file:font-semibold file:text-primary hover:file:bg-primary/20 focus:outline-none dark:bg-zinc-800/50 dark:text-zinc-300 dark:file:bg-blue-900/30 dark:file:text-blue-400" />
                                         <div wire:loading wire:target="imagen" class="absolute right-3 top-2.5 text-sm text-primary dark:text-blue-400">Cargando...</div>

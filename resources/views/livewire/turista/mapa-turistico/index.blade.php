@@ -22,8 +22,6 @@
             position: relative;
         }
 
-<<<<<<< HEAD:resources/views/livewire/Turista/MapaTuristico/index.blade.php
-
         /* =====================================================
            MAPA
         ====================================================== */
@@ -753,7 +751,6 @@
 
         }
 
-=======
         .dark #map {
             box-shadow: 0 18px 45px rgba(0,0,0,.45);
         }
@@ -764,7 +761,6 @@
             background: #18181b;
             color: #e5e7eb;
         }
->>>>>>> origin/Rama_jhinier:resources/views/livewire/turista/MapaTuristico/index.blade.php
     </style>
 
 
@@ -780,19 +776,8 @@
         ====================================================== --}}
 
         <div class="mb-6">
-<<<<<<< HEAD:resources/views/livewire/Turista/MapaTuristico/index.blade.php
 
             <div class="flex items-center gap-3">
-=======
-            <h1 class="text-3xl font-bold text-emerald-700 dark:text-emerald-300">
-                🗺️ Mapa Turístico de La Candelaria
-            </h1>
-
-            <p class="text-gray-500 mt-2 dark:text-slate-300">
-                Explora los atractivos turísticos de manera interactiva.
-            </p>
-        </div>
->>>>>>> origin/Rama_jhinier:resources/views/livewire/turista/MapaTuristico/index.blade.php
 
                 <div
                     class="
@@ -834,12 +819,6 @@
             </div>
 
         </div>
-
-<<<<<<< HEAD:resources/views/livewire/Turista/MapaTuristico/index.blade.php
-=======
-                <div id="panelLugar"
-                     class="bg-white rounded-2xl shadow-lg h-[700px] p-6 overflow-y-auto dark:border dark:border-white/10 dark:bg-zinc-900">
->>>>>>> origin/Rama_jhinier:resources/views/livewire/turista/MapaTuristico/index.blade.php
 
         {{-- =====================================================
              MAPA + PANEL
@@ -1003,7 +982,6 @@
                             🧭
                         </div>
 
-<<<<<<< HEAD:resources/views/livewire/Turista/MapaTuristico/index.blade.php
 
                         <h2
                             class="
@@ -1015,15 +993,6 @@
                             Explora La Candelaria
                         </h2>
 
-=======
-                        <h2 class="text-2xl font-bold text-gray-700 dark:text-white">
-                            Explora el mapa
-                        </h2>
-
-                        <p class="text-gray-500 mt-4 dark:text-slate-300">
-
-                            Haz clic sobre cualquier marcador para visualizar toda la información del atractivo turístico.
->>>>>>> origin/Rama_jhinier:resources/views/livewire/turista/MapaTuristico/index.blade.php
 
                         <p
                             class="

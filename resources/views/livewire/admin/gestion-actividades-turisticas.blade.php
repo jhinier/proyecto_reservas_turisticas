@@ -1,8 +1,8 @@
-<div class="p-6">
+<div class="space-y-6">
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-            <h2 class="text-3xl font-bold text-slate-800 tracking-tight">
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight sm:text-3xl">
                 Actividades Turísticas
             </h2>
 
@@ -13,7 +13,7 @@
 
         <button
             wire:click="abrirModal"
-            class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-3 rounded-2xl shadow-md transition-all duration-300 flex items-center justify-center gap-2 font-semibold"
+            class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-3 rounded-2xl shadow-md transition-all duration-300 flex w-full items-center justify-center gap-2 font-semibold sm:w-auto"
         >
             <svg
                 class="w-5 h-5"
@@ -50,7 +50,7 @@
         {{-- Encabezado de tabla --}}
         <div class="px-6 py-4 border-b border-slate-200 bg-slate-50/70">
 
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
                 <div>
                     <h2 class="text-sm font-bold text-slate-800">
@@ -380,13 +380,13 @@
 
                         <flux:modal
                             name="detalle-actividad-{{ $actividad->publicacion_id }}"
-                            class="md:w-3/4 lg:w-2/3"
+                            class="w-[94vw] md:max-w-4xl"
                         >
 
                             <div class="p-4 sm:p-6 text-slate-800">
 
                                 {{-- ENCABEZADO --}}
-                                <div class="flex items-center gap-3 mb-6">
+                                <div class="flex items-start gap-3 mb-6">
 
                                     <div class="w-11 h-11 rounded-xl bg-emerald-100
                                                 flex items-center justify-center">
@@ -409,7 +409,7 @@
 
                                     <div>
 
-                                        <h2 class="text-2xl font-bold text-slate-800">
+                                        <h2 class="text-xl font-bold text-slate-800 sm:text-2xl">
                                             {{ $actividad->publicacion->nombre }}
                                         </h2>
 
@@ -428,7 +428,7 @@
 
                                 <div class="mb-6">
 
-                                    <div class="flex items-center justify-between mb-3">
+                                    <div class="flex flex-col gap-3 mb-3 sm:flex-row sm:items-center sm:justify-between">
 
                                         <div>
                                             <h3 class="text-sm font-bold text-slate-800">
@@ -680,12 +680,12 @@
         >
 
             <div
-                class="bg-white text-slate-800 rounded-3xl p-6 sm:p-8
+                class="bg-white text-slate-800 rounded-3xl p-4 sm:p-8
                        w-full max-w-2xl shadow-2xl border border-slate-100
                        overflow-y-auto max-h-[90vh]"
             >
 
-                <h2 class="text-2xl font-bold mb-6 text-slate-800 tracking-tight">
+                <h2 class="text-xl font-bold mb-6 text-slate-800 tracking-tight sm:text-2xl">
 
                     {{ $modoEdicion
                         ? '📝 Editar Actividad Turística'
@@ -884,7 +884,7 @@
 
 
                 <div
-                    class="flex justify-end gap-3 mt-6 pt-4
+                    class="flex flex-col-reverse gap-3 mt-6 pt-4 sm:flex-row sm:justify-end
                            border-t border-slate-100"
                 >
 

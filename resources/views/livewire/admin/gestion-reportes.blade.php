@@ -1,4 +1,4 @@
-<div class="p-6">
+<div class="space-y-6">
 
     {{-- ============================================================
         ENCABEZADO
@@ -6,7 +6,7 @@
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
 
         <div>
-            <h1 class="text-3xl font-bold text-slate-800 tracking-tight">
+            <h1 class="text-2xl font-bold text-slate-800 tracking-tight sm:text-3xl">
                 Reportes
             </h1>
 
@@ -22,7 +22,7 @@
                        text-white px-5 py-3 rounded-2xl
                        shadow-md hover:shadow-lg
                        transition-all duration-300
-                       flex items-center justify-center gap-2
+                       flex w-full items-center justify-center gap-2 sm:w-auto
                        font-semibold text-sm"
             >
                 <svg
@@ -276,7 +276,7 @@
 
                 <div class="overflow-x-auto">
 
-                    <table class="w-full text-sm">
+                    <table class="w-full min-w-[520px] text-sm">
 
                         <thead class="bg-slate-50 border-b border-slate-200">
 
@@ -376,7 +376,7 @@
         ========================================================= --}}
         @if($reporte !== 'general')
 
-            <div class="p-8 border-t border-slate-100">
+            <div class="p-5 border-t border-slate-100 sm:p-8">
 
                 <div class="text-center">
 

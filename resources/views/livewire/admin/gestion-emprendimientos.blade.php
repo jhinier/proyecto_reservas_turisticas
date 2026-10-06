@@ -1,4 +1,4 @@
-<div relative>
+<div class="relative">
     <div x-data="{ show: false, type: 'success', title: '', message: '' }"
          @notify.window="
             type = $event.detail.type;
@@ -7,7 +7,7 @@
             show = true;
             setTimeout(() => show = false, 4000);
          "
-         class="fixed top-4 right-4 z-[100] w-full max-w-sm space-y-2"
+         class="fixed inset-x-4 top-4 z-[100] space-y-2 sm:left-auto sm:right-4 sm:w-full sm:max-w-sm"
          x-show="show"
          x-transition.opacity.duration.300ms
          style="display: none;">
@@ -106,7 +106,7 @@
     </div>
 
     <div class="w-full overflow-hidden overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-700 bg-surface dark:bg-surface-dark">
-        <table class="w-full text-left text-sm text-on-surface dark:text-on-surface-dark">
+        <table class="w-full min-w-[760px] text-left text-sm text-on-surface dark:text-on-surface-dark">
             <thead class="border-b border-neutral-200 bg-surface-alt dark:border-neutral-700 dark:bg-surface-dark-alt">
                 <tr>
                     <th scope="col" class="p-4 font-medium">Emprendimiento</th>
@@ -175,7 +175,7 @@
         </ul>
     </nav>
     
-    <flux:modal name="modal-ver-empresa" class="w-[92%] mx-auto md:max-w-4xl relative rounded-2xl !p-0">
+    <flux:modal name="modal-ver-empresa" class="w-[94vw] mx-auto md:max-w-4xl relative rounded-2xl !p-0">
         <div wire:loading wire:target="verDetalle" class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 dark:bg-zinc-900/70 rounded-2xl min-h-[400px]">
             <div class="flex flex-col items-center justify-center translate-y-[-20px]">
                 <flux:icon.loading class="size-12 text-primary" />
@@ -184,11 +184,11 @@
 
         <div class="flex flex-col max-h-[85vh]">
             @if($empresaDetalle)
-                <div class="p-6 shrink-0 border-b border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-t-2xl">
+                <div class="p-4 shrink-0 border-b border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-t-2xl sm:p-6">
                     <flux:heading size="lg">Detalles del Emprendimiento</flux:heading>
                     <flux:subheading>Información completa del registro #{{ $empresaDetalle->id }}</flux:subheading>
                 </div>
-                <div class="p-6 flex-1 overflow-y-auto bg-neutral-50 dark:bg-zinc-950/30">
+                <div class="p-4 flex-1 overflow-y-auto bg-neutral-50 dark:bg-zinc-950/30 sm:p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-zinc-900 shadow-sm">
                             <h3 class="text-xs font-bold uppercase text-neutral-500 mb-2">Datos del Establecimiento</h3>
@@ -235,14 +235,14 @@
                         @endif
                     </div>
                 </div>
-                <div class="p-6 shrink-0 border-t border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-b-2xl flex flex-col-reverse sm:flex-row justify-end gap-3">
+                <div class="p-4 shrink-0 border-t border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-b-2xl flex flex-col-reverse sm:flex-row justify-end gap-3 sm:p-6">
                     <flux:modal.close><flux:button variant="ghost" class="w-full sm:w-auto">Cerrar</flux:button></flux:modal.close>
                 </div>
             @endif
         </div>
     </flux:modal>
 
-    <flux:modal name="modal-emprendimiento" class="w-[92%] mx-auto md:max-w-4xl relative rounded-2xl !p-0">
+    <flux:modal name="modal-emprendimiento" class="w-[94vw] mx-auto md:max-w-4xl relative rounded-2xl !p-0">
         <div wire:loading wire:target="editar" class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 dark:bg-zinc-900/70 rounded-2xl min-h-[400px]">
             <div class="flex flex-col items-center justify-center translate-y-[-20px]">
                 <flux:icon.loading class="size-12 text-primary" />
@@ -250,11 +250,11 @@
         </div>
 
         <form wire:submit="actualizar" enctype="multipart/form-data" class="flex flex-col max-h-[85vh]">
-            <div class="p-6 shrink-0 border-b border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-t-2xl">
+            <div class="p-4 shrink-0 border-b border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-t-2xl sm:p-6">
                 <flux:heading size="lg">Editar Información General</flux:heading>
                 <flux:subheading>Modifica los datos del emprendimiento y responsable.</flux:subheading>
             </div>
-            <div class="p-6 flex-1 overflow-y-auto bg-neutral-50 dark:bg-zinc-950/30">
+            <div class="p-4 flex-1 overflow-y-auto bg-neutral-50 dark:bg-zinc-950/30 sm:p-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="space-y-4">
                         <flux:heading level="3" size="sm" class="text-blue-600 uppercase tracking-wider">Empresa</flux:heading>
@@ -327,7 +327,7 @@
                     </div>
                 </div>
             </div>
-            <div class="p-6 shrink-0 border-t border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-b-2xl flex flex-col-reverse sm:flex-row gap-3">
+            <div class="p-4 shrink-0 border-t border-neutral-100 dark:border-neutral-800 bg-white dark:bg-zinc-900 rounded-b-2xl flex flex-col-reverse sm:flex-row gap-3 sm:p-6">
                 <flux:spacer class="hidden sm:block" />
                 <flux:button variant="ghost" class="w-full sm:w-auto" x-on:click="$flux.modal('modal-emprendimiento').close()">Cancelar</flux:button>
                 <flux:button type="submit" variant="primary" class="w-full sm:w-auto">Guardar Cambios</flux:button>

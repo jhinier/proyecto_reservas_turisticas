@@ -1,6 +1,6 @@
-<div class="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="max-w-7xl mx-auto grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
     
-    <div class="bg-white p-6 rounded-lg shadow-md col-span-1">
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
         <h2 class="text-xl font-bold mb-4 text-gray-800">Registrar Nuevo Usuario</h2>
 
         @if (session()->has('mensaje'))
@@ -38,32 +38,34 @@
         </form>
     </div>
 
-    <div class="bg-white p-6 rounded-lg shadow-md col-span-2 overflow-x-auto">
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md md:col-span-2">
         <h2 class="text-xl font-bold mb-4 text-gray-800">Usuarios Registrados</h2>
         
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Usuario</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rol</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @foreach($usuarios as $user)
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
-                        <div class="text-sm text-gray-500">{{ $user->email }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                            {{ $user->getRoleNames()->first() ?? 'Sin Rol' }}
-                        </span>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="overflow-x-auto">
+            <table class="min-w-[520px] divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase sm:px-6">Usuario</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase sm:px-6">Rol</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach($usuarios as $user)
+                    <tr>
+                        <td class="px-4 py-4 sm:px-6">
+                            <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
+                            <div class="break-all text-sm text-gray-500">{{ $user->email }}</div>
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap sm:px-6">
+                            <span class="px-2 inline-flex text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                {{ $user->getRoleNames()->first() ?? 'Sin Rol' }}
+                            </span>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>

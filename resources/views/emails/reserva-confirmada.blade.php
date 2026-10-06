@@ -78,6 +78,35 @@
             font-size: 14px;
             margin-bottom: 20px;
         }
+        .datos-pago {
+            background-color: #ecfdf5;
+            color: #064e3b;
+            padding: 15px;
+            border-left: 4px solid #10b981;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .cuenta-pago {
+            border-bottom: 1px solid #bbf7d0;
+            padding: 10px 0;
+        }
+        .cuenta-pago:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+        .cuenta-pago p {
+            margin: 3px 0;
+        }
+        .instrucciones {
+            background-color: #f8fafc;
+            color: #1f2937;
+            padding: 15px;
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
         .pie-pagina {
             text-align: center;
             padding: 24px;
@@ -133,8 +162,27 @@
                 </tfoot>
             </table>
 
+            <div class="datos-pago">
+                <p style="margin: 0 0 10px 0;"><strong>Datos para el pago:</strong></p>
+                <p style="margin: 0 0 10px 0;">Telefono de contacto: <strong>{{ $telefono }}</strong></p>
+
+                @foreach($cuentasBancarias as $cuenta)
+                    <div class="cuenta-pago">
+                        <p><strong>Banco:</strong> {{ $cuenta->nombre_banco }}</p>
+                        <p><strong>Cuenta:</strong> {{ $cuenta->numero_cuenta }}</p>
+                        <p><strong>Titular:</strong> {{ $cuenta->titular }}</p>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="instrucciones">
+                <p style="margin: 0 0 10px 0;"><strong>Instrucciones para el pago:</strong></p>
+                <p style="margin: 0 0 10px 0;"><strong>Realiza el pago</strong> usando una de las cuentas indicadas en este correo.</p>
+                <p style="margin: 0;">Luego ingresa al sistema y <strong>sube tu comprobante de pago</strong> para que el establecimiento pueda validarlo.</p>
+            </div>
+
             <div class="alerta">
-                <strong>Atención:</strong> Tienes un plazo máximo de 24 horas para comunicarte al número <strong>{{ $telefono }}</strong>, realizar el pago y subir tu comprobante al sistema. Si el tiempo expira, la reserva se cancela de forma automática.
+                <strong>Importante:</strong> Tienes un plazo maximo de 24 horas para realizar el pago. Caso contrario, tu reserva sera cancelada automaticamente. Si tienes dudas, comunicate al siguiente numero: <strong>{{ $telefono }}</strong>.
             </div>
 
             <p>Por favor, conserva este correo como comprobante de tu reserva. Si tienes alguna duda, ponte en contacto con {{ $nombreEmprendimiento }}.</p>

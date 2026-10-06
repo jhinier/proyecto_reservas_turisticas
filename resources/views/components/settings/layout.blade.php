@@ -27,6 +27,12 @@
                         wire:navigate
                         class="{{ request()->routeIs('emprendimiento-profile.edit') ? 'bg-emerald-50 text-emerald-700 font-semibold ring-1 ring-emerald-200 dark:bg-emerald-400/10 dark:text-emerald-300 dark:ring-emerald-400/20' : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-emerald-300' }}"
                     >Datos del emprendimiento</flux:navlist.item>
+
+                    <flux:navlist.item
+                        :href="route('emprendimiento-payment.edit')"
+                        wire:navigate
+                        class="{{ request()->routeIs('emprendimiento-payment.edit') ? 'bg-emerald-50 text-emerald-700 font-semibold ring-1 ring-emerald-200 dark:bg-emerald-400/10 dark:text-emerald-300 dark:ring-emerald-400/20' : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-emerald-300' }}"
+                    >Datos de pago</flux:navlist.item>
                 @endif
 
                 <flux:navlist.item

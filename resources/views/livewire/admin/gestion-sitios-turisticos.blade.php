@@ -1,4 +1,4 @@
- <div class="p-6">
+ <div class="space-y-6">
     @if (session()->has('mensaje'))
         <div class="mb-4 p-4 bg-green-800 text-white rounded-2xl shadow-lg text-sm font-medium">
             {{ session('mensaje') }}
@@ -7,12 +7,12 @@
 
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Sitios Turísticos</h1>
+            <h1 class="text-2xl font-bold text-slate-800 tracking-tight sm:text-3xl">Sitios Turísticos</h1>
             <p class="text-slate-500 mt-1 text-sm">Gestiona los atractivos turísticos de la región</p>
         </div>
 
         <button wire:click="abrirModal"
-            class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 font-semibold text-sm">
+            class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex w-full items-center justify-center gap-2 font-semibold text-sm sm:w-auto">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             Agregar Sitio
         </button>
@@ -23,7 +23,7 @@
     
             {{-- Encabezado de tabla --}}
             <div class="px-6 py-4 border-b border-slate-200 bg-slate-50/70">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h2 class="text-sm font-bold text-slate-800">
                             Sitios registrados
@@ -339,12 +339,12 @@
                             {{-- MODAL DE DETALLES --}}
                             <flux:modal
                                 name="detalle-sitio-{{ $sitio->publicacion_id }}"
-                                class="md:w-2/4"
+                                class="w-[94vw] md:max-w-2xl"
                             >
     
-                                <div class="p-6 bg-white rounded-3xl text-slate-800">
+                                <div class="p-4 bg-white rounded-3xl text-slate-800 sm:p-6">
     
-                                    <h2 class="text-2xl font-bold mb-2 tracking-tight text-emerald-800">
+                                    <h2 class="text-xl font-bold mb-2 tracking-tight text-emerald-800 sm:text-2xl">
                                         {{ $sitio->publicacion->nombre }}
                                     </h2>
     
@@ -361,7 +361,7 @@
                                         Galería de Imágenes
                                     </h3>
     
-                                    <div class="grid grid-cols-3 gap-2 mt-4 max-h-60 overflow-y-auto">
+                                    <div class="grid grid-cols-2 gap-2 mt-4 max-h-60 overflow-y-auto sm:grid-cols-3">
     
                                         @forelse($sitio->publicacion->imagenes as $img)
     
@@ -453,7 +453,7 @@
                         placeholder="Descripción corta del atractivo..."></textarea>
                 </div>
 
-                <div class="flex justify-end gap-3 mt-6">
+                <div class="flex flex-col-reverse gap-3 mt-6 sm:flex-row sm:justify-end">
                     <button wire:click="cerrarModal" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-600 text-sm font-semibold transition hover:bg-slate-200">
                         Cancelar
                     </button>
@@ -470,9 +470,9 @@
         
         <div @click.outside="show = false" class="bg-white dark:bg-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col">
             
-            <div class="p-5 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur z-20">
+            <div class="p-4 border-b border-gray-100 dark:border-gray-800 flex items-start justify-between gap-3 sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur z-20 sm:p-5">
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Gestor de Galería Fotográfica</h3>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white sm:text-xl">Gestor de Galería Fotográfica</h3>
                     <p class="text-xs text-emerald-600 font-bold mt-0.5">Sitio seleccionado: {{ $sitioSeleccionado?->publicacion?->nombre }}</p>
                 </div>
                 <button @click="show = false" class="p-2 hover:bg-gray-100 rounded-xl dark:hover:bg-gray-800 transition text-gray-500">
@@ -480,7 +480,7 @@
                 </button>
             </div>
 
-            <div class="p-6 flex-1">
+            <div class="p-4 flex-1 sm:p-6">
                 @if (session()->has('mensaje_galeria'))
                     <div class="mb-4 p-3.5 bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm">
                         {{ session('mensaje_galeria') }}
@@ -489,7 +489,7 @@
 
                 <div class="mb-8">
                     <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Imágenes en el Servidor</h4>
-                    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
                         @if($sitioSeleccionado && $sitioSeleccionado->publicacion)
                             @foreach($sitioSeleccionado->publicacion->imagenes as $imagen)
                                 <div wire:key="img-cloud-{{ $imagen->id }}" class="group relative aspect-square rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 dark:border-gray-700 shadow-sm">

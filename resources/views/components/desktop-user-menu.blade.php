@@ -1,6 +1,13 @@
+@php
+    $usuarioMenu = auth()->user();
+    $primerNombreMenu = preg_split('/\s+/', trim($usuarioMenu?->name ?? ''))[0] ?? '';
+    $primerApellidoMenu = preg_split('/\s+/', trim($usuarioMenu?->apellidos ?? ''))[0] ?? '';
+    $nombreMenuUsuario = trim($primerNombreMenu.' '.$primerApellidoMenu) ?: ($usuarioMenu?->name ?? 'Usuario');
+@endphp
+
 <flux:dropdown position="bottom" align="start">
     <flux:sidebar.profile
-        :name="auth()->user()->name"
+        :name="$nombreMenuUsuario"
         :initials="auth()->user()->initials()"
         icon:trailing="chevrons-up-down"
         data-test="sidebar-menu-button"
@@ -9,11 +16,11 @@
     <flux:menu>
         <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
             <flux:avatar
-                :name="auth()->user()->name"
+                :name="$nombreMenuUsuario"
                 :initials="auth()->user()->initials()"
             />
             <div class="grid flex-1 text-start text-sm leading-tight">
-                <flux:heading class="truncate">{{ auth()->user()->name }}</flux:heading>
+                <flux:heading class="truncate">{{ $nombreMenuUsuario }}</flux:heading>
                 <flux:text class="truncate">{{ auth()->user()->email }}</flux:text>
             </div>
         </div>

@@ -13,15 +13,6 @@ use Illuminate\Support\Facades\Auth;
 #[Layout('layouts.app.sidebar_emprendimiento')] 
 class Dashboard extends Component
 {
-    // 1. Cambiamos el periodo por defecto a 'hoy'
-    public string $periodoFiltro = 'hoy';
-
-    public function updatedPeriodoFiltro()
-    {
-        unset($this->metricas);
-        unset($this->servicioTop);
-    }
-
     #[Computed]
     public function categorias()
     {
@@ -44,7 +35,7 @@ class Dashboard extends Component
     public function metricas()
     {
         $user = Auth::user();
-        return app(DashboardEmprendimientoService::class)->obtenerMetricas($user->emprendimiento->id, $this->periodoFiltro);
+        return app(DashboardEmprendimientoService::class)->obtenerMetricas($user->emprendimiento->id);
     }
 
     #[Computed]
@@ -59,7 +50,7 @@ class Dashboard extends Component
     public function servicioTop()
     {
         $user = Auth::user();
-        return app(DashboardEmprendimientoService::class)->obtenerServicioMasVendido($user->emprendimiento->id, $this->periodoFiltro);
+        return app(DashboardEmprendimientoService::class)->obtenerServicioMasVendido($user->emprendimiento->id);
     }
 
     public function render()

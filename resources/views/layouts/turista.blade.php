@@ -537,7 +537,13 @@
                     <ul x-cloak x-show="userDropDownIsOpen" x-transition.opacity x-on:click.outside="userDropDownIsOpen = false" id="userMenu" class="absolute right-0 top-14 flex w-56 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl py-2">
                         <li class="border-b border-slate-100">
                             <div class="flex flex-col px-5 py-4">
-                                <span class="text-sm font-bold text-slate-800">{{ Auth::user()->name }}</span>
+                                @php
+                                    $usuarioMenu = Auth::user();
+                                    $primerNombreMenu = preg_split('/\s+/', trim($usuarioMenu?->name ?? ''))[0] ?? '';
+                                    $primerApellidoMenu = preg_split('/\s+/', trim($usuarioMenu?->apellidos ?? ''))[0] ?? '';
+                                    $nombreMenuUsuario = trim($primerNombreMenu.' '.$primerApellidoMenu) ?: ($usuarioMenu?->name ?? 'Usuario');
+                                @endphp
+                                <span class="text-sm font-bold text-slate-800">{{ $nombreMenuUsuario }}</span>
                                 <p class="text-xs text-slate-500">Turista</p>
                             </div>
                         </li>
@@ -593,7 +599,13 @@
                             </svg>
                         </div>
                         <div>
-                            <span class="font-bold text-slate-800">{{ Auth::user()->name }}</span>
+                            @php
+                                $usuarioMenu = Auth::user();
+                                $primerNombreMenu = preg_split('/\s+/', trim($usuarioMenu?->name ?? ''))[0] ?? '';
+                                $primerApellidoMenu = preg_split('/\s+/', trim($usuarioMenu?->apellidos ?? ''))[0] ?? '';
+                                $nombreMenuUsuario = trim($primerNombreMenu.' '.$primerApellidoMenu) ?: ($usuarioMenu?->name ?? 'Usuario');
+                            @endphp
+                            <span class="font-bold text-slate-800">{{ $nombreMenuUsuario }}</span>
                             <p class="text-sm text-slate-500">Turista</p>
                         </div>
                 </li>

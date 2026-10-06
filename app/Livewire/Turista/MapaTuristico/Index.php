@@ -19,6 +19,6 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.turista.MapaTuristico.index')->layout('layouts.turista');
+        return view('livewire.turista.mapa-turistico.index')->layout('layouts.turista');
     }
 }

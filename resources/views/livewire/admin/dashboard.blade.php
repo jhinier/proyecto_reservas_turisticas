@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-6xl space-y-8">
+<div class="mx-auto max-w-6xl space-y-6 sm:space-y-8">
 
     {{-- ALERTA --}}
     @if (session('status'))
@@ -11,9 +11,9 @@
     @endif
 
     {{-- HERO --}}
-    <div class="relative overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-100 px-8 py-10 shadow-sm">
+    <div class="relative overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-100 px-5 py-7 shadow-sm sm:px-8 sm:py-10">
 
-        <h1 class="text-3xl font-bold text-emerald-800">
+        <h1 class="text-2xl font-bold text-emerald-800 sm:text-3xl">
             Panel Turístico 📊
         </h1>
 
@@ -21,14 +21,14 @@
             Gestión centralizada de emprendimientos, lugares turísticos, actividades y eventos del sistema.
         </p>
 
-        <div class="absolute right-0 top-0 h-full w-1/3 opacity-10 bg-emerald-500 blur-3xl"></div>
+        <div class="absolute right-0 top-0 hidden h-full w-1/3 opacity-10 bg-emerald-500 blur-3xl sm:block"></div>
     </div>
 
   {{-- CARDS --}}
 <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
 
     {{-- EMPRENDIMIENTOS --}}
-    <div class="rounded-3xl border bg-white p-6 shadow-sm hover:shadow-md hover:scale-[1.02] transition-transform duration-200">
+    <div class="rounded-3xl border bg-white p-5 shadow-sm hover:shadow-md hover:scale-[1.02] transition-transform duration-200 sm:p-6">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-zinc-500 font-semibold">Emprendimientos</p>
@@ -43,7 +43,7 @@
     </div>
 
     {{-- LUGARES TURÍSTICOS --}}
-    <div class="rounded-3xl border bg-white p-6 shadow-sm hover:shadow-md hover:scale-[1.02] transition-transform duration-200">
+    <div class="rounded-3xl border bg-white p-5 shadow-sm hover:shadow-md hover:scale-[1.02] transition-transform duration-200 sm:p-6">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-zinc-500 font-semibold">Lugares turísticos</p>
@@ -58,7 +58,7 @@
     </div>
 
     {{-- ACTIVIDADES --}}
-    <div class="rounded-3xl border bg-white p-6 shadow-sm hover:shadow-md hover:scale-[1.02] transition-transform duration-200">
+    <div class="rounded-3xl border bg-white p-5 shadow-sm hover:shadow-md hover:scale-[1.02] transition-transform duration-200 sm:p-6">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-zinc-500 font-semibold">Actividades</p>
@@ -73,7 +73,7 @@
     </div>
 
     {{-- FESTIVIDADES --}}
-    <div class="rounded-3xl border bg-white p-6 shadow-sm hover:shadow-md hover:scale-[1.02] transition-transform duration-200">
+    <div class="rounded-3xl border bg-white p-5 shadow-sm hover:shadow-md hover:scale-[1.02] transition-transform duration-200 sm:p-6">
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-zinc-500 font-semibold">Festividades</p>
@@ -169,4 +169,4 @@
         </div>
     </div>
 
-</div>  
+</div>

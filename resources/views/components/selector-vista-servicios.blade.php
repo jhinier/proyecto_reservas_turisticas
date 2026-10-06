@@ -1,4 +1,4 @@
-@props(['vista' => 'tarjetas'])
+@props(['vista' => 'lista'])
 
 <div {{ $attributes->class(['inline-flex w-full shrink-0 rounded-xl border border-[#d5dfbc] bg-[#e4eccf] p-0.5 sm:w-[230px]']) }}
      role="group"
