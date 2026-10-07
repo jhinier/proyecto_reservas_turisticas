@@ -85,16 +85,16 @@ class DatosEmprendimiento extends Component
             'redes.*.url' => ['nullable', 'url:http,https', 'max:255', 'distinct'],
             'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
         ], [
-            'descripcion.required' => 'La descripción es obligatoria.',
-            'descripcion.min' => 'La descripción debe tener al menos 10 caracteres.',
-            'descripcion.max' => 'La descripción no puede superar los 300 caracteres.',
+            'descripcion.required' => 'La descripcion es obligatoria.',
+            'descripcion.min' => 'La descripcion debe tener al menos 10 caracteres.',
+            'descripcion.max' => 'La descripcion no puede superar los 300 caracteres.',
             'redes.max' => 'Puedes registrar hasta 10 redes sociales.',
-            'redes.*.url.url' => 'Ingresa un enlace válido que comience con http:// o https://.',
+            'redes.*.url.url' => 'Ingresa un enlace valido que comience con http:// o https://.',
             'redes.*.url.max' => 'El enlace no puede superar los 255 caracteres.',
             'redes.*.url.distinct' => 'No puedes repetir el mismo enlace.',
             'imagen.image' => 'El archivo seleccionado debe ser una imagen.',
             'imagen.mimes' => 'La imagen debe estar en formato JPG, PNG o WEBP.',
-            'imagen.max' => 'La imagen no puede pesar más de 5 MB.',
+            'imagen.max' => 'La imagen no puede pesar mas de 5 MB.',
         ]);
 
         $enlaces = collect($validated['redes'])
@@ -123,6 +123,8 @@ class DatosEmprendimiento extends Component
 
             throw $exception;
         }
+
+        $emprendimiento->refresh();
 
         if ($nuevaRuta && $imagenAnterior && $imagenAnterior !== $nuevaRuta) {
             Storage::disk('public')->delete($imagenAnterior);

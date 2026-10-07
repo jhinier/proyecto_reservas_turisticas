@@ -1,12 +1,8 @@
 <div class="min-h-screen relative pb-24 text-[#06281E] dark:text-gray-200 font-sans antialiased" wire:key="dashboard-root">
     
     @php
-        $textoPeriodo = match($periodoFiltro) {
-            'esta_semana' => 'esta semana',
-            'este_mes' => 'este mes',
-            default => 'hoy'
-        };
-        $totalMetricas = array_sum($this->metricas);
+        $metricas = $this->metricas;
+        $totalMetricas = array_sum($metricas);
     @endphp
 
     {{-- Cabecera --}}
@@ -18,36 +14,20 @@
                 <span class="text-[#00A344] dark:text-[#77f062] font-black">Panel operativo</span>
             </div>
             <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#06281E] dark:text-white tracking-tight mt-2 leading-tight">
-                Bienvenido, <span>{{ Auth::user()->name }}</span> <span class="text-gray-400 dark:text-gray-500 font-normal">de</span> <span class="text-[#00A344] dark:text-[#7ed957]">{{ Auth::user()->emprendimiento->nombre ?? 'Tu Emprendimiento' }}</span>
+                    Bienvenido, <span>{{ Auth::user()->name }}</span> <span class="text-gray-400 dark:text-gray-500 font-normal">de</span> <span class="text-[#06281E] dark:text-white">{{ Auth::user()->emprendimiento->nombre ?? 'Tu Emprendimiento' }}</span>
             </h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-medium">
                 <span class="text-base sm:text-lg font-black text-[#06281E] dark:text-white uppercase tracking-wide">Resumen de actividad</span>
                 <span class="text-gray-300 dark:text-gray-600 hidden sm:inline">|</span>
                 <span class="flex items-center gap-1.5 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full text-[10px] text-[#00A344] dark:text-[#7ed957] font-bold uppercase tracking-widest border border-gray-200 dark:border-white/5">
                     <span class="size-2 rounded-full bg-[#00D65B] dark:bg-[#7ed957] animate-pulse"></span>
-                    {{ $totalMetricas }} reservas registradas {{ $textoPeriodo }}
+                    {{ $totalMetricas }} reservas registradas en total
                 </span>
             </p>
-        </div>
-
-        <div class="flex items-center gap-3 w-full md:w-auto shrink-0">
-            <div class="flex items-center bg-gray-50 dark:bg-zinc-800/50 p-1 rounded-xl border border-gray-200 dark:border-white/10 w-full md:w-auto transition-colors">
-                <span class="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-bold px-3 hidden lg:inline">Periodo:</span>
-                <select wire:model.live="periodoFiltro" class="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-white/10 rounded-lg py-1.5 px-4 text-xs font-bold text-[#06281E] dark:text-white shadow-sm focus:ring-2 focus:ring-[#00A344] dark:focus:ring-[#07b25f] focus:border-[#00A344] dark:focus:border-[#07b25f] cursor-pointer outline-none transition-all w-full md:w-auto">
-                    <option value="hoy">Hoy</option>
-                    <option value="esta_semana">Esta semana</option>
-                    <option value="este_mes">Este mes</option>
-                </select>
-            </div>
         </div>
     </div>
 
     <div class="p-8 max-w-7xl mx-auto space-y-8 relative">
-        
-        {{-- Cargando --}}
-        <div wire:loading.flex wire:target="periodoFiltro" class="absolute inset-0 bg-white/70 dark:bg-zinc-900/70 z-30 items-center justify-center backdrop-blur-xs transition-all rounded-3xl">
-            <div class="animate-spin size-7 border-3 border-gray-300 dark:border-gray-600 border-t-[#00A344] dark:border-t-[#07b25f] rounded-full"></div>
-        </div>
 
         {{-- Tarjetas superiores con colores --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -56,7 +36,7 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-[10px] font-bold text-green-600 dark:text-green-500 uppercase tracking-widest">Confirmadas</p>
-                        <h3 class="text-3xl font-black text-green-900 dark:text-white mt-1">{{ $this->metricas['confirmadas'] ?? 0 }}</h3>
+                        <h3 class="text-3xl font-black text-green-900 dark:text-white mt-1">{{ $metricas['confirmadas'] ?? 0 }}</h3>
                     </div>
                     <div class="size-10 rounded-2xl bg-white dark:bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center shadow-sm border border-green-100 dark:border-green-500/20">
                         <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
@@ -72,7 +52,7 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-[10px] font-bold text-yellow-600 dark:text-yellow-500 uppercase tracking-widest">Pendientes</p>
-                        <h3 class="text-3xl font-black text-yellow-900 dark:text-white mt-1">{{ $this->metricas['pendientes'] ?? 0 }}</h3>
+                        <h3 class="text-3xl font-black text-yellow-900 dark:text-white mt-1">{{ $metricas['pendientes'] ?? 0 }}</h3>
                     </div>
                     <div class="size-10 rounded-2xl bg-white dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 flex items-center justify-center shadow-sm border border-yellow-100 dark:border-yellow-500/20">
                         <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -84,19 +64,19 @@
                 </div>
             </div>
 
-            <div class="bg-red-50/50 dark:bg-red-900/10 rounded-3xl p-6 border border-red-200 dark:border-red-500/20 shadow-sm flex flex-col justify-between group transition-all">
+            <div class="bg-indigo-50/50 dark:bg-indigo-900/10 rounded-3xl p-6 border border-indigo-200 dark:border-indigo-500/20 shadow-sm flex flex-col justify-between group transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-[10px] font-bold text-red-600 dark:text-red-500 uppercase tracking-widest">Canceladas</p>
-                        <h3 class="text-3xl font-black text-red-900 dark:text-white mt-1">{{ $this->metricas['canceladas'] ?? 0 }}</h3>
+                        <p class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Comprobantes en revisión</p>
+                        <h3 class="text-3xl font-black text-indigo-900 dark:text-white mt-1">{{ $metricas['en_revision_comprobantes'] ?? 0 }}</h3>
                     </div>
-                    <div class="size-10 rounded-2xl bg-white dark:bg-red-500/10 text-red-600 dark:text-red-500 flex items-center justify-center shadow-sm border border-red-100 dark:border-red-500/20">
-                        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    <div class="size-10 rounded-2xl bg-white dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-sm border border-indigo-100 dark:border-indigo-500/20">
+                        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M14.25 2.25H6.75A2.25 2.25 0 004.5 4.5v15a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V7.5l-5.25-5.25z"/><path stroke-linecap="round" stroke-linejoin="round" d="M14.25 2.25V7.5h5.25"/></svg>
                     </div>
                 </div>
-                <div class="mt-4 pt-4 border-t border-red-100 dark:border-red-800/30 flex items-center gap-2 text-[10px] text-red-700 dark:text-red-400 font-bold uppercase tracking-wider">
-                    <span class="text-white bg-red-500 px-2 py-0.5 rounded shadow-sm">Anuladas</span>
-                    <span>Descartadas</span>
+                <div class="mt-4 pt-4 border-t border-indigo-100 dark:border-indigo-800/30 flex items-center gap-2 text-[10px] text-indigo-700 dark:text-indigo-300 font-bold uppercase tracking-wider">
+                    <span class="text-white bg-indigo-500 px-2 py-0.5 rounded shadow-sm">Revisión</span>
+                    <span>Por validar</span>
                 </div>
             </div>
         </div>
@@ -193,7 +173,7 @@
                             </div>
                             <div>
                                 <h2 class="text-lg font-black text-[#06281E] dark:text-white uppercase tracking-wide">Rendimiento y Ventas</h2>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Volumen del periodo y servicio estrella</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Volumen general y servicio estrella</p>
                             </div>
                         </div>
                     </div>
@@ -210,8 +190,8 @@
                         {{-- Recuadros del gráfico (Top Servicio) --}}
                         <div class="absolute top-6 right-6 flex flex-col gap-3">
                             <div class="bg-white dark:bg-zinc-800 border border-gray-100 dark:border-white/10 p-3 rounded-2xl shadow-sm text-right">
-                                <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total en el periodo</div>
-                                <div class="text-xl font-black text-[#06281E] dark:text-white mt-1">{{ array_sum($this->metricas) }} rsv.</div>
+                                <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total general</div>
+                                <div class="text-xl font-black text-[#06281E] dark:text-white mt-1">{{ $totalMetricas }} rsv.</div>
                             </div>
                             
                             @if($this->servicioTop)
@@ -236,7 +216,7 @@
                 <div class="bg-[#06281E] dark:bg-[#163016] rounded-3xl shadow-sm text-white p-6 relative overflow-hidden flex flex-col justify-center h-32 border border-[#06281E] dark:border-white/10 transition-colors">
                     <div class="relative z-10 flex items-center justify-between">
                         <div>
-                            <div class="text-5xl font-black tracking-tight text-[#00D65B] dark:text-[#77f062]">{{ $this->metricas['completadas'] ?? 0 }}</div>
+                            <div class="text-5xl font-black tracking-tight text-[#00D65B] dark:text-[#77f062]">{{ $metricas['completadas'] ?? 0 }}</div>
                             <div class="text-[10px] font-bold uppercase tracking-widest text-gray-300 dark:text-[#7ed957] mt-1">Servicios completados</div>
                         </div>
                         <div class="size-12 rounded-2xl bg-white/10 dark:bg-[#07b25f]/20 flex items-center justify-center text-[#00D65B]">

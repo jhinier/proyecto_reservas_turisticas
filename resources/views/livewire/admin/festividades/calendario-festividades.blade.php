@@ -15,13 +15,13 @@
          x-transition:leave="transition transform duration-200 ease-in"
          x-transition:leave-start="translate-x-0"
          x-transition:leave-end="translate-x-full"
-         class="fixed right-0 top-0 h-full w-full sm:w-[450px] md:w-[90vw] lg:w-[85vw] bg-white shadow-2xl z-[70] flex flex-col md:flex-row overflow-hidden border-l-4 border-[#C6A24D]"
+         class="fixed right-0 top-0 h-full w-full bg-white shadow-2xl z-[70] flex flex-col md:w-[90vw] lg:w-[85vw] md:flex-row overflow-y-auto md:overflow-hidden border-l-4 border-[#C6A24D]"
          style="display: none;">
         
         {{-- SIDEBAR IZQUIERDO --}}
-        <div class="w-full md:w-80 bg-[#3B4D36] text-[#F1EAD7] flex flex-col h-full shrink-0 shadow-lg z-20">
+        <div class="w-full md:w-80 bg-[#3B4D36] text-[#F1EAD7] flex flex-col h-auto max-h-[48vh] md:h-full md:max-h-none shrink-0 shadow-lg z-20">
 
-            <div class="p-6 flex justify-between items-center border-b border-[#8DBEA2]/20">
+            <div class="p-4 sm:p-6 flex justify-between items-center border-b border-[#8DBEA2]/20">
                 <button @click="$wire.cerrar()" class="bg-white/10 p-2 rounded-xl hover:bg-[#C6A24D] hover:text-[#3B4D36] transition">
                     <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -33,10 +33,10 @@
                 </h2>
             </div>
 
-            <div class="p-6 flex-1 overflow-y-auto space-y-8">
+            <div class="p-4 sm:p-6 flex-1 overflow-y-auto space-y-6 sm:space-y-8">
 
                 {{-- MINI CALENDARIO --}}
-                <div class="bg-[#F1EAD7]/10 p-5 rounded-3xl border border-[#8DBEA2]/20">
+                <div class="bg-[#F1EAD7]/10 p-4 sm:p-5 rounded-3xl border border-[#8DBEA2]/20">
 
                     <div class="flex justify-between items-center mb-5">
                         <span class="font-black text-[#F1EAD7] text-sm capitalize">
@@ -120,7 +120,7 @@
         </div>
 
         {{-- PANEL DERECHO --}}
-        <div class="flex-1 flex flex-col h-full bg-white relative">
+        <div class="flex-1 flex min-h-[52vh] flex-col bg-white relative md:h-full md:min-h-0">
 
             {{-- LOADING --}}
             <div wire:loading.flex 
@@ -131,7 +131,7 @@
             </div>
 
             {{-- HEADER --}}
-            <div class="p-4 md:p-6 border-b border-[#CFE2CF] flex justify-between items-center bg-white z-20 shrink-0">
+            <div class="p-4 md:p-6 border-b border-[#CFE2CF] flex items-start justify-between gap-3 bg-white z-20 shrink-0">
 
                 <div>
                     <h2 class="text-xl md:text-2xl font-black text-[#3B4D36]">
@@ -152,7 +152,7 @@
             </div>
 
             {{-- CONTENIDO --}}
-            <div class="flex-1 overflow-y-auto p-6 bg-[#F8F9FA]">
+            <div class="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#F8F9FA]">
 
                 <div class="border-b border-gray-200 pb-3 mb-6">
                     <h2 class="text-lg font-bold text-[#3B4D36]">
@@ -167,7 +167,7 @@
 
                     @forelse($this->agendaPorDia()[$diaSeleccionado] ?? [] as $actividad)
 
-                        <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition space-y-4">
+                        <div class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition space-y-4">
 
                             {{-- FESTIVIDAD --}}
                             <div class="border-b border-dashed border-[#CFE2CF] pb-3">

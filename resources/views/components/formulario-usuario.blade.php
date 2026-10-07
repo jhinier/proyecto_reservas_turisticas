@@ -132,52 +132,88 @@
 
     {{-- 7. CONTRASEÑA --}}
     @php $pass = $getFieldInfo('password'); @endphp
-    <div class="flex flex-col gap-1" x-data="{ showPassword: false }">
-        <label class="flex w-fit items-center gap-1 pl-0.5 text-sm {{ $pass['labelClass'] }}">Contraseña</label>
-        <div class="relative">
-            <input :type="showPassword ? 'text' : 'password'" wire:model="{{ $pass['name'] }}" autocomplete="off" placeholder="Mínimo 8 caracteres"
-                class="w-full rounded-radius border {{ $pass['statusClass'] }} {{ $inputClass }} px-2 py-2 pr-10 text-sm {{ $focusClass }}" />
-            <button type="button" @click="showPassword = !showPassword" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400">
-                <svg x-show="!showPassword" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
-                <svg x-show="showPassword" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>
-            </button>
-        </div>
-    </div>
+    @php $passwordConfirmationName = $prefix . 'password_confirmation'; @endphp
+    <div
+        class="grid grid-cols-1 gap-6 md:col-span-2 md:grid-cols-2"
+        x-data="{
+            password: @entangle($pass['name']),
+            confirmation: @entangle($passwordConfirmationName),
+            showPassword: false,
+            showConfirm: false,
+        }"
+    >
+        <div class="flex flex-col gap-1">
+            <label class="flex w-fit items-center gap-1 pl-0.5 text-sm {{ $pass['labelClass'] }}">Contraseña</label>
+            <div class="relative">
+                <input
+                    :type="showPassword ? 'text' : 'password'"
+                    wire:model="{{ $pass['name'] }}"
+                    x-model="password"
+                    autocomplete="off"
+                    placeholder="Mínimo 8 caracteres"
+                    class="w-full rounded-radius border {{ $pass['statusClass'] }} {{ $inputClass }} px-2 py-2 pr-10 text-sm {{ $focusClass }}"
+                />
+                <button type="button" @click="showPassword = !showPassword" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400">
+                    <svg x-show="!showPassword" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                    <svg x-cloak x-show="showPassword" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>
+                </button>
+            </div>
+            @error($pass['name']) <small class="pl-0.5 text-danger">{{ $message }}</small> @enderror
 
-    {{-- 8. CONFIRMAR CONTRASEÑA --}}
-    <div class="flex flex-col gap-1" x-data="{ showConfirm: false }">
-        <label class="pl-0.5 text-sm text-on-surface dark:text-on-surface-dark">Confirmar Contraseña</label>
-        <div class="relative">
-            <input :type="showConfirm ? 'text' : 'password'" wire:model="{{ $prefix }}password_confirmation" autocomplete="off" placeholder="Repite la contraseña"
-                class="w-full rounded-radius border border-outline dark:border-zinc-700 {{ $inputClass }} px-2 py-2 pr-10 text-sm focus:outline-none" />
-            <button type="button" @click="showConfirm = !showConfirm" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400">
-                <svg x-show="!showConfirm" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /></svg>
-                <svg x-show="showConfirm" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12" /></svg>
-            </button>
-        </div>
-    </div>
-
-    {{-- MENSAJE DE ERROR PARA CONTRASEÑA (Solo asoma cuando está mal) --}}
-    <div class="md:col-span-2">
-        @if($errors->has($prefix . 'password'))
-            <div class="relative w-full overflow-hidden rounded-radius border border-danger bg-surface text-on-surface dark:bg-surface-dark dark:text-on-surface-dark" role="alert">
-                <div class="flex w-full items-center gap-2 bg-danger/10 p-4">
-                    <div class="bg-danger/15 text-danger rounded-full p-1" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-6" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-2">
-                        <h3 class="text-sm font-semibold text-danger">La contraseña no es segura</h3>
-                        <p class="text-xs font-medium sm:text-sm">La contraseña ingresada no cumple con los requisitos mínimos. Asegúrate de que:</p>
-                        <ul class="mt-2 list-inside list-disc pl-2 text-xs font-medium text-danger sm:text-sm">
-                            <li>Tenga <strong>mínimo 8</strong> caracteres</li>
-                            <li>Incluya <strong>mayúsculas y minúsculas</strong></li>
-                            <li>Contenga <strong>al menos un número y un símbolo</strong></li>
-                        </ul>
-                    </div>
+            <div class="mt-3 space-y-2">
+                <div class="flex items-center gap-2 text-[10px] transition-colors duration-300 md:text-xs" :class="password.length >= 8 ? 'text-success dark:text-green-400' : 'text-zinc-500 dark:text-zinc-400'">
+                    <svg x-cloak x-show="password.length >= 8" class="size-4 shrink-0 text-success dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    <svg x-cloak x-show="password.length < 8" class="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                    <span>Al menos 8 caracteres</span>
+                </div>
+                <div class="flex items-center gap-2 text-[10px] transition-colors duration-300 md:text-xs" :class="/[A-Z]/.test(password) ? 'text-success dark:text-green-400' : 'text-zinc-500 dark:text-zinc-400'">
+                    <svg x-cloak x-show="/[A-Z]/.test(password)" class="size-4 shrink-0 text-success dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    <svg x-cloak x-show="!/[A-Z]/.test(password)" class="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                    <span>Una mayúscula</span>
+                </div>
+                <div class="flex items-center gap-2 text-[10px] transition-colors duration-300 md:text-xs" :class="/[a-z]/.test(password) ? 'text-success dark:text-green-400' : 'text-zinc-500 dark:text-zinc-400'">
+                    <svg x-cloak x-show="/[a-z]/.test(password)" class="size-4 shrink-0 text-success dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    <svg x-cloak x-show="!/[a-z]/.test(password)" class="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                    <span>Una minúscula</span>
+                </div>
+                <div class="flex items-center gap-2 text-[10px] transition-colors duration-300 md:text-xs" :class="/[0-9]/.test(password) ? 'text-success dark:text-green-400' : 'text-zinc-500 dark:text-zinc-400'">
+                    <svg x-cloak x-show="/[0-9]/.test(password)" class="size-4 shrink-0 text-success dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    <svg x-cloak x-show="!/[0-9]/.test(password)" class="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                    <span>Un número</span>
+                </div>
+                <div class="flex items-center gap-2 text-[10px] transition-colors duration-300 md:text-xs" :class="/[^a-zA-Z0-9]/.test(password) ? 'text-success dark:text-green-400' : 'text-zinc-500 dark:text-zinc-400'">
+                    <svg x-cloak x-show="/[^a-zA-Z0-9]/.test(password)" class="size-4 shrink-0 text-success dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    <svg x-cloak x-show="!/[^a-zA-Z0-9]/.test(password)" class="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                    <span>Un carácter especial</span>
                 </div>
             </div>
-        @endif
+        </div>
+
+        {{-- 8. CONFIRMAR CONTRASEÑA --}}
+        <div class="flex flex-col gap-1">
+            <label class="pl-0.5 text-sm text-on-surface dark:text-on-surface-dark">Confirmar Contraseña</label>
+            <div class="relative">
+                <input
+                    :type="showConfirm ? 'text' : 'password'"
+                    wire:model="{{ $passwordConfirmationName }}"
+                    x-model="confirmation"
+                    autocomplete="off"
+                    placeholder="Repite la contraseña"
+                    class="w-full rounded-radius border border-outline dark:border-zinc-700 {{ $inputClass }} px-2 py-2 pr-10 text-sm focus:outline-none"
+                />
+                <button type="button" @click="showConfirm = !showConfirm" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400">
+                    <svg x-show="!showConfirm" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /></svg>
+                    <svg x-cloak x-show="showConfirm" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12" /></svg>
+                </button>
+            </div>
+            @error($passwordConfirmationName) <small class="pl-0.5 text-danger">{{ $message }}</small> @enderror
+
+            <div class="mt-3 flex items-center gap-2 text-[10px] transition-colors duration-300 md:text-xs" :class="confirmation.length === 0 ? 'text-zinc-500 dark:text-zinc-400' : (confirmation === password ? 'text-success dark:text-green-400' : 'text-danger dark:text-red-400')">
+                <svg x-cloak x-show="confirmation.length > 0 && confirmation === password" class="size-4 shrink-0 text-success dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <svg x-cloak x-show="confirmation.length > 0 && confirmation !== password" class="size-4 shrink-0 text-danger dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18 18 6M6 6l12 12"/></svg>
+                <svg x-cloak x-show="confirmation.length === 0" class="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                <span x-text="confirmation.length === 0 ? 'Las contraseñas deben coincidir' : (confirmation === password ? 'Las contraseñas coinciden' : 'Las contraseñas no coinciden')"></span>
+            </div>
+        </div>
     </div>
 </div>

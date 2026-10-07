@@ -1,4 +1,4 @@
-<div class="p-6">
+<div class="space-y-6">
 
     @if (session()->has('mensaje'))
         <div class="mb-4 p-4 bg-green-800 text-white rounded-2xl shadow-lg text-sm font-medium">
@@ -9,7 +9,7 @@
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
 
         <div>
-            <h1 class="text-3xl font-bold text-slate-800 tracking-tight">
+            <h1 class="text-2xl font-bold text-slate-800 tracking-tight sm:text-3xl">
                 Festividades
             </h1>
 
@@ -20,7 +20,7 @@
 
         <button
             x-on:click="$flux.modal('modal-festividad').show(); $wire.set('modoEditar', false); $wire.call('limpiarCampos');"
-            class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 font-semibold text-sm"
+            class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex w-full items-center justify-center gap-2 font-semibold text-sm sm:w-auto"
         >
 
             <svg
@@ -116,7 +116,7 @@
         {{-- CABECERA DE LA TABLA --}}
         <div class="overflow-x-auto">
 
-            <table class="w-full text-sm text-left">
+            <table class="w-full min-w-[980px] text-sm text-left">
 
                 <thead class="bg-slate-50 border-b border-slate-200">
 
@@ -521,12 +521,12 @@
 
     <flux:modal
         name="modal-festividad"
-        class="md:w-2/4"
+        class="w-[94vw] md:max-w-2xl"
     >
 
-        <div class="p-6 bg-white rounded-3xl text-slate-800">
+        <div class="p-4 bg-white rounded-3xl text-slate-800 sm:p-6">
 
-            <h2 class="text-2xl font-bold mb-6 text-slate-800">
+            <h2 class="text-xl font-bold mb-6 text-slate-800 sm:text-2xl">
 
                 {{ $modoEditar ? 'Editar Festividad' : 'Nueva Festividad' }}
 
@@ -553,7 +553,7 @@
                 ></textarea>
 
 
-                <div class="grid grid-cols-2 gap-4 text-sm">
+                <div class="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
 
                     {{-- FECHA INICIO --}}
 
@@ -615,12 +615,12 @@
 
     <flux:modal
         name="modal-actividad"
-        class="md:w-2/4"
+        class="w-[94vw] md:max-w-2xl"
     >
 
-        <div class="p-6 bg-white rounded-3xl text-slate-800">
+        <div class="p-4 bg-white rounded-3xl text-slate-800 sm:p-6">
 
-            <h2 class="text-2xl font-bold mb-6 text-slate-800">
+            <h2 class="text-xl font-bold mb-6 text-slate-800 sm:text-2xl">
                 Nueva Actividad
             </h2>
 
@@ -638,7 +638,7 @@
                 >
 
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
                     <input
                         type="date"
@@ -707,7 +707,7 @@
             class="bg-white dark:bg-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col"
         >
 
-            <div class="p-5 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur z-20">
+            <div class="p-4 border-b border-gray-100 dark:border-gray-800 flex items-start justify-between gap-3 sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur z-20 sm:p-5">
 
                 <div>
 
@@ -751,7 +751,7 @@
             </div>
 
 
-            <div class="p-6 flex-1">
+            <div class="p-4 flex-1 sm:p-6">
 
                 @if (session()->has('mensaje_galeria'))
 
@@ -771,7 +771,7 @@
                     </h4>
 
 
-                    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
 
                         @if($festividadSeleccionada && $festividadSeleccionada->publicacion)
 
@@ -902,7 +902,7 @@
     <button
         type="button"
         wire:click="$dispatch('abrirCalendario')"
-        class="fixed bottom-8 right-8 z-40 bg-emerald-700 hover:bg-emerald-800 text-white shadow-2xl rounded-full px-6 py-3.5 font-bold text-base transition duration-300 hover:scale-105 flex items-center gap-2"
+        class="fixed bottom-4 right-4 z-40 bg-emerald-700 hover:bg-emerald-800 text-white shadow-2xl rounded-full px-4 py-3 text-sm font-bold transition duration-300 hover:scale-105 flex items-center gap-2 sm:bottom-8 sm:right-8 sm:px-6 sm:py-3.5 sm:text-base"
     >
 
         📅 Calendario
@@ -915,7 +915,7 @@
     
     <flux:modal
         name="modal-detalles-festividad"
-        class="md:w-3/5"
+        class="w-[94vw] md:max-w-3xl"
     >
     
         @if($festividadDetalle)
@@ -923,7 +923,7 @@
             <div class="bg-white rounded-3xl overflow-hidden">
     
                {{-- CABECERA --}}
-                <div class="relative bg-white px-6 py-7 border-b border-slate-200">
+                <div class="relative bg-white px-4 py-6 border-b border-slate-200 sm:px-6 sm:py-7">
                 
                     {{-- Línea decorativa superior --}}
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-700 via-emerald-500 to-lime-400"></div>
@@ -955,7 +955,7 @@
                 
                 
                         {{-- TÍTULO --}}
-                        <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">
+                        <h2 class="text-xl font-extrabold text-slate-800 tracking-tight sm:text-2xl">
                 
                             {{ $festividadDetalle->publicacion->nombre }}
                 
@@ -975,7 +975,7 @@
     
     
                 {{-- CONTENIDO --}}
-                <div class="p-6 space-y-6">
+                <div class="p-4 space-y-6 sm:p-6">
     
                     {{-- DESCRIPCIÓN --}}
                     <div>
@@ -1025,7 +1025,7 @@
                     {{-- ACTIVIDADES --}}
                     <div>
     
-                        <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center justify-between gap-3 mb-3">
     
                             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">
                                 Actividades
@@ -1098,7 +1098,7 @@
                     {{-- FOTOGRAFÍAS --}}
                     <div>
     
-                        <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center justify-between gap-3 mb-3">
     
                             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">
                                 Fotografías
@@ -1113,7 +1113,7 @@
     
                         @if($festividadDetalle->publicacion->imagenes->count())
     
-                            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
     
                                 @foreach($festividadDetalle->publicacion->imagenes as $imagen)
     

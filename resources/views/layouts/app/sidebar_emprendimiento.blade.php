@@ -42,7 +42,7 @@
 
         /* Modo oscuro para el fondo del Sidebar */
         html.dark [data-flux-sidebar] {
-            background: #000b08!important;
+            background: #01120d!important;
             border-right: 1px solid rgba(16,185,129,0.12)!important;
             box-shadow: 10px 0 38px rgba(0,0,0,0.46)!important;
         }
@@ -88,6 +88,278 @@
             margin-top:0.3rem!important;
         }
         html.dark .brand-subtitle { color: rgba(187,247,208,0.75)!important; }
+
+        .logo-wrapper-admin-gad-dark {
+            display: none;
+        }
+
+        html.dark .logo-wrapper {
+            display: none;
+        }
+
+        html.dark .logo-wrapper-admin-gad-dark {
+            width: 2.75rem;
+            height: 2.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        html.dark .logo-wrapper-admin-gad-dark img {
+            width: 2.75rem;
+            height: 2.75rem;
+            border-radius: 0.75rem;
+            background: #ffffff;
+            padding: 0.375rem;
+            box-shadow: 0 10px 18px rgba(0,0,0,0.24);
+            object-fit: contain;
+        }
+
+        html.dark .admin-emprendimiento-shell {
+            color-scheme: dark;
+            background: #050b09 !important;
+            color: #f8fafc !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] {
+            background: #050b09 !important;
+            color: #f8fafc !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-white,
+        html.dark .admin-emprendimiento-shell [data-flux-main] [data-flux-modal] .bg-white {
+            background-color: #0b1512 !important;
+            color: #f8fafc !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-white\/90,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-white\/95 {
+            background-color: rgba(11, 21, 18, 0.95) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-white\/70,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-white\/60 {
+            background-color: rgba(5, 11, 9, 0.78) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-slate-50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-gray-50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-neutral-50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-zinc-50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-\[\#F8F9FA\],
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-\[\#E8F2EC\] {
+            background-color: rgba(16, 185, 129, 0.06) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-slate-50\/70,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-slate-50\/80,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-gray-50\/50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-zinc-900\/50 {
+            background-color: rgba(16, 185, 129, 0.08) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-slate-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-gray-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-neutral-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-zinc-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-zinc-800 {
+            background-color: rgba(16, 185, 129, 0.10) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .hover\:bg-slate-50:hover,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .hover\:bg-slate-50\/80:hover,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .hover\:bg-gray-50:hover,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .hover\:bg-gray-100:hover,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .hover\:bg-slate-100:hover,
+        html.dark .admin-emprendimiento-shell [data-flux-main] tr.hover\:bg-gray-50:hover {
+            background-color: rgba(16, 185, 129, 0.10) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-slate-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-slate-200,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-gray-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-gray-200,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-neutral-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-neutral-200,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-zinc-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-zinc-200,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-zinc-800,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-white\/10,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-outline,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .divide-gray-200 > :not([hidden]) ~ :not([hidden]),
+        html.dark .admin-emprendimiento-shell [data-flux-main] .divide-slate-200 > :not([hidden]) ~ :not([hidden]),
+        html.dark .admin-emprendimiento-shell [data-flux-main] .divide-neutral-200 > :not([hidden]) ~ :not([hidden]) {
+            border-color: rgba(16, 185, 129, 0.14) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-emerald-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-emerald-200,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-green-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-green-200,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-green-500,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-green-500\/20 {
+            border-color: rgba(16, 185, 129, 0.36) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-yellow-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-yellow-200,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-yellow-500\/20,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-amber-500 {
+            border-color: rgba(245, 158, 11, 0.38) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-red-100,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-red-200,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-red-500,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-red-500\/20,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .border-danger {
+            border-color: rgba(248, 113, 113, 0.42) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-slate-900,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-gray-900,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-zinc-900,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-neutral-900,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-on-surface-strong {
+            color: #f8fafc !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-slate-800,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-gray-800,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-zinc-800,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-neutral-800,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-on-surface,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-on-surface-dark {
+            color: #ecfdf5 !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-slate-700,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-gray-700,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-zinc-700,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-neutral-700 {
+            color: #d1fae5 !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-slate-600,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-gray-600,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-zinc-600,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-neutral-600 {
+            color: #a7f3d0 !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-slate-500,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-gray-500,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-zinc-500,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-neutral-500,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-slate-400,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-gray-400,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-zinc-400,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-neutral-400 {
+            color: rgba(209, 250, 229, 0.72) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-emerald-50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-green-50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-green-50\/40,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-primary\/10,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-success\/10 {
+            background-color: rgba(16, 185, 129, 0.13) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-emerald-700,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-emerald-800,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-green-500,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-green-600,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-green-700,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-success,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-\[\#00A344\] {
+            color: #6ee7b7 !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-blue-50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-sky-50 {
+            background-color: rgba(59, 130, 246, 0.14) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-blue-500,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-blue-600,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-blue-700,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-sky-500,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-sky-600,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-sky-700,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-primary {
+            color: #93c5fd !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-amber-50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-yellow-50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-yellow-50\/50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-orange-50 {
+            background-color: rgba(245, 158, 11, 0.14) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-amber-600,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-amber-700,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-yellow-500,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-yellow-600,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-yellow-700,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-orange-600,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-orange-700 {
+            color: #fcd34d !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-red-50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-red-50\/50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .bg-danger\/10 {
+            background-color: rgba(239, 68, 68, 0.13) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-red-500,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-red-600,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-red-700,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .text-danger {
+            color: #fca5a5 !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] input:not([type="checkbox"]):not([type="radio"]),
+        html.dark .admin-emprendimiento-shell [data-flux-main] textarea,
+        html.dark .admin-emprendimiento-shell [data-flux-main] select {
+            background-color: #07110d !important;
+            border-color: rgba(16, 185, 129, 0.22) !important;
+            color: #f8fafc !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] input::placeholder,
+        html.dark .admin-emprendimiento-shell [data-flux-main] textarea::placeholder {
+            color: rgba(209, 250, 229, 0.45) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] input[type="file"]::file-selector-button {
+            background-color: rgba(16, 185, 129, 0.16) !important;
+            color: #6ee7b7 !important;
+            border-color: transparent !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] table {
+            color: #d1fae5;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] thead,
+        html.dark .admin-emprendimiento-shell [data-flux-main] thead.bg-slate-50,
+        html.dark .admin-emprendimiento-shell [data-flux-main] thead.bg-gray-50 {
+            background-color: rgba(16, 185, 129, 0.08) !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] tbody.bg-white {
+            background-color: #0b1512 !important;
+        }
+
+        html.dark .admin-emprendimiento-shell [data-flux-main] .shadow-sm,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .shadow-md,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .shadow-xl,
+        html.dark .admin-emprendimiento-shell [data-flux-main] .shadow-2xl {
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24) !important;
+        }
 
         /* TEXTOS DE FLUX SOBRESCRITOS: only affect nav items inside sidebar, not popups */
         [data-flux-sidebar] nav .text-zinc-800,
@@ -228,6 +500,9 @@
             padding:0.75rem!important;
             color: #ffffff !important;
         }
+        [data-flux-sidebar] [data-test="sidebar-menu-button"] > span {
+            color: #ffffff !important;
+        }
         html.dark [data-flux-sidebar] [data-flux-profile]{ color: #2b4e3d !important; }
 
         [data-flux-sidebar] [data-flux-profile]:hover{
@@ -314,7 +589,7 @@
     </style>
 </head>
 
-<body class="min-h-screen bg-slate-50 dark:bg-zinc-900 text-[#123524] dark:text-white antialiased">
+<body class="admin-emprendimiento-shell min-h-screen bg-slate-50 dark:bg-zinc-900 text-[#123524] dark:text-white antialiased">
 
     {{-- SIDEBAR --}}
     <flux:sidebar sticky collapsible="mobile" class="border-e-0">
@@ -330,6 +605,12 @@
                         href="{{ route('emprendimiento.panel') }}"
                     />
                 </div>
+
+                <a href="{{ route('emprendimiento.panel') }}"
+                   wire:navigate
+                   class="logo-wrapper-admin-gad-dark">
+                    <img src="{{ asset('img/Logo1.png') }}" alt="Explora Candelaria">
+                </a>
 
                 <div class="leading-tight">
                     <h1 class="brand-title">
@@ -417,6 +698,13 @@
 
         <flux:spacer />
 
+        @php
+            $usuarioMenu = auth()->user();
+            $primerNombreMenu = preg_split('/\s+/', trim($usuarioMenu?->name ?? ''))[0] ?? '';
+            $primerApellidoMenu = preg_split('/\s+/', trim($usuarioMenu?->apellidos ?? ''))[0] ?? '';
+            $nombreMenuUsuario = trim($primerNombreMenu.' '.$primerApellidoMenu) ?: ($usuarioMenu?->name ?? 'Usuario');
+        @endphp
+
         <flux:dropdown position="top" align="end">
 
             <flux:profile
@@ -430,12 +718,12 @@
                     <div class="p-0 text-sm font-normal">
                         <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                             <flux:avatar
-                                :name="auth()->user()->name"
+                                :name="$nombreMenuUsuario"
                                 :initials="auth()->user()->initials()"
                             />
                             <div class="grid flex-1 text-start text-sm leading-tight">
                                 <flux:heading class="truncate">
-                                    {{ auth()->user()->name }}
+                                    {{ $nombreMenuUsuario }}
                                 </flux:heading>
                                 <flux:text class="truncate">
                                     {{ auth()->user()->email }}
@@ -487,8 +775,7 @@
             if (!sidebar) return;
 
             /* Determinar si el modo oscuro está activo en el HTML */
-            const isDarkMode = document.documentElement.classList.contains('dark');
-            const targetColor = isDarkMode ? '#ffffff' : '#000000';
+            const targetColor = '#ffffff';
 
             /* Forzar textos del usuario inferior a color correcto según el modo */
             const nav = sidebar.querySelector('nav');

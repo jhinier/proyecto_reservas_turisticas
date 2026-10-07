@@ -25,7 +25,6 @@ use App\Livewire\Emprendimiento\GestionServicios\CrearAlquilerEquipo;
 use App\Livewire\Emprendimiento\GestorReservas;
 use App\Livewire\Emprendimiento\Reserva\CrearReserva;
 use App\Http\Controllers\Emprendimiento\ReporteEmprendedorController;
-use App\Livewire\Admin\MapaTuristico\Index;
 use App\Livewire\Turista\MapaTuristico\Index as MapaTuristicoTurista;
 
 //Turista Publicaciones

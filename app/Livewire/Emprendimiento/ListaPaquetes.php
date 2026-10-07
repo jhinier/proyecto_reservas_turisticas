@@ -21,9 +21,9 @@ class ListaPaquetes extends Component
     public int $pivotId;
     public string $nombreCategoria;
     public string $rutaCrear;
-    public string $vista = 'tarjetas';
+    public string $vista = 'lista';
 
-    public function mount(int $pivotId, string $nombreCategoria, string $rutaCrear, string $vista = 'tarjetas')
+    public function mount(int $pivotId, string $nombreCategoria, string $rutaCrear, string $vista = 'lista')
     {
         $this->pivotId = $pivotId;
         $this->nombreCategoria = $nombreCategoria;

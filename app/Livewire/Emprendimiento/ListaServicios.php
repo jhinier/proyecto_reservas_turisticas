@@ -23,7 +23,7 @@ class ListaServicios extends Component
     public int $pivotId;
     public string $nombreCategoria;
     public string $rutaCrear;
-    public string $vista = 'tarjetas';
+    public string $vista = 'lista';
 
     /**
      * Elimina un servicio usando el Service Base.

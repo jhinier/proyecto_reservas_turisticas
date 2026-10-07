@@ -14,6 +14,7 @@ class UserService
         return DB::transaction(function () use ($datos) {
             $cedula = trim((string) ($datos['cedula'] ?? ''));
             $email = filter_var($datos['email'] ?? '', FILTER_SANITIZE_EMAIL);
+            $rol = $this->resolverRolCreacion($datos);
 
             $usuarioExistente = User::withTrashed()
                 ->where('cedula', $cedula)
@@ -33,7 +34,7 @@ class UserService
                         'edad'      => (int) ($datos['edad'] ?? 0),
                     ]);
 
-                    $usuarioExistente->syncRoles(['turista']);
+                    $usuarioExistente->syncRoles([$rol]);
 
                     return $usuarioExistente;
                 }
@@ -51,10 +52,17 @@ class UserService
                 'edad'      => (int) ($datos['edad'] ?? 0),
             ]);
 
-            $usuario->assignRole('turista');
+            $usuario->assignRole($rol);
 
             return $usuario;
         });
+    }
+
+    private function resolverRolCreacion(array $datos): string
+    {
+        $rol = trim((string) ($datos['role'] ?? ''));
+
+        return $rol !== '' ? $rol : 'turista';
     }
 
     public function buscarOCrearTurista(array $datos)

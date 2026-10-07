@@ -56,7 +56,7 @@
     </table>
 
     {{-- Lógica para mostrar tabla de filtros según el tipo de reporte --}}
-    <?php if($tipoReporte !== 'inventario'): ?>
+    <?php if ($tipoReporte !== 'inventario') { ?>
     <table class="table-filtros">
         <thead>
             <tr>
@@ -65,20 +65,20 @@
             </tr>
         </thead>
         <tbody>
-            <?php if($tipoReporte === 'todo' || $tipoReporte === 'servicios'): ?>
+            <?php if ($tipoReporte === 'todo' || $tipoReporte === 'servicios') { ?>
                 <tr><td>Categoría</td><td>{{ $filtroCategoria }}</td></tr>
                 <tr><td>Estado</td><td>{{ $filtroEstado }}</td></tr>
-            <?php endif; ?>
+            <?php } ?>
             
-            <?php if($tipoReporte === 'todo' || $tipoReporte === 'turistas'): ?>
+            <?php if ($tipoReporte === 'todo' || $tipoReporte === 'turistas') { ?>
                 <tr><td>Cédula Turista</td><td>{{ $filtroCedula }}</td></tr>
-            <?php endif; ?>
+            <?php } ?>
         </tbody>
     </table>
-    <?php endif; ?>
+    <?php } ?>
 
     {{-- GRÁFICOS: Solo se muestran cuando se imprimen todas las tablas --}}
-    <?php if($tipoReporte === 'todo'): ?>
+    <?php if ($tipoReporte === 'todo') { ?>
     <?php
         $conf = $analisis['confirmadas'] ?? 0;
         $pend = $analisis['pendientes'] ?? 0;
@@ -87,42 +87,50 @@
 
         $nombresStr = '';
         $cantidadesStr = '';
-        
-        if(isset($servicios) && $servicios->isNotEmpty()){
-            $agrupado = $servicios->groupBy(function($item) { return $item->servicio->nombre ?? 'Otros'; });
+
+        if (isset($servicios) && $servicios->isNotEmpty()) {
+            $agrupado = $servicios->groupBy(function ($item) {
+                return $item->servicio->nombre ?? 'Otros';
+            });
             $nombres = [];
             $cantidades = [];
-            foreach($agrupado as $nom => $grp) {
+            foreach ($agrupado as $nom => $grp) {
                 // Limpieza para que la URL sea válida
-                $nombres[] = "'" . str_replace(['\'', '"'], '', $nom) . "'";
+                $nombres[] = "'".str_replace(['\'', '"'], '', $nom)."'";
                 $cantidades[] = $grp->sum('cantidad');
             }
             $nombresStr = implode(',', $nombres);
             $cantidadesStr = implode(',', $cantidades);
         }
-        
+
         // Conversión y codificación nativa en PHP para saltar la restricción del PDF
         $chartConfigDona = "{type:'doughnut',data:{labels:['Confirmadas','Completadas','Pendientes','Canceladas'],datasets:[{data:[$conf,$comp,$pend,$canc],backgroundColor:['#00A344','#3b82f6','#f59e0b','#ef4444']}]},options:{plugins:{datalabels:{display:false}},legend:{position:'right',labels:{fontSize:10}}}}";
-        $urlDona = "https://quickchart.io/chart?w=350&h=180&bkg=white&c=" . urlencode($chartConfigDona);
-        
+        $urlDona = 'https://quickchart.io/chart?w=350&h=180&bkg=white&c='.urlencode($chartConfigDona);
+
         $srcDona = $urlDona;
-        try { 
+        try {
             $donaData = @file_get_contents($urlDona);
-            if ($donaData) { $srcDona = 'data:image/png;base64,' . base64_encode($donaData); }
-        } catch(\Exception $e) {}
+            if ($donaData) {
+                $srcDona = 'data:image/png;base64,'.base64_encode($donaData);
+            }
+        } catch (\Exception $e) {
+        }
 
         $srcBarras = '';
-        if($nombresStr !== '') {
+        if ($nombresStr !== '') {
             $chartConfigBarras = "{type:'bar',data:{labels:[$nombresStr],datasets:[{label:'Cantidad',data:[$cantidadesStr],backgroundColor:'#8DBEA2'}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{stepSize:1}}}}}";
-            $urlBarras = "https://quickchart.io/chart?w=350&h=180&bkg=white&c=" . urlencode($chartConfigBarras);
-            
+            $urlBarras = 'https://quickchart.io/chart?w=350&h=180&bkg=white&c='.urlencode($chartConfigBarras);
+
             $srcBarras = $urlBarras;
-            try { 
+            try {
                 $barrasData = @file_get_contents($urlBarras);
-                if ($barrasData) { $srcBarras = 'data:image/png;base64,' . base64_encode($barrasData); }
-            } catch(\Exception $e) {}
+                if ($barrasData) {
+                    $srcBarras = 'data:image/png;base64,'.base64_encode($barrasData);
+                }
+            } catch (\Exception $e) {
+            }
         }
-    ?>
+        ?>
     <table style="width: 100%; margin-bottom: 20px; text-align: center; border: none;">
         <tr>
             <td style="width: 48%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; vertical-align: top;">
@@ -132,17 +140,17 @@
             <td style="width: 4%; border: none;"></td>
             <td style="width: 48%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; vertical-align: top;">
                 <h3 style="margin-top: 0; color: #999; font-size: 10px;">SERVICIOS SOLICITADOS</h3>
-                <?php if($srcBarras !== ''): ?>
+                <?php if ($srcBarras !== '') { ?>
                     <img src="<?php echo $srcBarras; ?>" style="max-width: 100%; height: auto;" />
-                <?php else: ?>
+                <?php } else { ?>
                     <p style="color: #999; margin-top: 40px;">No hay datos en este rango</p>
-                <?php endif; ?>
+                <?php } ?>
             </td>
         </tr>
     </table>
-    <?php endif; ?>
+    <?php } ?>
 
-    <?php if($tipoReporte === 'todo' || $tipoReporte === 'servicios'): ?>
+    <?php if ($tipoReporte === 'todo' || $tipoReporte === 'servicios') { ?>
     <h3>Desglose de servicios agendados</h3>
     <table class="table-datos">
         <thead>
@@ -159,8 +167,10 @@
             </tr>
         </thead>
         <tbody>
-            <?php $sumaPDF = 0; $contadorServicios = 1; ?>
-            <?php if($servicios->isNotEmpty()): foreach($servicios as $item): ?>
+            <?php $sumaPDF = 0;
+        $contadorServicios = 1; ?>
+            <?php if ($servicios->isNotEmpty()) {
+                foreach ($servicios as $item) { ?>
                 <?php $sumaPDF += $item->subtotal; ?>
                 <tr>
                     <td class="text-center font-bold" style="vertical-align: middle;"><?php echo $contadorServicios++; ?></td>
@@ -176,21 +186,27 @@
                     <td class="text-right" style="vertical-align: middle;">$<?php echo number_format($item->subtotal, 2); ?></td>
                     <td style="vertical-align: middle;">
                         <?php
-                            $est = $item->reserva->estado ?? 'Indefinido';
-                            if ($est === 'Confirmada' || $est === 'Completada') $colorBadge = '#059669';
-                            elseif ($est === 'Pendiente') $colorBadge = '#d97706';
-                            elseif ($est === 'Cancelada' || $est === 'Rechazada') $colorBadge = '#dc2626';
-                            else $colorBadge = '#333';
-                            $estiloSpan = 'color: ' . $colorBadge . '; font-weight: bold; text-transform: uppercase; font-size: 10px;';
-                        ?>
+                                $est = $item->reserva->estado ?? 'Indefinido';
+                    if ($est === 'Confirmada' || $est === 'Completada') {
+                        $colorBadge = '#059669';
+                    } elseif ($est === 'Pendiente') {
+                        $colorBadge = '#d97706';
+                    } elseif ($est === 'Cancelada' || $est === 'Rechazada') {
+                        $colorBadge = '#dc2626';
+                    } else {
+                        $colorBadge = '#333';
+                    }
+                    $estiloSpan = 'color: '.$colorBadge.'; font-weight: bold; text-transform: uppercase; font-size: 10px;';
+                    ?>
                         <span style="<?php echo $estiloSpan; ?>"><?php echo $est; ?></span>
                     </td>
                 </tr>
-            <?php endforeach; else: ?>
+            <?php }
+                } else { ?>
                 <tr><td colspan="9" class="text-center">No hay servicios en este rango.</td></tr>
-            <?php endif; ?>
+            <?php } ?>
         </tbody>
-        <?php if($servicios->isNotEmpty()): ?>
+        <?php if ($servicios->isNotEmpty()) { ?>
         <tfoot style="background-color: #f9fafb;">
             <tr>
                 <td colspan="7" class="text-right font-bold" style="font-size: 10px;">TOTAL CALCULADO:</td>
@@ -198,11 +214,11 @@
                 <td></td>
             </tr>
         </tfoot>
-        <?php endif; ?>
+        <?php } ?>
     </table>
-    <?php endif; ?>
+    <?php } ?>
 
-    <?php if($tipoReporte === 'todo' || $tipoReporte === 'turistas'): ?>
+    <?php if ($tipoReporte === 'todo' || $tipoReporte === 'turistas') { ?>
     <h3>Listado de Turistas</h3>
     <table class="table-datos">
         <thead>
@@ -216,10 +232,11 @@
         </thead>
         <tbody>
             <?php $contadorTuristas = 1; ?>
-            <?php if($servicios->isNotEmpty()): foreach($servicios as $item): 
-                $turista = $item->reserva->turista;
-                $edad = $turista->edad ?? (\Carbon\Carbon::parse($turista->fecha_nacimiento)->age ?? 'N/A');
-            ?>
+            <?php if ($servicios->isNotEmpty()) {
+                foreach ($servicios as $item) {
+                    $turista = $item->reserva->turista;
+                    $edad = $turista->edad ?? (\Carbon\Carbon::parse($turista->fecha_nacimiento)->age ?? 'N/A');
+                    ?>
                 <tr>
                     <td class="text-center font-bold" style="vertical-align: middle;"><?php echo $contadorTuristas++; ?></td>
                     <td style="vertical-align: middle;">
@@ -236,14 +253,15 @@
                         Al: <?php echo $item->fecha_fin ? \Carbon\Carbon::parse($item->fecha_fin)->format('d/m/Y') : \Carbon\Carbon::parse($item->fecha_inicio)->format('d/m/Y'); ?>
                     </td>
                 </tr>
-            <?php endforeach; else: ?>
+            <?php }
+                } else { ?>
                 <tr><td colspan="5" class="text-center">No hay clientes en este rango.</td></tr>
-            <?php endif; ?>
+            <?php } ?>
         </tbody>
     </table>
-    <?php endif; ?>
+    <?php } ?>
 
-    <?php if($tipoReporte === 'todo' || $tipoReporte === 'inventario'): ?>
+    <?php if ($tipoReporte === 'todo' || $tipoReporte === 'inventario') { ?>
     <h3>Inventario de Servicios</h3>
     <table class="table-datos">
         <thead>
@@ -254,24 +272,26 @@
             </tr>
         </thead>
         <tbody>
-            <?php if($serviciosInventario->isNotEmpty()): foreach($serviciosInventario as $categoria => $listaServicios): ?>
-                <?php foreach($listaServicios as $index => $servicio): ?>
+            <?php if ($serviciosInventario->isNotEmpty()) {
+                foreach ($serviciosInventario as $categoria => $listaServicios) { ?>
+                <?php foreach ($listaServicios as $index => $servicio) { ?>
                 <tr>
-                    <?php if($index === 0): ?>
+                    <?php if ($index === 0) { ?>
                     <td rowspan="<?php echo count($listaServicios); ?>" style="vertical-align: top; background-color: #f9fafb; font-weight: bold; text-transform: uppercase; font-size: 9px;">
                         <?php echo $categoria; ?>
                     </td>
-                    <?php endif; ?>
+                    <?php } ?>
                     <td><?php echo $servicio->nombre; ?></td>
                     <td class="text-right font-bold">$<?php echo number_format($servicio->precio, 2); ?></td>
                 </tr>
-                <?php endforeach; ?>
-            <?php endforeach; else: ?>
+                <?php } ?>
+            <?php }
+                } else { ?>
                 <tr><td colspan="3" class="text-center">No hay servicios registrados en el inventario.</td></tr>
-            <?php endif; ?>
+            <?php } ?>
         </tbody>
     </table>
-    <?php endif; ?>
+    <?php } ?>
 
 </body>
 </html>

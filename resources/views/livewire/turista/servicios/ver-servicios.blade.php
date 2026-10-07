@@ -32,6 +32,7 @@
                                 let fp = flatpickr($refs.dateWrapper, {
                                     mode: '{{ $this->requiereFechaFin() ? 'range' : 'single' }}',
                                     showMonths: window.innerWidth > 768 ? 2 : 1, locale: 'es', 
+                                     disableMobile: true,
                                     minDate: new Date().fp_incr(3),
                                     disable: bloquearLunesDomingos ? [function(date) {
                                         return date.getDay() === 0 || date.getDay() === 1;

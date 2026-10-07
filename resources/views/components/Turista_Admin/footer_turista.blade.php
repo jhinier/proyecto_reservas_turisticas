@@ -3,39 +3,35 @@
      Diseño institucional, moderno y responsive
 ========================================================= -->
 
-<<<<<<< HEAD
-<footer class="relative mt-16 overflow-hidden bg-[#014726] text-white">
-=======
-        <div class="grid md:grid-cols-4 gap-10">
->>>>>>> origin/Rama_jhinier
+<footer class="relative mt-10 overflow-hidden bg-[#014726] text-white dark:bg-[#031f17] sm:mt-16">
 
     <!-- Línea decorativa superior -->
-    <div class="h-1 w-full bg-gradient-to-r from-[#0b8a0f] via-[#7ed957] to-[#0b8a0f]"></div>
+    <div class="h-1 w-full bg-gradient-to-r from-[#0b8a0f] via-[#7ed957] to-[#0b8a0f] dark:from-[#052d1e] dark:via-[#7ed957] dark:to-[#052d1e]"></div>
 
     <!-- Decoración sutil de fondo -->
-    <div class="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full bg-[#7ed957]/5 blur-3xl"></div>
-    <div class="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-[#0b8a0f]/10 blur-3xl"></div>
+    <div class="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full bg-[#7ed957]/5 blur-3xl dark:bg-[#7ed957]/10"></div>
+    <div class="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-[#0b8a0f]/10 blur-3xl dark:bg-[#7ed957]/5"></div>
 
 
     <!-- =====================================================
          CONTENIDO PRINCIPAL
     ====================================================== -->
 
-    <div class="relative mx-auto max-w-7xl px-5 py-10 sm:px-6 lg:px-8">
+    <div class="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
 
-        <div class="grid gap-10 lg:grid-cols-[1.25fr_1fr_1.25fr_0.9fr]">
+        <div class="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-4 pb-3 [scrollbar-width:none] sm:-mx-6 sm:gap-4 sm:px-6 sm:pb-4 lg:mx-0 lg:grid lg:snap-none lg:grid-cols-[1.25fr_1fr_1.25fr_0.9fr] lg:gap-10 lg:overflow-visible lg:overscroll-auto lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
 
 
             <!-- =================================================
                  IDENTIDAD INSTITUCIONAL
             ================================================== -->
 
-            <div class="lg:pr-6">
+            <div class="w-[72vw] min-w-[13.75rem] max-w-[16rem] shrink-0 snap-start rounded-xl border border-white/10 bg-white/5 p-3.5 shadow-sm shadow-black/10 backdrop-blur-sm dark:border-[#7ed957]/15 dark:bg-[#02170f]/70 sm:w-[68vw] sm:min-w-[15rem] sm:max-w-xs sm:rounded-2xl sm:p-4 lg:w-auto lg:min-w-0 lg:max-w-none lg:shrink lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:pr-6 lg:shadow-none lg:backdrop-blur-none lg:dark:bg-transparent">
 
                 <!-- Logo -->
-                <div class="mb-5 flex items-center">
+                <div class="mb-3 flex items-center sm:mb-5">
 
-                    <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 p-2 ring-1 ring-white/10 backdrop-blur-sm">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 p-2 ring-1 ring-white/10 backdrop-blur-sm dark:bg-[#7ed957]/10 dark:ring-[#7ed957]/15 sm:h-14 sm:w-14 sm:rounded-2xl lg:h-16 lg:w-16">
 
                         <img
                             src="{{ asset('images/logo-gad.png') }}"
@@ -50,19 +46,19 @@
 
 
                 <!-- Nombre -->
-                <h2 class="text-xl font-bold tracking-tight text-white">
+                <h2 class="text-base font-bold tracking-tight text-white sm:text-lg lg:text-xl">
                     Gobierno Parroquial
                 </h2>
 
-                <p class="mt-1 text-base font-semibold text-[#7ed957]">
+                <p class="mt-0.5 text-sm font-semibold text-[#7ed957] sm:mt-1 sm:text-base">
                     La Candelaria
                 </p>
 
 
                 <!-- Presidente -->
-                <div class="mt-5">
+                <div class="mt-3 sm:mt-5">
 
-                    <p class="text-sm font-semibold text-white">
+                    <p class="text-xs font-semibold text-white sm:text-sm">
                         Sr. Diego Barba Pusay
                     </p>
 
@@ -78,9 +74,9 @@
 
 
                 <!-- Horario -->
-                <div class="mt-5 flex items-start gap-3">
+                <div class="mt-3 flex items-start gap-2.5 sm:mt-5 sm:gap-3">
 
-                    <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#7ed957]/10 text-[#7ed957]">
+                    <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#7ed957]/10 text-[#7ed957] dark:bg-[#7ed957]/15 sm:h-9 sm:w-9 sm:rounded-xl">
 
                         <!-- Icono reloj -->
                         <svg
@@ -101,7 +97,7 @@
                     </div>
 
                     <div>
-                        <p class="text-sm font-semibold text-white">
+                        <p class="text-xs font-semibold text-white sm:text-sm">
                             Horario de Atención
                         </p>
 
@@ -120,11 +116,11 @@
                  ENLACES DIRECTOS
             ================================================== -->
 
-            <div>
+            <div class="w-[72vw] min-w-[13.75rem] max-w-[16rem] shrink-0 snap-start rounded-xl border border-white/10 bg-white/5 p-3.5 shadow-sm shadow-black/10 backdrop-blur-sm dark:border-[#7ed957]/15 dark:bg-[#02170f]/70 sm:w-[68vw] sm:min-w-[15rem] sm:max-w-xs sm:rounded-2xl sm:p-4 lg:w-auto lg:min-w-0 lg:max-w-none lg:shrink lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none lg:dark:bg-transparent">
 
-                <div class="mb-5">
+                <div class="mb-3 sm:mb-5">
 
-                    <h3 class="text-base font-bold text-white">
+                    <h3 class="text-sm font-bold text-white sm:text-base">
                         Enlaces Directos
                     </h3>
 
@@ -137,11 +133,11 @@
                 </div>
 
 
-                <nav class="space-y-3">
+                <nav class="space-y-2 sm:space-y-3">
 
                     <a
                         href="{{ route('home') }}"
-                        class="group flex items-center gap-3 text-sm text-white/60 transition duration-200 hover:translate-x-1 hover:text-[#7ed957]"
+                        class="group flex items-center gap-2.5 text-xs text-white/60 transition duration-200 hover:translate-x-1 hover:text-[#7ed957] sm:gap-3 sm:text-sm"
                     >
                         <span class="h-1.5 w-1.5 rounded-full bg-[#7ed957]/70 transition group-hover:bg-[#7ed957]"></span>
                         Inicio
@@ -150,7 +146,7 @@
 
                     <a
                         href="{{ route('sitios') }}"
-                        class="group flex items-center gap-3 text-sm text-white/60 transition duration-200 hover:translate-x-1 hover:text-[#7ed957]"
+                        class="group flex items-center gap-2.5 text-xs text-white/60 transition duration-200 hover:translate-x-1 hover:text-[#7ed957] sm:gap-3 sm:text-sm"
                     >
                         <span class="h-1.5 w-1.5 rounded-full bg-[#7ed957]/70 transition group-hover:bg-[#7ed957]"></span>
                         Atractivos Turísticos
@@ -159,7 +155,7 @@
 
                     <a
                         href="{{ route('actividades') }}"
-                        class="group flex items-center gap-3 text-sm text-white/60 transition duration-200 hover:translate-x-1 hover:text-[#7ed957]"
+                        class="group flex items-center gap-2.5 text-xs text-white/60 transition duration-200 hover:translate-x-1 hover:text-[#7ed957] sm:gap-3 sm:text-sm"
                     >
                         <span class="h-1.5 w-1.5 rounded-full bg-[#7ed957]/70 transition group-hover:bg-[#7ed957]"></span>
                         Actividades
@@ -168,7 +164,7 @@
 
                     <a
                         href="{{ route('festividades') }}"
-                        class="group flex items-center gap-3 text-sm text-white/60 transition duration-200 hover:translate-x-1 hover:text-[#7ed957]"
+                        class="group flex items-center gap-2.5 text-xs text-white/60 transition duration-200 hover:translate-x-1 hover:text-[#7ed957] sm:gap-3 sm:text-sm"
                     >
                         <span class="h-1.5 w-1.5 rounded-full bg-[#7ed957]/70 transition group-hover:bg-[#7ed957]"></span>
                         Festividades    
@@ -184,11 +180,11 @@
                  NUESTRAS OFICINAS
             ================================================== -->
 
-            <div>
+            <div class="w-[72vw] min-w-[13.75rem] max-w-[16rem] shrink-0 snap-start rounded-xl border border-white/10 bg-white/5 p-3.5 shadow-sm shadow-black/10 backdrop-blur-sm dark:border-[#7ed957]/15 dark:bg-[#02170f]/70 sm:w-[68vw] sm:min-w-[15rem] sm:max-w-xs sm:rounded-2xl sm:p-4 lg:w-auto lg:min-w-0 lg:max-w-none lg:shrink lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none lg:dark:bg-transparent">
 
-                <div class="mb-5">
+                <div class="mb-3 sm:mb-5">
 
-                    <h3 class="text-base font-bold text-white">
+                    <h3 class="text-sm font-bold text-white sm:text-base">
                         Nuestras Oficinas
                     </h3>
 
@@ -200,13 +196,13 @@
                 </div>
 
 
-                <div class="space-y-4">
+                <div class="space-y-3 sm:space-y-4">
 
 
                     <!-- Dirección -->
-                    <div class="flex items-start gap-3">
+                    <div class="flex items-start gap-2.5 sm:gap-3">
 
-                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-[#7ed957]">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 text-[#7ed957] dark:bg-[#7ed957]/10 sm:h-9 sm:w-9 sm:rounded-xl">
 
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -231,7 +227,7 @@
 
                         </div>
 
-                        <p class="text-sm leading-6 text-white/60">
+                        <p class="text-xs leading-5 text-white/60 sm:text-sm sm:leading-6">
                             Calle Principal S/N,<br>
                             frente al Parque Central<br>
                             Penipe - Ecuador
@@ -241,9 +237,9 @@
 
 
                     <!-- Teléfonos -->
-                    <div class="flex items-start gap-3">
+                    <div class="flex items-start gap-2.5 sm:gap-3">
 
-                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-[#7ed957]">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 text-[#7ed957] dark:bg-[#7ed957]/10 sm:h-9 sm:w-9 sm:rounded-xl">
 
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -262,7 +258,7 @@
 
                         </div>
 
-                        <div class="text-sm leading-6 text-white/60">
+                        <div class="text-xs leading-5 text-white/60 sm:text-sm sm:leading-6">
 
                             <p>
                                 Oficina:
@@ -284,9 +280,9 @@
 
 
                     <!-- Correo -->
-                    <div class="flex items-start gap-3">
+                    <div class="flex items-start gap-2.5 sm:gap-3">
 
-                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-[#7ed957]">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 text-[#7ed957] dark:bg-[#7ed957]/10 sm:h-9 sm:w-9 sm:rounded-xl">
 
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -313,7 +309,7 @@
 
                         <a
                             href="mailto:lacandelaria_penipe@hotmail.com"
-                            class="break-all pt-1 text-sm text-white/60 transition hover:text-[#7ed957]"
+                            class="break-all pt-1 text-xs text-white/60 transition hover:text-[#7ed957] sm:text-sm"
                         >
                             lacandelaria_penipe@hotmail.com
                         </a>
@@ -330,9 +326,9 @@
 
 
                 <!-- Redes sociales -->
-                <div class="mt-5">
+                <div class="w-[72vw] min-w-[13.75rem] max-w-[16rem] shrink-0 snap-start rounded-xl border border-white/10 bg-white/5 p-3.5 shadow-sm shadow-black/10 backdrop-blur-sm dark:border-[#7ed957]/15 dark:bg-[#02170f]/70 sm:w-[68vw] sm:min-w-[15rem] sm:max-w-xs sm:rounded-2xl sm:p-4 lg:mt-5 lg:w-auto lg:min-w-0 lg:max-w-none lg:shrink lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none lg:dark:bg-transparent">
 
-                    <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-white/40">
+                    <p class="mb-2 text-xs font-semibold uppercase tracking-widest text-white/40 sm:mb-3">
                         Síguenos
                     </p>
 
@@ -341,7 +337,7 @@
                         <a
                             href="https://www.facebook.com/gadlacandelaria"
                             aria-label="Facebook"
-                            class="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition duration-200 hover:-translate-y-1 hover:border-[#7ed957]/30 hover:bg-[#7ed957]/10 hover:text-[#7ed957]"
+                            class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/60 transition duration-200 hover:-translate-y-1 hover:border-[#7ed957]/30 hover:bg-[#7ed957]/10 hover:text-[#7ed957] dark:border-[#7ed957]/15 dark:bg-[#7ed957]/5 sm:h-9 sm:w-9 sm:rounded-xl"
                         >
                             <span class="text-sm font-bold">f</span>
                         </a>
@@ -350,7 +346,7 @@
                         <a
                             href="https://www.instagram.com/gadlacandelaria/"
                             aria-label="Instagram"
-                            class="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition duration-200 hover:-translate-y-1 hover:border-[#7ed957]/30 hover:bg-[#7ed957]/10 hover:text-[#7ed957]"
+                            class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/60 transition duration-200 hover:-translate-y-1 hover:border-[#7ed957]/30 hover:bg-[#7ed957]/10 hover:text-[#7ed957] dark:border-[#7ed957]/15 dark:bg-[#7ed957]/5 sm:h-9 sm:w-9 sm:rounded-xl"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -389,7 +385,7 @@
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="TikTok"
-                        class="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition duration-200 hover:-translate-y-1 hover:border-[#7ed957]/30 hover:bg-[#7ed957]/10 hover:text-[#7ed957]"
+                        class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/60 transition duration-200 hover:-translate-y-1 hover:border-[#7ed957]/30 hover:bg-[#7ed957]/10 hover:text-[#7ed957] dark:border-[#7ed957]/15 dark:bg-[#7ed957]/5 sm:h-9 sm:w-9 sm:rounded-xl"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -405,8 +401,6 @@
 
                 </div>
 
-            </div>
-
         </div>
 
     </div>
@@ -417,9 +411,9 @@
          BARRA INFERIOR
     ====================================================== -->
 
-    <div class="border-t border-white/10">
+    <div class="border-t border-white/10 dark:border-[#7ed957]/15">
 
-        <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-5 py-4 text-center sm:px-6 md:flex-row md:text-left lg:px-8">
+        <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-3 text-center sm:px-6 md:flex-row md:text-left lg:px-8 lg:py-4">
 
             <p class="text-xs text-white/45">
                 © {{ date('Y') }}
@@ -448,12 +442,12 @@
         type="button"
         onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
         aria-label="Volver arriba"
-        class="group fixed bottom-6 right-6 z-50 flex h-11 w-11 items-center justify-center rounded-xl bg-[#7ed957] text-[#10251b] shadow-lg shadow-black/20 transition duration-300 hover:-translate-y-1 hover:bg-[#91e76b] focus:outline-none focus:ring-2 focus:ring-[#7ed957] focus:ring-offset-2 focus:ring-offset-[#10251b]"
+        class="group fixed bottom-4 right-4 z-50 flex h-10 w-10 items-center justify-center rounded-xl bg-[#7ed957] text-[#10251b] shadow-lg shadow-black/20 transition duration-300 hover:-translate-y-1 hover:bg-[#91e76b] focus:outline-none focus:ring-2 focus:ring-[#7ed957] focus:ring-offset-2 focus:ring-offset-[#10251b] dark:focus:ring-offset-[#031f17] sm:bottom-6 sm:right-6 sm:h-11 sm:w-11"
     >
 
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5"
+            class="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 sm:h-5 sm:w-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

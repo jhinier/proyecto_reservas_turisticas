@@ -15,15 +15,15 @@ class GestorServicios extends Component
     #[Url(as: 'tab')]
     public ?int $pestanaActivaId = null;
 
-    #[Url(as: 'vista', except: 'tarjetas')]
-    public string $vista = 'tarjetas';
+    #[Url(as: 'vista', except: 'lista')]
+    public string $vista = 'lista';
 
     public array $categoriasActivas = [];
 
     public function mount(ListadoServicioService $queryService): void
     {
         if (! in_array($this->vista, ['tarjetas', 'lista'], true)) {
-            $this->vista = 'tarjetas';
+            $this->vista = 'lista';
         }
 
         $emprendimiento = Auth::user()->emprendimiento;

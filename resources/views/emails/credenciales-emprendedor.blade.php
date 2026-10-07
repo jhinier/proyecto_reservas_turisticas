@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Restablecer contrasena</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,15 +32,31 @@
         .cuerpo {
             padding: 24px;
         }
-        .aviso {
+        .credenciales {
             background-color: #ecfdf5;
             border: 1px solid #bbf7d0;
             border-left: 4px solid #10b981;
             border-radius: 6px;
-            color: #064e3b;
             padding: 16px;
             margin: 20px 0;
             font-size: 14px;
+        }
+        .credenciales p {
+            margin: 0 0 10px 0;
+        }
+        .credenciales p:last-child {
+            margin-bottom: 0;
+        }
+        .valor {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 4px 8px;
+            background-color: #ffffff;
+            border: 1px dashed #10b981;
+            border-radius: 4px;
+            color: #064e3b;
+            font-weight: 700;
+            word-break: break-all;
         }
         .boton {
             display: inline-block;
@@ -57,16 +72,6 @@
         .centro {
             text-align: center;
             margin: 26px 0 12px 0;
-        }
-        .enlace {
-            word-break: break-all;
-            background-color: #f8fafc;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            color: #374151;
-            padding: 14px;
-            font-size: 13px;
-            margin: 12px 0 20px 0;
         }
         .nota {
             color: #6b7280;
@@ -85,25 +90,29 @@
 <body>
     <div class="contenedor">
         <div class="cabecera">
-            <h1>Restablecer contrasena</h1>
+            <h1>Cuenta de emprendimiento creada</h1>
         </div>
 
         <div class="cuerpo">
-            <p>Hola <strong>{{ $name }}</strong>,</p>
-            <p>Hemos recibido una solicitud para restablecer la contrasena de tu cuenta.</p>
+            <p>Hola <strong>{{ $nombreCompleto }}</strong>,</p>
+            <p>El GAD La Candelaria ha creado tu cuenta para administrar el emprendimiento <strong>{{ $emprendimiento->nombre }}</strong>.</p>
 
-            <div class="aviso">
-                Haz clic en el boton para crear una nueva contrasena. Si no solicitaste este cambio, puedes ignorar este correo con seguridad.
+            <div class="credenciales">
+                <p>
+                    <strong>Usuario / correo:</strong><br>
+                    <span class="valor">{{ $usuario->email }}</span>
+                </p>
+                <p>
+                    <strong>Contrasena:</strong><br>
+                    <span class="valor">{{ $passwordPlano }}</span>
+                </p>
             </div>
+
+            <p class="nota">Por seguridad, te recomendamos cambiar tu contrasena despues de ingresar por primera vez.</p>
 
             <div class="centro">
-                <a href="{{ $url }}" target="_blank" class="boton">Restablecer contrasena</a>
+                <a href="{{ url('/login') }}" class="boton">Ingresar al sistema</a>
             </div>
-
-            <p class="nota">Si el boton no funciona, copia y pega este enlace en tu navegador:</p>
-            <div class="enlace">{{ $url }}</div>
-
-            <p class="nota">Por seguridad, este enlace solo debe ser usado por el dueno de la cuenta.</p>
         </div>
 
         <div class="pie">

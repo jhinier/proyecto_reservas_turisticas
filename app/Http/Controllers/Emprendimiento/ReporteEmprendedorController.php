@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Emprendimiento;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
-use App\Services\ReservaService;
-use App\Models\TipoServicio;
 use App\Models\Servicio;
-use Illuminate\Support\Facades\Auth;
+use App\Models\TipoServicio;
+use App\Services\ReservaService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReporteEmprendedorController extends Controller
 {
@@ -18,24 +18,24 @@ class ReporteEmprendedorController extends Controller
         $desde = $request->query('desde') ?: now()->startOfMonth()->format('Y-m-d');
         $hasta = $request->query('hasta') ?: now()->format('Y-m-d');
         $categoria = $request->query('categoria');
-        $estado = $request->query('estado'); 
-        $cedula = $request->query('cedula'); 
+        $estado = $request->query('estado');
+        $cedula = $request->query('cedula');
         $tipoReporte = $request->query('tipo_reporte', 'todo');
-    
+
         $user = Auth::user();
         $emprendimiento = $user->emprendimiento;
-    
+
         // Consulta de agenda
         $servicios = app(ReservaService::class)->obtenerAgendaPorRangoYFiltros(
-            $emprendimiento->id, 
-            $desde, 
-            $hasta, 
+            $emprendimiento->id,
+            $desde,
+            $hasta,
             $categoria,
             $estado,
             $cedula
         );
-    
-        $reservas = $servicios->map(function($item) {
+
+        $reservas = $servicios->map(function ($item) {
             return $item->reserva;
         })->unique('id');
 
@@ -46,19 +46,19 @@ class ReporteEmprendedorController extends Controller
         $totalReservas = $reservas->count();
 
         $nombreCatFiltro = 'Todas';
-        if (!empty($categoria)) {
+        if (! empty($categoria)) {
             $cat = TipoServicio::find($categoria);
             $nombreCatFiltro = $cat ? $cat->nombre : 'Todas';
         }
 
         // Consulta de inventario agrupada por categoría
         $serviciosInventario = Servicio::with('tipoServicio')
-            ->whereHas('categoriaPivot', function($q) use($emprendimiento) {
+            ->whereHas('categoriaPivot', function ($q) use ($emprendimiento) {
                 $q->where('emprendimiento_id', $emprendimiento->id);
-            })->get()->groupBy(function($s) {
+            })->get()->groupBy(function ($s) {
                 return $s->tipoServicio->nombre ?? 'Otros';
             });
-    
+
         $fechaDesdeFormato = Carbon::parse($desde)->format('Ymd');
         $fechaHastaFormato = Carbon::parse($hasta)->format('Ymd');
         $nombreArchivo = "Reporte_{$tipoReporte}_{$fechaDesdeFormato}_{$fechaHastaFormato}.pdf";
@@ -82,9 +82,9 @@ class ReporteEmprendedorController extends Controller
                 'pendientes' => $totalPendientes,
                 'confirmadas' => $totalConfirmadas,
                 'total' => $totalReservas,
-            ]
+            ],
         ]);
-    
+
         return $pdf->stream($nombreArchivo);
     }
 }

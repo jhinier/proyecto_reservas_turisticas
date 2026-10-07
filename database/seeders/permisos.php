@@ -71,8 +71,8 @@ class permisos extends Seeder
         $superAdmin = User::updateOrCreate(
             ['email' => 'alcaldia@gad.gob.ec'], 
             [
-                'name' => 'Super Admin GAD',
-                'apellidos' => 'del GAD',
+                'name' => 'Super',
+                'apellidos' => 'Admin',
                 'password' => Hash::make('admin1234'), 
                 'cedula' => '0600000000',
                 'telefono' => '0900000000',

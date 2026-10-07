@@ -2,49 +2,56 @@
 
 namespace App\Livewire\Forms;
 
-use Livewire\Form;
 use App\Rules\CedulaEcuatoriana;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Validation\Rule; // <--- Añade esta línea
+use Livewire\Form;
 
 class UsuarioForm extends Form
 {
     public string $nombre = '';
+
     public string $apellidos = '';
+
     public string $cedula = '';
+
     public string $edad = '';
+
     public string $telefono = '';
+
     public string $email = '';
+
     public string $password = '';
+
     public string $password_confirmation = '';
 
     public function rules(): array
     {
         return [
-            'nombre'    => 'required|string|min:3|max:50|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
+            'nombre' => 'required|string|min:3|max:50|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
             'apellidos' => 'required|string|min:3|max:50|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
-            
+
             // Cambiamos la validación 'unique' por esta estructura:
-            'cedula'    => [
-                'required', 
-                'numeric', 
-                'digits:10', 
-                Rule::unique('users', 'cedula')->whereNull('deleted_at'), 
-                new CedulaEcuatoriana()
+            'cedula' => [
+                'required',
+                'numeric',
+                'digits:10',
+                Rule::unique('users', 'cedula')->whereNull('deleted_at'),
+                new CedulaEcuatoriana,
             ],
-            
-            'edad'      => 'required|numeric|min:18|max:99',
-            'telefono'  => 'required|numeric|digits:10',
-            
+
+            'edad' => 'required|numeric|min:18|max:99',
+            'telefono' => 'required|numeric|digits:10',
+
             // Lo mismo para el email:
-            'email'     => [
-                'required', 
-                'email', 
-                'max:255', 
-                Rule::unique('users', 'email')->whereNull('deleted_at')
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->whereNull('deleted_at'),
             ],
-            
-            'password'  => ['required', 'confirmed', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
+
+            'password' => ['required', 'confirmed', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
         ];
     }
 
@@ -53,25 +60,30 @@ class UsuarioForm extends Form
         return [
             // MENSAJES PARA CÉDULA
             'cedula.required' => 'La cédula es obligatoria.',
-            'cedula.digits'   => 'La cédula debe tener exactamente 10 dígitos.',
-            'cedula.unique'   => 'Esta cédula ya se encuentra registrada en el sistema.', // <--- ESTO ES LO QUE TE FALTABA
-            
+            'cedula.digits' => 'La cédula debe tener exactamente 10 dígitos.',
+            'cedula.unique' => 'Esta cédula ya se encuentra registrada en el sistema.', // <--- ESTO ES LO QUE TE FALTABA
+
             // MENSAJES PARA TELÉFONO
             'telefono.required' => 'El teléfono es obligatorio.',
-            'telefono.digits'   => 'El teléfono debe tener 10 dígitos.',
-            
+            'telefono.digits' => 'El teléfono debe tener 10 dígitos.',
+
             // MENSAJES PARA EMAIL
             'email.required' => 'El correo es obligatorio.',
-            'email.unique'   => 'Este correo ya está en uso por otro usuario.',
-            
+            'email.unique' => 'Este correo ya está en uso por otro usuario.',
+
             // MENSAJES PARA PASSWORD
-            'password.required'  => 'La contraseña es obligatoria.',
+            'password.required' => 'La contraseña es obligatoria.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
-            
+            'password.min' => 'La contraseña no cumple con los requisitos indicados.',
+            'password.letters' => 'La contraseña no cumple con los requisitos indicados.',
+            'password.mixed' => 'La contraseña no cumple con los requisitos indicados.',
+            'password.numbers' => 'La contraseña no cumple con los requisitos indicados.',
+            'password.symbols' => 'La contraseña no cumple con los requisitos indicados.',
+
             // OTROS MENSAJES
-            'edad.required'   => 'La edad es obligatoria.',
-            'edad.min'        => 'Debes ser mayor de edad (18+).',
-            'nombre.regex'    => 'El nombre solo puede contener letras.',
+            'edad.required' => 'La edad es obligatoria.',
+            'edad.min' => 'Debes ser mayor de edad (18+).',
+            'nombre.regex' => 'El nombre solo puede contener letras.',
             'nombre.required' => 'El nombre es obligatorio.',
             'apellidos.required' => 'Los apellidos son obligatorios.',
             'apellidos.regex' => 'Los apellidos solo pueden contener letras.',

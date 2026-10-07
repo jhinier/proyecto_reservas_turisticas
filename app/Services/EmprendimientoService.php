@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Mail\CredencialesEmprendedorMail;
 use App\Models\Emprendimiento;
 use App\Models\User; 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Exception;
 
@@ -57,7 +59,9 @@ class EmprendimientoService
     public function registrarNuevoEmprendimiento(array $datosUsuario, array $datosEmpresa, $imagen = null)
     {
         try {
-            return DB::transaction(function () use ($datosUsuario, $datosEmpresa, $imagen) {
+            $passwordPlano = (string) ($datosUsuario['password'] ?? '');
+
+            $emprendimiento = DB::transaction(function () use ($datosUsuario, $datosEmpresa, $imagen) {
                 
                 $datosUsuario['role'] = 'emprendimiento';
                 $user = $this->userService->crearUsuario($datosUsuario);
@@ -77,9 +81,32 @@ class EmprendimientoService
                     'enlaces'     => $datosEmpresa['enlaces'] ?? null, // Nuevo campo agregado
                 ]);
             });
+
+            $this->enviarCredencialesEmprendedor($emprendimiento, $passwordPlano);
+
+            return $emprendimiento;
         } catch (Exception $e) {
             Log::error('Fallo al registrar emprendimiento: ' . $e->getMessage());
             throw $e; 
+        }
+    }
+
+    private function enviarCredencialesEmprendedor(Emprendimiento $emprendimiento, string $passwordPlano): void
+    {
+        try {
+            $emprendimiento->loadMissing('user');
+            $usuario = $emprendimiento->user;
+
+            if (! $usuario || blank($usuario->email) || blank($passwordPlano)) {
+                Log::warning("No se enviaron credenciales del emprendimiento #{$emprendimiento->id}: faltan datos de acceso.");
+                return;
+            }
+
+            Mail::to($usuario->email)->send(
+                new CredencialesEmprendedorMail($usuario, $emprendimiento, $passwordPlano)
+            );
+        } catch (\Throwable $e) {
+            Log::error("Fallo al enviar credenciales del emprendimiento #{$emprendimiento->id}: " . $e->getMessage());
         }
     }
 

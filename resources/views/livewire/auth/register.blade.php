@@ -140,7 +140,7 @@
                         </div>
                     </div>
 
-                    <div class="space-y-4">
+                    <div class="space-y-4" x-data="{ password: '', passwordConfirmation: '', showPassword: false, showConfirmPassword: false }">
                         <div class="border-b border-white/10 pb-2 mb-4 mt-6 md:mt-0">
                             <h4 class="text-[#7ed957] font-bold uppercase tracking-widest text-xs">Datos de la Cuenta</h4>
                         </div>
@@ -152,7 +152,7 @@
                             @error('email') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
                         </div>
 
-                        <div x-data="{ password: '', showPassword: false }">
+                        <div>
                             <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Contraseña</label>
                             <div class="relative mt-1">
                                 <input type="password" :type="showPassword ? 'text' : 'password'" name="password" x-model="password" required autocomplete="new-password" placeholder="••••••••"
@@ -189,10 +189,10 @@
                             </div>
                         </div>
 
-                        <div x-data="{ showConfirmPassword: false }">
+                        <div>
                             <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Confirmar contraseña</label>
                             <div class="relative mt-1">
-                                <input type="password" :type="showConfirmPassword ? 'text' : 'password'" name="password_confirmation" required autocomplete="new-password" placeholder="••••••••"
+                                <input type="password" :type="showConfirmPassword ? 'text' : 'password'" name="password_confirmation" x-model="passwordConfirmation" required autocomplete="new-password" placeholder="••••••••"
                                     class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm pr-10">
                                 
                                 <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7ed957] focus:outline-none transition">
@@ -201,6 +201,13 @@
                                 </button>
                             </div>
                             @error('password_confirmation') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
+
+                            <div class="mt-3 flex items-center gap-2 text-[10px] md:text-xs transition-colors duration-300" :class="passwordConfirmation.length === 0 ? 'text-gray-400' : (passwordConfirmation === password ? 'text-[#7ed957]' : 'text-red-400')">
+                                <svg x-cloak x-show="passwordConfirmation.length > 0 && passwordConfirmation === password" class="w-4 h-4 shrink-0 text-[#7ed957]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <svg x-cloak x-show="passwordConfirmation.length > 0 && passwordConfirmation !== password" class="w-4 h-4 shrink-0 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18 18 6M6 6l12 12"/></svg>
+                                <svg x-cloak x-show="passwordConfirmation.length === 0" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                                <span x-text="passwordConfirmation.length === 0 ? 'Las contraseñas deben coincidir' : (passwordConfirmation === password ? 'Las contraseñas coinciden' : 'Las contraseñas no coinciden')"></span>
+                            </div>
                         </div>
                     </div>
 
