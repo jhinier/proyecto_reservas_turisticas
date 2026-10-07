@@ -18,7 +18,7 @@
 
     <div class="absolute inset-0 z-0">
         <img 
-            src="{{ asset('img/fondop.jpeg') }}"
+            src="{{ asset('img/fondop.png') }}"
             class="w-full h-full object-cover"
             alt="Fondo"
         >
