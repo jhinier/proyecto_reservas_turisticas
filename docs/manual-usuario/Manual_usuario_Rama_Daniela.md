@@ -1,7 +1,30 @@
 # Manual de usuario — Explora Candelaria
-Rama-Daniela · Edición 1.0 · 8 de octubre de 2026
+Rama-Daniela · Edición 2.0 · 9 de octubre de 2026
 
-## 1. Introducción y acceso
+## ¿Qué es Explora Candelaria?
+
+Explora Candelaria es un sistema web que reúne información turística de La Candelaria y permite consultar establecimientos y solicitar reservas de sus servicios. Las personas pueden explorar sitios turísticos, actividades y festividades; los turistas registrados pueden reservar y dar seguimiento a sus solicitudes. La administración mantiene la información turística y los emprendimientos gestionan su oferta y sus reservas.
+
+## Características del sistema
+
+El sistema organiza sus funciones según el rol de la cuenta. Las siguientes características corresponden a la rama Rama-Daniela, utilizada como referencia para este manual.
+
+## Funciones disponibles
+
+Las principales funciones son:
+
+1. Consulta pública de sitios turísticos, actividades, festividades y mapa turístico.
+2. Búsqueda de emprendimientos y servicios por categoría.
+3. Registro de turistas con confirmación de correo y acceso a su historial.
+4. Solicitud de reservas con selección de fechas, cantidades y carrito.
+5. Envío y revisión de imágenes de comprobantes de pago.
+6. Administración de emprendimientos y publicaciones turísticas.
+7. Gestión de servicios, reservas, información comercial y datos de pago del emprendimiento.
+8. Consulta y descarga de reportes según el rol.
+
+**Resultado esperado:** Cada usuario dispone de los módulos correspondientes a su cuenta.
+
+## Guía de uso · 1. Introducción y acceso
 
 Este manual explica cómo utilizar el sistema de reservas turísticas de La Candelaria según las funciones de la rama Rama-Daniela. Está dirigido a turistas, administradores y responsables de emprendimientos. Las capturas muestran la interfaz real ejecutada en un entorno local con datos ficticios de demostración. Los nombres, teléfonos, cuentas bancarias, precios y reservas de ejemplo no corresponden a operaciones reales.
 
@@ -48,7 +71,7 @@ Restablecer el acceso cuando no recuerdas tu contraseña.
 
 **Imagen por insertar:** Pantalla de recuperación con el campo de correo y el botón para enviar el enlace; otra captura opcional del formulario de nueva contraseña.
 
-## 2. Manual del turista
+## Guía de uso · 2. Manual del turista
 
 El turista puede explorar la oferta turística sin sesión. El registro, la confirmación del correo y el inicio de sesión permiten completar reservas y consultar su historial personal. Una solicitud recién creada queda pendiente; la confirmación del establecimiento y la revisión del pago son pasos posteriores.
 
@@ -181,7 +204,7 @@ Cancelar una solicitud cuando la opción esté habilitada.
 
 **Imagen por insertar:** Detalle de una reserva con la opción Cancelar y el cuadro para escribir el motivo de cancelación.
 
-## 3. Manual del administrador
+## Guía de uso · 3. Manual del administrador
 
 El administrador del GAD o superadministrador utiliza el panel administrativo para mantener la oferta turística y los emprendimientos. Las funciones disponibles se muestran en su navegación. Utiliza el registro público para cuentas de turista y el asistente administrativo para dar de alta un emprendimiento.
 
@@ -247,7 +270,7 @@ Publicar y actualizar los sitios que consulta el turista.
 
 **Ten en cuenta:** En esta rama se detectó una referencia inconsistente a la vista del detalle público del sitio. Si el listado abre pero el detalle falla, informa al responsable técnico; no vuelvas a crear el sitio para intentar resolverlo.
 
-![Gestión de sitios turísticos con tarjetas o filas, acciones de edición y galería.](capturas/14_admin_sitios.png)
+![Pantalla de gestión de sitios turísticos con el control para agregar un sitio.](capturas/14_admin_sitios.png)
 
 ## 3.5. Administrar actividades turísticas
 
@@ -261,7 +284,7 @@ Mantener actividades independientes de las festividades.
 
 **Resultado esperado:** La actividad queda registrada con la información necesaria para planificar una visita.
 
-![Gestión de actividades turísticas y, como complemento, formulario de nueva actividad con duración, dificultad y recomendaciones.](capturas/15_admin_actividades.png)
+![Pantalla de gestión de actividades turísticas con el control para agregar una actividad.](capturas/15_admin_actividades.png)
 
 ## 3.6. Administrar festividades y su programación
 
@@ -276,7 +299,7 @@ Registrar una festividad y las actividades que forman parte de ella.
 
 **Resultado esperado:** La festividad muestra su periodo y la programación de actividades asociada.
 
-![Gestión de festividades con calendario o listado y la programación de actividades de una festividad seleccionada.](capturas/13_admin_festividades.png)
+![Pantalla de gestión de festividades y sus controles disponibles.](capturas/13_admin_festividades.png)
 
 ## 3.7. Consultar y descargar reportes administrativos
 
@@ -309,7 +332,7 @@ Conocer el alcance real del módulo de usuarios de esta rama.
 
 **Imagen por insertar:** Si el módulo está habilitado, captura Usuarios Registrados mostrando solo cuentas de demostración y sus roles.
 
-## 4. Manual del emprendimiento
+## Guía de uso · 4. Manual del emprendimiento
 
 El responsable necesita una cuenta con el rol emprendimiento y un establecimiento asociado y activo. Su panel reúne servicios, reservas, reportes y configuración. Los registros y acciones se limitan a su propio establecimiento.
 
@@ -458,7 +481,7 @@ Mantener la información comercial y los datos de pago.
 
 ![Datos de pago con banco, número de cuenta y titular ficticios, más los controles Agregar cuenta y Guardar cambios.](capturas/27_empresa_pago.png)
 
-## 5. Configuración de la cuenta y ayuda
+## Guía de uso · 5. Configuración de la cuenta y ayuda
 
 Las opciones personales se abren desde el menú de la cuenta. Utiliza los mensajes del sistema para comprobar cada operación y pide apoyo cuando una acción no esté disponible o no puedas completarla.
 
@@ -479,7 +502,7 @@ Actualizar tu cuenta y sus opciones de seguridad.
 
 **Imagen por insertar:** Configuración de perfil con datos de demostración y el menú de opciones personales.
 
-## 6. Problemas frecuentes y cierre
+## Guía de uso · 6. Problemas frecuentes y cierre
 
 Antes de repetir una operación, comprueba si el sistema ya la registró. Para solicitar ayuda, indica la pantalla, el paso y el mensaje observado. No envíes contraseñas ni códigos de verificación.
 
@@ -530,10 +553,10 @@ Reagendada / Rechazada · Estos estados también están contemplados en algunas 
 Base de elaboración: jhinier/proyecto_reservas_turisticas, rama Rama-Daniela, commit b0aad471c381a90eb071c0b2b903a5872c29edb4. Fecha de elaboración: 8 de octubre de 2026 (America/Guayaquil).
 El contenido se contrastó con las rutas, vistas y componentes de los tres roles. Las capturas se obtuvieron de la aplicación ejecutada localmente con una base de datos independiente y cuentas ficticias. Son imágenes de interfaz reales; no son diseños generados ni evidencias de operaciones de producción.
 Los procedimientos redactados a partir del código no constituyen una certificación de todos los flujos de negocio. Las notificaciones por correo, transferencias bancarias y datos de mapas externos requieren sus servicios reales y no se comprobaron de extremo a extremo para este documento.
-La plantilla Design Report enlazada y la aplicación Documents no estaban accesibles en esta sesión. Se preparó un diseño propio de manual en Word editable y PDF; no se atribuye a la plantilla solicitada.
 Observación sobre pagos: el detalle del emprendimiento contiene un aviso de aprobación a las 12 horas, mientras ReservaService contempla aprobación tras 24 horas y alerta a las 23. La ejecución automática depende además de cuándo se invoque el procesamiento. Se recomienda resolver esta diferencia antes de comunicar un plazo garantizado a los usuarios.
 Observación sobre usuarios: existe una ruta de gestión, pero el menú revisado no la muestra y el formulario omite campos obligatorios para guardar. Se documenta como una limitación de la rama.
 Observación sobre sitios: LandingController referencia turista.publicacion.detalle-sitio, mientras el archivo de detalle se encuentra bajo livewire/turista/publicacion. Conviene corregir esa referencia antes de dar por validada la pantalla pública de detalle.
 Observación sobre reportes: el total recaudado del emprendimiento incluye Confirmadas y Completadas. No debe interpretarse automáticamente como cobros bancarios comprobados.
 Las imágenes pendientes tienen una descripción concreta junto al procedimiento. Para sustituirlas, utiliza la pantalla indicada y datos de prueba. Oculta información personal, números de cuenta reales, contraseñas y códigos de seguridad.
 Algunas vistas públicas dependen de cdn.tailwindcss.com, bloqueado en la red de esta sesión. Sus capturas sin estilos se descartaron; se incluyeron instrucciones para insertar imágenes fieles cuando ese recurso esté disponible.
+Diseño adaptado del documento de referencia Manual de Usuario de Yumpu.pdf facilitado por el usuario: portada, presentación del sistema, características, guía de uso numerada y pies de imagen. El contenido y las pantallas corresponden a Explora Candelaria; no se incorporan funciones de Yumpu.
