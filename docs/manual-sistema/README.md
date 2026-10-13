@@ -1,15 +1,15 @@
-# Manual del sistema — Explora Candelaria
+# Manual del sistema — Explora Candelaria (MySQL)
 
-Edición 1.0 · 12 de octubre de 2026. Documento técnico basado en `Rama-Daniela`, commit `3943f13d45944d979c9d7375506ee2e5e3c0128e`, publicado en `main` por solicitud del usuario. La publicación documental no incorpora el código de esa rama a main.
+Edición corregida 2.0 · 12 de octubre de 2026. Se corrigió el **Word facilitado por el usuario** para documentar MySQL como su motor de base de datos y se reorganizó siguiendo el ejemplo **Manual Técnico CAE.pdf**.
 
-- [Manual PDF — 30 páginas](Manual_del_sistema.pdf)
-- [Manual Word editable](Manual_del_sistema.docx)
-- [Manual en Markdown](Manual_del_sistema.md)
-- [Diccionario de las 33 tablas en JSON](Diccionario_datos.json)
-- [Manual de usuario de los tres roles](../manual-usuario/README.md)
+- [Word editable corregido](Manual_del_sistema.docx)
+- [PDF de consulta — 39 páginas](Manual_del_sistema.pdf)
+- [Contenido en Markdown](Manual_del_sistema.md)
+- [Guía de las 33 capturas y diagramas pendientes](Guia_de_capturas.md)
+- [Diccionario de referencia, pendiente de contrastar con MySQL](Diccionario_datos.json)
 
-Incluye arquitectura, tecnologías, requisitos, instalación, configuración, arranque, cron y colas, roles, rutas, datos, reservas, integraciones, despliegue, respaldos, mantenimiento, pruebas y limitaciones.
+Estructura: introducción, objetivo general, requisitos, instalación/configuración, diseño (arquitectura, DFD, red, ER, modelo relacional, dependencias, normalización, diccionario, casos de uso, secuencias e interfaz) e implementación.
 
-Comprobaciones locales: requisitos Composer aprobados; 22 migraciones aplicadas; rutas y programador inspeccionados; 52 pruebas ejecutadas, 43 aprobadas y 9 fallidas. El documento identifica los fallos y distingue instrucciones de despliegue recomendadas de operaciones realmente comprobadas.
+Fuente funcional: Rama-Daniela. Ubicación de documentos: main. No se cambió código de la aplicación ni se modificó la base del usuario. No se accedió a su MySQL: versión, tipos finales, índices y restricciones deben verificarse en la instalación real. Las pruebas locales previas no se presentan como pruebas de MySQL.
 
-Para descargar el PDF o Word desde GitHub, abre el archivo y pulsa **Download raw file**. No se incluyen credenciales, bases de datos ni información personal real.
+Abre Word o PDF en GitHub y pulsa **Download raw file** para descargar. El manual señala en cada lugar qué imagen insertar y su pie sugerido; usa datos de demostración y oculta secretos.

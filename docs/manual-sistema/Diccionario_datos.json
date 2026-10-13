@@ -1,1582 +1,1587 @@
-[
-  {
-    "table": "actividades_festividades",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "publicacion_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "nombre",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "fecha",
-        "type": "date",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "hora",
-        "type": "time",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "lugar",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "descripcion",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "imagen",
-        "type": "varchar",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "publicacion_id",
-        "target": "publicaciones_turisticas.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "actividades_turisticas",
-    "columns": [
-      {
-        "name": "publicacion_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "duracion_estimada",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "dificultad",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "recomendaciones",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "publicacion_id",
-        "target": "publicaciones_turisticas.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "cache",
-    "columns": [
-      {
-        "name": "key",
-        "type": "varchar",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "value",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "expiration",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "cache_locks",
-    "columns": [
-      {
-        "name": "key",
-        "type": "varchar",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "owner",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "expiration",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "cuentas_bancarias",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "emprendimiento_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "nombre_banco",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "numero_cuenta",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "titular",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "deleted_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "emprendimiento_id",
-        "target": "emprendimientos.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "detalle_alimentaciones",
-    "columns": [
-      {
-        "name": "servicio_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "tipo_alimentacion",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "lugar_alimentacion",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "servicio_id",
-        "target": "servicios.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "detalle_guianzas",
-    "columns": [
-      {
-        "name": "servicio_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "numero_max_persona",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "servicio_id",
-        "target": "servicios.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "detalle_hospedajes",
-    "columns": [
-      {
-        "name": "servicio_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "capacidad",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "servicio_id",
-        "target": "servicios.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "detalle_paquete_turistico",
-    "columns": [
-      {
-        "name": "servicio_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "lugar_salida",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "hora_salida",
-        "type": "time",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "servicios_incluidos",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "lugares_actividades",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "recomendaciones",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "documento",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "mensaje_pago",
-        "type": "varchar",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "duracion_dias",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "servicio_id",
-        "target": "servicios.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "emprendimiento_tipo_servicios",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "tipo_servicio_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "emprendimiento_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "estado",
-        "type": "tinyint(1)",
-        "required": true,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "emprendimiento_id",
-        "target": "emprendimientos.id",
-        "delete": "CASCADE"
-      },
-      {
-        "column": "tipo_servicio_id",
-        "target": "tipo_servicios.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "emprendimientos",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "user_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "nombre",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "descripcion",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "estado",
-        "type": "tinyint(1)",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "imagen",
-        "type": "varchar",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "deleted_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "enlaces",
-        "type": "TEXT",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "user_id",
-        "target": "users.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "failed_jobs",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "uuid",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "connection",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "queue",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "payload",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "exception",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "failed_at",
-        "type": "datetime",
-        "required": true,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "festividades",
-    "columns": [
-      {
-        "name": "publicacion_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "fecha_inicio",
-        "type": "date",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "fecha_fin",
-        "type": "date",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "publicacion_id",
-        "target": "publicaciones_turisticas.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "imagen_publicaciones",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "publicacion_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "imagen",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "publicacion_id",
-        "target": "publicaciones_turisticas.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "imagen_servicios",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "servicio_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "imagen",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "servicio_id",
-        "target": "servicios.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "job_batches",
-    "columns": [
-      {
-        "name": "id",
-        "type": "varchar",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "name",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "total_jobs",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "pending_jobs",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "failed_jobs",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "failed_job_ids",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "options",
-        "type": "TEXT",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "cancelled_at",
-        "type": "INTEGER",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "finished_at",
-        "type": "INTEGER",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "jobs",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "queue",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "payload",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "attempts",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "reserved_at",
-        "type": "INTEGER",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "available_at",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "migrations",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "migration",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "batch",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "model_has_permissions",
-    "columns": [
-      {
-        "name": "permission_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "model_type",
-        "type": "varchar",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "model_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "permission_id",
-        "target": "permissions.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "model_has_roles",
-    "columns": [
-      {
-        "name": "role_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "model_type",
-        "type": "varchar",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "model_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "role_id",
-        "target": "roles.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "password_reset_tokens",
-    "columns": [
-      {
-        "name": "email",
-        "type": "varchar",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "token",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "permissions",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "name",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "guard_name",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "publicaciones_turisticas",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "user_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "tipo_publicacion_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "nombre",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "descripcion",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "tipo_publicacion_id",
-        "target": "tipo_publicaciones.id",
-        "delete": "CASCADE"
-      },
-      {
-        "column": "user_id",
-        "target": "users.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "reserva_detalles",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "reserva_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "servicio_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "fecha_inicio",
-        "type": "date",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "fecha_fin",
-        "type": "date",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "cantidad",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "precio_unitario",
-        "type": "numeric",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "subtotal",
-        "type": "numeric",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "hora_llegada",
-        "type": "time",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "numero_personas",
-        "type": "INTEGER",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "reserva_id",
-        "target": "reservas.id",
-        "delete": "CASCADE"
-      },
-      {
-        "column": "servicio_id",
-        "target": "servicios.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "reservas",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "user_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "estado",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "precio_total",
-        "type": "numeric",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "reservada_por_rol",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "cancelada_en",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "cancelada_por_rol",
-        "type": "varchar",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "motivo_cancelacion",
-        "type": "TEXT",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "comprobante_pago",
-        "type": "varchar",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "fecha_subida_comprobante",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "user_id",
-        "target": "users.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "role_has_permissions",
-    "columns": [
-      {
-        "name": "permission_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "role_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "role_id",
-        "target": "roles.id",
-        "delete": "CASCADE"
-      },
-      {
-        "column": "permission_id",
-        "target": "permissions.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "roles",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "name",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "guard_name",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "servicios",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "emprendimiento_tipo_servicio_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "nombre",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "descripcion",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "precio",
-        "type": "numeric",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "stock",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "deleted_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "emprendimiento_tipo_servicio_id",
-        "target": "emprendimiento_tipo_servicios.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "sessions",
-    "columns": [
-      {
-        "name": "id",
-        "type": "varchar",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "user_id",
-        "type": "INTEGER",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "ip_address",
-        "type": "varchar",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "user_agent",
-        "type": "TEXT",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "payload",
-        "type": "TEXT",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "last_activity",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "sitios_turisticos",
-    "columns": [
-      {
-        "name": "publicacion_id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "ubicacion",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": [
-      {
-        "column": "publicacion_id",
-        "target": "publicaciones_turisticas.id",
-        "delete": "CASCADE"
-      }
-    ]
-  },
-  {
-    "table": "tipo_publicaciones",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "nombre",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "tipo_servicios",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "nombre",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  },
-  {
-    "table": "users",
-    "columns": [
-      {
-        "name": "id",
-        "type": "INTEGER",
-        "required": true,
-        "pk": true
-      },
-      {
-        "name": "name",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "apellidos",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "email",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "cedula",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "edad",
-        "type": "INTEGER",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "telefono",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "email_verified_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "password",
-        "type": "varchar",
-        "required": true,
-        "pk": false
-      },
-      {
-        "name": "remember_token",
-        "type": "varchar",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "created_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "updated_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "two_factor_secret",
-        "type": "TEXT",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "two_factor_recovery_codes",
-        "type": "TEXT",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "two_factor_confirmed_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      },
-      {
-        "name": "deleted_at",
-        "type": "datetime",
-        "required": false,
-        "pk": false
-      }
-    ],
-    "foreign_keys": []
-  }
-]
+{
+  "motor_del_usuario": "MySQL",
+  "verificado_con_servidor_mysql": false,
+  "fuente": "Nombres y columnas del esquema local anterior; no es una extracción del MySQL del usuario. Tipos y restricciones requieren contraste con migraciones e INFORMATION_SCHEMA.",
+  "tablas_de_referencia": [
+    {
+      "table": "actividades_festividades",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "publicacion_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "nombre",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "fecha",
+          "type": "date",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "hora",
+          "type": "time",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "lugar",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "descripcion",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "imagen",
+          "type": "varchar",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "publicacion_id",
+          "target": "publicaciones_turisticas.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "actividades_turisticas",
+      "columns": [
+        {
+          "name": "publicacion_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "duracion_estimada",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "dificultad",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "recomendaciones",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "publicacion_id",
+          "target": "publicaciones_turisticas.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "cache",
+      "columns": [
+        {
+          "name": "key",
+          "type": "varchar",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "value",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "expiration",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "cache_locks",
+      "columns": [
+        {
+          "name": "key",
+          "type": "varchar",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "owner",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "expiration",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "cuentas_bancarias",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "emprendimiento_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "nombre_banco",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "numero_cuenta",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "titular",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "deleted_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "emprendimiento_id",
+          "target": "emprendimientos.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "detalle_alimentaciones",
+      "columns": [
+        {
+          "name": "servicio_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "tipo_alimentacion",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "lugar_alimentacion",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "servicio_id",
+          "target": "servicios.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "detalle_guianzas",
+      "columns": [
+        {
+          "name": "servicio_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "numero_max_persona",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "servicio_id",
+          "target": "servicios.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "detalle_hospedajes",
+      "columns": [
+        {
+          "name": "servicio_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "capacidad",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "servicio_id",
+          "target": "servicios.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "detalle_paquete_turistico",
+      "columns": [
+        {
+          "name": "servicio_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "lugar_salida",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "hora_salida",
+          "type": "time",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "servicios_incluidos",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "lugares_actividades",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "recomendaciones",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "documento",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "mensaje_pago",
+          "type": "varchar",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "duracion_dias",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "servicio_id",
+          "target": "servicios.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "emprendimiento_tipo_servicios",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "tipo_servicio_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "emprendimiento_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "estado",
+          "type": "tinyint(1)",
+          "required": true,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "emprendimiento_id",
+          "target": "emprendimientos.id",
+          "delete": "CASCADE"
+        },
+        {
+          "column": "tipo_servicio_id",
+          "target": "tipo_servicios.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "emprendimientos",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "nombre",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "descripcion",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "estado",
+          "type": "tinyint(1)",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "imagen",
+          "type": "varchar",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "deleted_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "enlaces",
+          "type": "TEXT",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "user_id",
+          "target": "users.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "failed_jobs",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "uuid",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "connection",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "queue",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "payload",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "exception",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "failed_at",
+          "type": "datetime",
+          "required": true,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "festividades",
+      "columns": [
+        {
+          "name": "publicacion_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "fecha_inicio",
+          "type": "date",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "fecha_fin",
+          "type": "date",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "publicacion_id",
+          "target": "publicaciones_turisticas.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "imagen_publicaciones",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "publicacion_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "imagen",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "publicacion_id",
+          "target": "publicaciones_turisticas.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "imagen_servicios",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "servicio_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "imagen",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "servicio_id",
+          "target": "servicios.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "job_batches",
+      "columns": [
+        {
+          "name": "id",
+          "type": "varchar",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "total_jobs",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "pending_jobs",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "failed_jobs",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "failed_job_ids",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "options",
+          "type": "TEXT",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "cancelled_at",
+          "type": "INTEGER",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "finished_at",
+          "type": "INTEGER",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "jobs",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "queue",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "payload",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "attempts",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "reserved_at",
+          "type": "INTEGER",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "available_at",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "migrations",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "migration",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "batch",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "model_has_permissions",
+      "columns": [
+        {
+          "name": "permission_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "model_type",
+          "type": "varchar",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "model_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "permission_id",
+          "target": "permissions.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "model_has_roles",
+      "columns": [
+        {
+          "name": "role_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "model_type",
+          "type": "varchar",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "model_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "role_id",
+          "target": "roles.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "password_reset_tokens",
+      "columns": [
+        {
+          "name": "email",
+          "type": "varchar",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "token",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "permissions",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "guard_name",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "publicaciones_turisticas",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "tipo_publicacion_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "nombre",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "descripcion",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "tipo_publicacion_id",
+          "target": "tipo_publicaciones.id",
+          "delete": "CASCADE"
+        },
+        {
+          "column": "user_id",
+          "target": "users.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "reserva_detalles",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "reserva_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "servicio_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "fecha_inicio",
+          "type": "date",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "fecha_fin",
+          "type": "date",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "cantidad",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "precio_unitario",
+          "type": "numeric",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "subtotal",
+          "type": "numeric",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "hora_llegada",
+          "type": "time",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "numero_personas",
+          "type": "INTEGER",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "reserva_id",
+          "target": "reservas.id",
+          "delete": "CASCADE"
+        },
+        {
+          "column": "servicio_id",
+          "target": "servicios.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "reservas",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "estado",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "precio_total",
+          "type": "numeric",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "reservada_por_rol",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "cancelada_en",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "cancelada_por_rol",
+          "type": "varchar",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "motivo_cancelacion",
+          "type": "TEXT",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "comprobante_pago",
+          "type": "varchar",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "fecha_subida_comprobante",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "user_id",
+          "target": "users.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "role_has_permissions",
+      "columns": [
+        {
+          "name": "permission_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "role_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "role_id",
+          "target": "roles.id",
+          "delete": "CASCADE"
+        },
+        {
+          "column": "permission_id",
+          "target": "permissions.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "roles",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "guard_name",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "servicios",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "emprendimiento_tipo_servicio_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "nombre",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "descripcion",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "precio",
+          "type": "numeric",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "stock",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "deleted_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "emprendimiento_tipo_servicio_id",
+          "target": "emprendimiento_tipo_servicios.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "sessions",
+      "columns": [
+        {
+          "name": "id",
+          "type": "varchar",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "user_id",
+          "type": "INTEGER",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "ip_address",
+          "type": "varchar",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "user_agent",
+          "type": "TEXT",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "payload",
+          "type": "TEXT",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "last_activity",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "sitios_turisticos",
+      "columns": [
+        {
+          "name": "publicacion_id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "ubicacion",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "publicacion_id",
+          "target": "publicaciones_turisticas.id",
+          "delete": "CASCADE"
+        }
+      ]
+    },
+    {
+      "table": "tipo_publicaciones",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "nombre",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "tipo_servicios",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "nombre",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "table": "users",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "required": true,
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "apellidos",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "email",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "cedula",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "edad",
+          "type": "INTEGER",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "telefono",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "email_verified_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "password",
+          "type": "varchar",
+          "required": true,
+          "pk": false
+        },
+        {
+          "name": "remember_token",
+          "type": "varchar",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "two_factor_secret",
+          "type": "TEXT",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "two_factor_recovery_codes",
+          "type": "TEXT",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "two_factor_confirmed_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        },
+        {
+          "name": "deleted_at",
+          "type": "datetime",
+          "required": false,
+          "pk": false
+        }
+      ],
+      "foreign_keys": []
+    }
+  ]
+}
