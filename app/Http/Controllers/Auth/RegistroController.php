@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Controlador de registro publico con confirmacion por correo.
+ * Valida datos del turista, guarda temporalmente el registro y crea la cuenta al confirmar el enlace.
+ */
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;

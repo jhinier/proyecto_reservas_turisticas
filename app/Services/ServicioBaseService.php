@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * Servicio base para crear y eliminar el registro principal de un servicio.
+ */
 namespace App\Services;
 
 use App\Models\Servicio;

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire para administrar emprendimientos, usuarios responsables e imagenes.
+ */
+
 namespace App\Livewire\Admin;
 
 use App\Services\EmprendimientoService;
@@ -135,7 +139,7 @@ class GestionEmprendimientos extends Component
 
         $this->validate([
             'nombre' => 'required|max:150',
-            'descripcion' => 'required|min:10|max:300',
+            'descripcion' => 'required|min:10|max:10000',
             'estado' => 'required|in:0,1',
             'user_name' => 'required|string|max:255',
             'user_apellidos' => 'required|string|max:255',
@@ -175,7 +179,7 @@ class GestionEmprendimientos extends Component
 
         $this->validate([
             'nombre' => 'required|max:150',
-            'descripcion' => 'required|min:10|max:300',
+            'descripcion' => 'required|min:10|max:10000',
             'estado' => 'required|in:0,1',
             'user_name' => 'required|string|max:255',
             'user_apellidos' => 'required|string|max:255',

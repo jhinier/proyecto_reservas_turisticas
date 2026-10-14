@@ -47,6 +47,7 @@
                     <select wire:model.live="estado" class="w-full appearance-none rounded-radius border border-outline bg-surface-alt px-3 py-1.5 text-xs text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-75 dark:border-emerald-500/20 dark:bg-[#050b09] dark:text-white dark:focus-visible:outline-primary-dark">
                         <option value="">Todos</option>
                         <option value="Confirmada">Confirmada</option>
+                        <option value="Pago en revisión">Pago en revisión</option>
                         <option value="Pendiente">Pendiente</option>
                         <option value="Completada">Completada</option>
                         <option value="Cancelada">Cancelada</option>
@@ -93,12 +94,18 @@
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
                 Limpiar
             </button>
-            <a href="{{ route('reportes.descargar', ['desde' => $fechaDesde, 'hasta' => $fechaHasta, 'categoria' => $categoria_id, 'estado' => $estado, 'cedula' => $cedula, 'tipo_reporte' => $tipoReporte, 'nombre' => $nombreServicio]) }}" 
-               target="_blank"
-               class="bg-[#00D65B] text-[#06281E] px-4 py-2 rounded-lg font-black text-[10px] uppercase flex items-center justify-center gap-1.5 hover:bg-[#00c052] transition-all shadow-md border border-[#00c052] h-[38px] active:scale-95">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                Descargar
-            </a>
+            <div class="relative">
+                <svg class="pointer-events-none absolute left-3 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-[#06281E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <svg class="pointer-events-none absolute right-3 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-[#06281E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                <select
+                    aria-label="Descargar reporte"
+                    onchange="if (this.value) { window.open(this.value, '_blank'); this.value = ''; }"
+                    class="h-[38px] w-full appearance-none rounded-lg border border-[#00c052] bg-[#00D65B] py-2 pl-9 pr-8 text-center text-[10px] font-black uppercase text-[#06281E] shadow-md transition-all hover:bg-[#00c052] focus:outline-none focus:ring-2 focus:ring-[#00D65B]/40 active:scale-95 dark:border-emerald-400 dark:bg-emerald-500 dark:hover:bg-emerald-400">
+                    <option value="">Descargar</option>
+                    <option value="{{ route('reportes.descargar', ['desde' => $fechaDesde, 'hasta' => $fechaHasta, 'categoria' => $categoria_id, 'estado' => $estado, 'cedula' => $cedula, 'tipo_reporte' => $tipoReporte, 'nombre' => $nombreServicio]) }}">PDF</option>
+                    <option value="{{ route('reportes.descargar.excel', ['desde' => $fechaDesde, 'hasta' => $fechaHasta, 'categoria' => $categoria_id, 'estado' => $estado, 'cedula' => $cedula, 'tipo_reporte' => $tipoReporte, 'nombre' => $nombreServicio]) }}">Excel</option>
+                </select>
+            </div>
         </div>
     </div>
 

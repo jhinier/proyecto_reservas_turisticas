@@ -1,3 +1,4 @@
+{{-- Componente reutilizable para mostrar una etiqueta y valor dentro del detalle de un servicio. --}}
 @props([
     'etiqueta',
     'valor' => null,

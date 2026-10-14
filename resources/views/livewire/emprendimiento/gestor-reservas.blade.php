@@ -51,6 +51,7 @@
                 <select wire:model.live="filtroEstado" class="w-full appearance-none rounded-full border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800/50 px-4 py-2.5 text-sm font-bold text-[#06281E] dark:text-white focus:ring-2 focus:ring-[#00A344] outline-none transition-all shadow-sm">
                     <option value="">Todos los estados</option>
                     <option value="Confirmada">Confirmada</option>
+                    <option value="Pago en revisión">Pago en revisión</option>
                     <option value="Pendiente">Pendiente</option>
                     <option value="Completada">Completada</option>
                     <option value="Cancelada">Cancelada</option>
@@ -161,7 +162,7 @@
     {{-- LLAMADA AL MODAL EXTRAÍDO --}}
     @include('livewire.emprendimiento.reserva.modal-detalle-reserva')
     
-    <button wire:click="$dispatch('abrirCalendario')" 
+    <button wire:click="$dispatch('abrirCalendarioReservasEmprendimiento')"
             class="fixed bottom-8 right-8 z-40 bg-[#00D65B] text-[#06281E] shadow-xl hover:bg-[#00c052] hover:scale-105 dark:bg-[#00D65B] dark:text-[#06281E] transition-all duration-300 rounded-full p-4 flex items-center justify-center group outline-none">
         <svg class="size-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 3v4M8 3v4M4 11h16M11 15h2m-1-1v2" /></svg>
         <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 font-bold pl-0 group-hover:pl-3 text-xs uppercase tracking-widest">Ver calendario</span>

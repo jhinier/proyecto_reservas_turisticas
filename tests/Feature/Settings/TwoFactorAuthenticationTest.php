@@ -2,7 +2,9 @@
 
 use App\Models\User;
 use Laravel\Fortify\Features;
+use Laravel\Fortify\Fortify;
 use Livewire\Livewire;
+use PragmaRX\Google2FA\Google2FA;
 
 beforeEach(function () {
     if (! Features::canManageTwoFactorAuthentication()) {
@@ -22,8 +24,8 @@ test('two factor settings page can be rendered', function () {
         ->withSession(['auth.password_confirmed_at' => time()])
         ->get(route('two-factor.show'))
         ->assertOk()
-        ->assertSee('Two-factor authentication')
-        ->assertSee('Disabled');
+        ->assertSee('Autenticación de dos factores')
+        ->assertSee('Desactivado');
 });
 
 test('two factor settings page requires password confirmation when enabled', function () {
@@ -67,4 +69,56 @@ test('two factor authentication disabled when confirmation abandoned between req
         'two_factor_secret' => null,
         'two_factor_recovery_codes' => null,
     ]);
+});
+
+test('two factor authentication can be disabled from fortify route', function () {
+    $user = User::factory()->withTwoFactor()->create();
+
+    $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => time()])
+        ->from(route('two-factor.show'))
+        ->delete(route('two-factor.disable'))
+        ->assertRedirect(route('two-factor.show'));
+
+    $this->assertDatabaseHas('users', [
+        'id' => $user->id,
+        'two_factor_secret' => null,
+        'two_factor_recovery_codes' => null,
+        'two_factor_confirmed_at' => null,
+    ]);
+});
+
+test('two factor authentication can be confirmed with generated authenticator code', function () {
+    $user = User::factory()->create();
+
+    $component = Livewire::actingAs($user)
+        ->test('settings.two-factor')
+        ->call('enable')
+        ->assertSet('showModal', true);
+
+    $user->refresh();
+
+    $secret = Fortify::currentEncrypter()->decrypt($user->two_factor_secret);
+    $code = app(Google2FA::class)->getCurrentOtp($secret);
+
+    $component
+        ->set('code', $code)
+        ->call('confirmTwoFactor')
+        ->assertSet('twoFactorEnabled', true)
+        ->assertSet('showModal', false);
+
+    expect($user->fresh()->two_factor_confirmed_at)->not->toBeNull();
+});
+
+test('invalid two factor confirmation shows spanish guidance', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test('settings.two-factor')
+        ->call('enable')
+        ->call('showVerificationIfNecessary')
+        ->set('code', '000000')
+        ->call('confirmTwoFactor')
+        ->assertHasErrors(['code'])
+        ->assertSee('El código no es válido');
 });

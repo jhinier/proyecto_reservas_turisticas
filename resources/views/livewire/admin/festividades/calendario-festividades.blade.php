@@ -1,3 +1,4 @@
+{{-- Vista de calendario para visualizar eventos por fecha. --}}
 <div>
     {{-- Fondo oscuro del Modal --}}
     <div x-show="$wire.abierto" 
@@ -135,7 +136,7 @@
 
                 <div>
                     <h2 class="text-xl md:text-2xl font-black text-[#3B4D36]">
-                        Agenda de Festividades
+                        Agenda de Eventos
                     </h2>
 
                     <p class="text-xs font-bold text-[#7C8D54] uppercase tracking-wider mt-1">
@@ -169,15 +170,15 @@
 
                         <div class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition space-y-4">
 
-                            {{-- FESTIVIDAD --}}
+                            {{-- EVENTO --}}
                             <div class="border-b border-dashed border-[#CFE2CF] pb-3">
 
                                 <span class="text-[10px] font-black uppercase tracking-[0.2em] text-[#7C8D54] block mb-2">
-                                    Festividad
+                                    Evento
                                 </span>
 
                                 <h3 class="text-lg font-black text-[#32744C] leading-tight">
-                                    {{ $actividad->publicacion->nombre ?? 'Festividad sin nombre' }}
+                                    {{ $actividad->publicacion->nombre ?? 'Evento sin nombre' }}
                                 </h3>
 
                             </div>

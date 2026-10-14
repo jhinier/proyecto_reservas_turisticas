@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Servicio para consultar y sincronizar los tipos de servicio de un emprendimiento.
+ */
+
 namespace App\Services;
 
 use App\Models\Emprendimiento;

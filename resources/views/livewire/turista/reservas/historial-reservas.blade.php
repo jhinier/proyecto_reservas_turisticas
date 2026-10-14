@@ -190,7 +190,58 @@
 
                     {{-- ZONA DE COMPROBANTE DE PAGO --}}
                     @if($reservaSeleccionada->estado === 'Confirmada' && empty($reservaSeleccionada->comprobante_pago))
+                        @php($tiempoComprobante = $this->tiempoRestanteComprobante())
+
                         <div class="mt-6 p-5 bg-blue-50 rounded-xl border border-blue-100 shadow-sm">
+                            @if($tiempoComprobante)
+                                <div
+                                    class="mb-4 rounded-xl border border-blue-200 bg-white p-4 shadow-sm"
+                                    x-data="{
+                                        restante: {{ $tiempoComprobante['segundos'] }},
+                                        init() {
+                                            setInterval(() => {
+                                                if (this.restante > 0) {
+                                                    this.restante--
+                                                }
+                                            }, 1000)
+                                        },
+                                        texto() {
+                                            if (this.restante <= 0) {
+                                                return 'Plazo vencido'
+                                            }
+
+                                            const horas = Math.floor(this.restante / 3600)
+                                            const minutos = Math.floor((this.restante % 3600) / 60)
+                                            const segundos = this.restante % 60
+
+                                            if (horas > 0) {
+                                                return `${horas} h ${minutos} min`
+                                            }
+
+                                            if (minutos > 0) {
+                                                return `${minutos} min ${segundos} s`
+                                            }
+
+                                            return `${segundos} s`
+                                        }
+                                    }"
+                                >
+                                    <span class="block text-[10px] font-bold text-blue-800 uppercase tracking-widest">
+                                        Tiempo restante para subir el comprobante
+                                    </span>
+
+                                    <div class="mt-2 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                                        <p class="text-2xl font-black text-blue-700 leading-none" x-text="texto()">
+                                            {{ $tiempoComprobante['texto'] }}
+                                        </p>
+
+                                        <p class="text-[11px] font-semibold text-slate-500">
+                                            Limite: {{ $tiempoComprobante['vence'] }}
+                                        </p>
+                                    </div>
+                                </div>
+                            @endif
+
                             <label class="block text-[11px] font-bold text-blue-800 uppercase tracking-widest mb-2">Subir comprobante de pago</label>
                             <p class="text-xs text-blue-700 mb-3">Sube la foto de tu transferencia o depósito. Tienes 24 horas desde la confirmación para realizarlo.</p>
                             

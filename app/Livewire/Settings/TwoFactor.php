@@ -4,6 +4,7 @@ namespace App\Livewire\Settings;
 
 use App\Livewire\Settings\Concerns\UsesSettingsLayout;
 use Exception;
+use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Actions\ConfirmTwoFactorAuthentication;
 use Laravel\Fortify\Actions\DisableTwoFactorAuthentication;
 use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
@@ -19,6 +20,10 @@ use Symfony\Component\HttpFoundation\Response;
 class TwoFactor extends Component
 {
     use UsesSettingsLayout;
+
+    private const AUTHENTICATOR_ANDROID_URL = 'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2';
+
+    private const AUTHENTICATOR_IPHONE_URL = 'https://apps.apple.com/app/google-authenticator/id388497605';
 
     public function render()
     {
@@ -41,7 +46,7 @@ class TwoFactor extends Component
 
     public bool $showVerificationStep = false;
 
-    #[Validate('required|string|size:6', onUpdate: false)]
+    #[Validate('required|digits:6', onUpdate: false)]
     public string $code = '';
 
     /**
@@ -64,10 +69,17 @@ class TwoFactor extends Component
      */
     public function enable(EnableTwoFactorAuthentication $enableTwoFactorAuthentication): void
     {
-        $enableTwoFactorAuthentication(auth()->user());
+        $user = auth()->user();
+
+        $enableTwoFactorAuthentication(
+            $user,
+            ! is_null($user->two_factor_secret) && is_null($user->two_factor_confirmed_at),
+        );
+
+        $user->refresh();
 
         if (! $this->requiresConfirmation) {
-            $this->twoFactorEnabled = auth()->user()->hasEnabledTwoFactorAuthentication();
+            $this->twoFactorEnabled = $user->hasEnabledTwoFactorAuthentication();
         }
 
         $this->loadSetupData();
@@ -84,7 +96,7 @@ class TwoFactor extends Component
 
         try {
             $this->qrCodeSvg = $user?->twoFactorQrCodeSvg();
-            $this->manualSetupKey = decrypt($user->two_factor_secret);
+            $this->manualSetupKey = Fortify::currentEncrypter()->decrypt($user->two_factor_secret);
         } catch (Exception) {
             $this->addError('setupData', 'Failed to fetch setup data.');
 
@@ -113,9 +125,17 @@ class TwoFactor extends Component
      */
     public function confirmTwoFactor(ConfirmTwoFactorAuthentication $confirmTwoFactorAuthentication): void
     {
+        $this->code = preg_replace('/\D/', '', $this->code);
+
         $this->validate();
 
-        $confirmTwoFactorAuthentication(auth()->user(), $this->code);
+        try {
+            $confirmTwoFactorAuthentication(auth()->user(), $this->code);
+        } catch (ValidationException) {
+            throw ValidationException::withMessages([
+                'code' => 'El código no es válido. Elimina cualquier cuenta anterior de Authenticator, escanea este QR de nuevo y verifica que la fecha y hora del celular estén en automático.',
+            ]);
+        }
 
         $this->closeModal();
 
@@ -135,11 +155,25 @@ class TwoFactor extends Component
     /**
      * Disable two-factor authentication for the user.
      */
-    public function disable(DisableTwoFactorAuthentication $disableTwoFactorAuthentication): void
+    public function disableTwoFactor(DisableTwoFactorAuthentication $disableTwoFactorAuthentication): void
     {
         $disableTwoFactorAuthentication(auth()->user());
 
         $this->twoFactorEnabled = false;
+    }
+
+    public function getAuthenticatorDownloadLinksProperty(): array
+    {
+        return [
+            [
+                'label' => 'Android',
+                'url' => self::AUTHENTICATOR_ANDROID_URL,
+            ],
+            [
+                'label' => 'iPhone',
+                'url' => self::AUTHENTICATOR_IPHONE_URL,
+            ],
+        ];
     }
 
     /**
@@ -169,24 +203,24 @@ class TwoFactor extends Component
     {
         if ($this->twoFactorEnabled) {
             return [
-                'title' => __('Two-factor authentication enabled'),
-                'description' => __('Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.'),
-                'buttonText' => __('Close'),
+                'title' => __('Autenticación en dos pasos activada'),
+                'description' => __('La autenticación en dos pasos ya está activada para tu cuenta.'),
+                'buttonText' => __('Cerrar'),
             ];
         }
 
         if ($this->showVerificationStep) {
             return [
-                'title' => __('Verify authentication code'),
-                'description' => __('Enter the 6-digit code from your authenticator app.'),
-                'buttonText' => __('Continue'),
+                'title' => __('Verifica el código'),
+                'description' => __('Ingresa el código de 6 dígitos que aparece en tu aplicación de autenticación.'),
+                'buttonText' => __('Continuar'),
             ];
         }
 
         return [
-            'title' => __('Enable two-factor authentication'),
-            'description' => __('To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app.'),
-            'buttonText' => __('Continue'),
+            'title' => __('Activar autenticación en dos pasos'),
+            'description' => __('Escanea el QR con tu aplicación de autenticación o copia la clave de configuración manual.'),
+            'buttonText' => __('Continuar'),
         ];
     }
 }

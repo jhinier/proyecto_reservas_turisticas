@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * Servicio de consulta para listar categorias activas y servicios paginados del emprendimiento.
+ */
 namespace App\Services;
 
 use App\Models\Emprendimiento;

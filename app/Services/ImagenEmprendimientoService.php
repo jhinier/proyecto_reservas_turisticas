@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Servicio para subir y eliminar imagenes de la galeria de servicios del emprendimiento.
+ */
+
 namespace App\Services;
 
 use App\Models\ImagenServicio;

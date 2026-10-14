@@ -390,7 +390,7 @@
                    @click="adminSidebarOpen = false"
                    class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.festividades.gestion') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
                     <flux:icon.calendar class="w-5 h-5" style="color: white !important;" />
-                    <span>Festividades</span>
+                    <span>Eventos</span>
                 </a>
             </div>
 

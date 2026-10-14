@@ -1,3 +1,4 @@
+{{-- Vista para que el emprendimiento seleccione que tipos de servicio va a ofrecer. --}}
 <div x-data="{ seleccionados: @js($seleccionados) }" class="flex h-full w-full flex-1 flex-col gap-6 rounded-xl p-4 md:p-6">
     <style>
         [data-service-card][data-selected="true"] {

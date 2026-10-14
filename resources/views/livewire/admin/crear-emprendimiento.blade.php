@@ -1,3 +1,4 @@
+{{-- Vista del asistente administrativo para registrar un emprendimiento y su usuario responsable. --}}
 <div class="w-full pb-8" wire:key="main-wizard-container">
     @if (session('status'))
         <div class="mb-6 relative w-full overflow-hidden rounded-radius border border-green-500 bg-surface text-on-surface dark:bg-zinc-900 dark:text-zinc-100 shadow-sm" role="alert">

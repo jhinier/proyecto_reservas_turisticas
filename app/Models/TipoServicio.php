@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para el catalogo maestro de tipos de servicio.
+ * Define categorias como hospedaje, guianza, alimentacion, paquetes o alquiler y las vincula con emprendimientos.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

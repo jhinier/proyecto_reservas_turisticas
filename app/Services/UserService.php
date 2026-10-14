@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Servicio para crear usuarios y buscar o registrar turistas por identificacion.
+ */
+
 namespace App\Services;
 
 use App\Models\User;

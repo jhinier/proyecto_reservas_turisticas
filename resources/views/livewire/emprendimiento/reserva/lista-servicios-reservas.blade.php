@@ -1,3 +1,4 @@
+{{-- Lista de servicios disponibles para agregarlos al carrito de una reserva creada por el emprendimiento. --}}
 <div class="space-y-4">
 
     {{-- Skeleton mientras carga la categoría --}}

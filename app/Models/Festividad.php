@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para festividades creadas por el administrador GAD.
+ * Usa una publicacion turistica como base, define rango de fechas y agrupa actividades del evento.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

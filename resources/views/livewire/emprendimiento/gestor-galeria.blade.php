@@ -1,3 +1,4 @@
+{{-- Modal para ver, subir y eliminar imagenes de la galeria de un servicio. --}}
 <div x-data="{ show: @entangle('abierto') }" x-show="show" 
      class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm" style="display: none;">
     

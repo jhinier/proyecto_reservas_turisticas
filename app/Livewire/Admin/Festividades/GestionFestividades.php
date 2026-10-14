@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire para crear, editar, listar y eliminar festividades turisticas.
+ */
+
 namespace App\Livewire\Admin\Festividades;
 
 use Livewire\Component;
@@ -162,7 +166,7 @@ class GestionFestividades extends Component
     {
         $this->validate([
             'nombre' => 'required',
-            'descripcion' => 'required',
+            'descripcion' => 'required|string|max:10000',
             'fecha_inicio' => 'required',
             'fecha_fin' => 'required',
         ]);
@@ -312,7 +316,7 @@ class GestionFestividades extends Component
             'fecha' => 'required',
             'hora' => 'required',
             'lugar' => 'required',
-            'descripcion_actividad' => 'required',
+            'descripcion_actividad' => 'required|string|max:10000',
             'imagen_actividad' => 'nullable|image|max:2048',
         ]);
 

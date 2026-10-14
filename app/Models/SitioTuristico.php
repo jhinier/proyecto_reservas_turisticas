@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para sitios turisticos administrados por el GAD.
+ * Usa la publicacion turistica como registro principal y como llave primaria compartida.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

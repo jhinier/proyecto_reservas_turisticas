@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para cada linea o item de una reserva.
+ * Relaciona un servicio con fechas, hora, cantidad, numero de personas y subtotal.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

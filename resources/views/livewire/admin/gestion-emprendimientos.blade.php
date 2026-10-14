@@ -1,3 +1,4 @@
+{{-- Vista administrativa para gestionar emprendimientos, responsables, filtros y acciones. --}}
 <div class="relative">
     <div x-data="{ show: false, type: 'success', title: '', message: '' }"
          @notify.window="

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire que permite buscar servicios turisticos por texto y tipo.
+ */
+
 namespace App\Livewire\Turista\Servicios;
 
 use Livewire\Component;

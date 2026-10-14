@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire para consultar reportes administrativos con filtros del GAD.
+ */
+
 namespace App\Livewire\Admin;
 
 use Livewire\Component;

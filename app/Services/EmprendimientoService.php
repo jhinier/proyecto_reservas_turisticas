@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Servicio de administracion para registrar, editar, listar y eliminar emprendimientos.
+ */
+
 namespace App\Services;
 
 use App\Mail\CredencialesEmprendedorMail;

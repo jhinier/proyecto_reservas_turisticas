@@ -78,7 +78,7 @@ class GestionReportes extends Component
 
         return view('livewire.emprendimiento.gestion-reportes', [
             'categorias' => TipoServicio::all(),
-            'estados' => ['Confirmada', 'Pendiente', 'Completada', 'Cancelada'],
+            'estados' => ['Confirmada', 'Pago en revisión', 'Pendiente', 'Completada', 'Cancelada'],
             'servicios' => $servicios,
             'serviciosInventario' => $serviciosInventario,
             'totales' => [

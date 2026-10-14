@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * Servicio de aplicacion para crear y actualizar alquileres de equipos.
+ */
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;

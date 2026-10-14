@@ -1,3 +1,4 @@
+{{-- Vista administrativa para crear, editar, listar y eliminar eventos turisticos. --}}
 <div class="space-y-6">
 
     @if (session()->has('mensaje'))
@@ -10,7 +11,7 @@
 
         <div>
             <h1 class="text-2xl font-bold text-slate-800 tracking-tight sm:text-3xl">
-                Festividades
+                Eventos
             </h1>
 
             <p class="text-slate-500 mt-1 text-sm">
@@ -37,7 +38,7 @@
                 />
             </svg>
 
-            Nueva Festividad
+            Nuevo Evento
 
         </button>
 
@@ -48,7 +49,7 @@
 
         <div>
             <h3 class="text-sm font-bold text-slate-700">
-                Estado de las festividades
+                Estado de los eventos
             </h3>
 
             <p class="text-xs text-slate-400 mt-0.5">
@@ -107,7 +108,7 @@
     </div>
 
     {{-- ============================================================
-    TABLA DE FESTIVIDADES
+    TABLA DE EVENTOS
     SOLO CAMBIO VISUAL: CARDS → TABLA
     ============================================================ --}}
 
@@ -123,7 +124,7 @@
                     <tr>
 
                         <th class="px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
-                            Festividad
+                            Evento
                         </th>
 
                         <th class="px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -173,7 +174,7 @@
                         <tr class="hover:bg-slate-50/80 transition duration-200">
 
                             {{-- ====================================================
-                                FESTIVIDAD
+                                EVENTO
                             ===================================================== --}}
 
                             <td class="px-5 py-4">
@@ -398,7 +399,7 @@
                                     <button
                                         wire:click="cargarFestividad({{ $festividad->publicacion_id }})"
                                         x-on:click="$flux.modal('modal-festividad').show()"
-                                        title="Editar festividad"
+                                        title="Editar evento"
                                         class="w-9 h-9 bg-white hover:bg-amber-50 text-amber-600 border border-amber-200 rounded-lg flex items-center justify-center transition shadow-sm"
                                     >
 
@@ -446,7 +447,7 @@
 
                                     <button
                                         wire:click="eliminar({{ $festividad->publicacion_id }})"
-                                        wire:confirm="¿Eliminar festividad?"
+                                        wire:confirm="¿Eliminar evento?"
                                         title="Eliminar"
                                         class="w-9 h-9 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg flex items-center justify-center transition"
                                     >
@@ -490,13 +491,13 @@
 
                                 <h2 class="text-xl font-bold text-slate-800 mb-1">
 
-                                    No hay festividades registradas
+                                    No hay eventos registrados
 
                                 </h2>
 
                                 <p class="text-sm text-slate-500">
 
-                                    Crea una nueva festividad para comenzar.
+                                    Crea un nuevo evento para comenzar.
 
                                 </p>
 
@@ -516,7 +517,7 @@
 
 
     {{-- ============================================================
-        MODAL NUEVA / EDITAR FESTIVIDAD
+        MODAL NUEVO / EDITAR EVENTO
     ============================================================ --}}
 
     <flux:modal
@@ -528,7 +529,7 @@
 
             <h2 class="text-xl font-bold mb-6 text-slate-800 sm:text-2xl">
 
-                {{ $modoEditar ? 'Editar Festividad' : 'Nueva Festividad' }}
+                {{ $modoEditar ? 'Editar Evento' : 'Nuevo Evento' }}
 
             </h2>
 
@@ -541,7 +542,7 @@
                 <input
                     type="text"
                     wire:model="nombre"
-                    placeholder="Nombre de la festividad"
+                    placeholder="Nombre del evento"
                     class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-sm"
                 >
 
@@ -598,7 +599,7 @@
                     class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-2xl font-bold transition shadow-lg text-sm"
                 >
 
-                    {{ $modoEditar ? 'Actualizar Festividad' : 'Guardar Festividad' }}
+                    {{ $modoEditar ? 'Actualizar Evento' : 'Guardar Evento' }}
 
                 </button>
 
@@ -717,7 +718,7 @@
 
                     <p class="text-xs text-emerald-600 font-bold mt-0.5">
 
-                        Festividad activa:
+                        Evento activo:
                         {{ $festividadSeleccionada?->publicacion?->nombre }}
 
                     </p>
@@ -901,7 +902,7 @@
 
     <button
         type="button"
-        wire:click="$dispatch('abrirCalendario')"
+        wire:click="$dispatch('abrirCalendarioEventosGad')"
         class="fixed bottom-4 right-4 z-40 bg-emerald-700 hover:bg-emerald-800 text-white shadow-2xl rounded-full px-4 py-3 text-sm font-bold transition duration-300 hover:scale-105 flex items-center gap-2 sm:bottom-8 sm:right-8 sm:px-6 sm:py-3.5 sm:text-base"
     >
 
@@ -910,7 +911,7 @@
     </button>
 
     {{-- ============================================================
-    MODAL DETALLES DE FESTIVIDAD
+    MODAL DETALLES DE EVENTO
     ============================================================ --}}
     
     <flux:modal
@@ -949,7 +950,7 @@
                                 />
                             </svg>
                 
-                            Detalles de festividad
+                            Detalles del evento
                 
                         </span>
                 

@@ -1,3 +1,4 @@
+{{-- Contenedor principal que carga el layout del panel administrativo GAD. --}}
 <x-admin-layout>
 
     <div class="p-6 space-y-10"> <!-- 🔥 CONTENEDOR GENERAL -->

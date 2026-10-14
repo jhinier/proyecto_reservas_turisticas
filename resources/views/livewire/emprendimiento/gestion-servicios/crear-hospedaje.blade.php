@@ -1,3 +1,4 @@
+{{-- Formulario para registrar un servicio de hospedaje con datos base, detalle e imagenes. --}}
 <div class="max-w-5xl mx-auto p-4 md:p-6 relative">
     
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">

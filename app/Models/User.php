@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent de usuario autenticable del sistema.
+ * Maneja credenciales, roles, doble factor, datos personales y la relacion con emprendimiento o turista.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

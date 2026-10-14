@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para los emprendimientos registrados en el sistema.
+ * Relaciona el negocio con su usuario responsable, tipos de servicio activos y cuentas bancarias.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

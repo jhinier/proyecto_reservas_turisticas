@@ -1,3 +1,4 @@
+{{-- Vista administrativa para consultar reportes con filtros y resultados resumidos. --}}
 <div class="space-y-6">
 
     {{-- ============================================================

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Controlador de publicaciones visibles para turistas.
+ * Lista sitios, actividades y festividades del GAD, incluyendo imagenes y actividades relacionadas.
+ */
+
 
 namespace App\Http\Controllers\Turista;
 

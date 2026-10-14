@@ -18,7 +18,7 @@
 
     <div class="absolute inset-0 z-0">
         <img 
-            src="{{ asset('img/fondop.png') }}"
+            src="{{ asset('img/fondop.jpeg') }}"
             class="w-full h-full object-cover"
             alt="Fondo"
         >
@@ -66,6 +66,12 @@
                 <p class="text-white italic text-xl">
                     “Descubre, reserva y vive experiencias.”
                 </p>
+            </div>
+
+            <div class="mt-8">
+                <a href="{{ route('home') }}" class="inline-flex items-center justify-center rounded-full border border-[#7ed957]/70 px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#7ed957] transition hover:bg-[#7ed957] hover:text-black">
+                    Inicio
+                </a>
             </div>
         </div>
 

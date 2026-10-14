@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para el detalle especifico de un servicio de guianza.
+ * Guarda el cupo maximo de personas y se relaciona uno a uno con el servicio base.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

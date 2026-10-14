@@ -98,7 +98,7 @@
                             </div>
                         </div>
                         
-                        <button type="button" wire:click="$dispatch('abrirCalendario')" class="bg-[#00D65B] hover:bg-[#00A344] text-[#06281E] dark:text-zinc-900 font-black px-6 py-2.5 rounded-full text-[10px] sm:text-xs uppercase tracking-widest shadow-sm transition-colors outline-none shrink-0 self-start sm:self-auto">
+                        <button type="button" wire:click="$dispatch('abrirCalendarioReservasEmprendimiento')" class="bg-[#00D65B] hover:bg-[#00A344] text-[#06281E] dark:text-zinc-900 font-black px-6 py-2.5 rounded-full text-[10px] sm:text-xs uppercase tracking-widest shadow-sm transition-colors outline-none shrink-0 self-start sm:self-auto">
                             Ver calendario
                         </button>
                     </div>

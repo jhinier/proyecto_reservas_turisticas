@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire que muestra el detalle de un servicio en un modal.
+ */
+
 namespace App\Livewire\Emprendimiento;
 
 use App\Models\Servicio;

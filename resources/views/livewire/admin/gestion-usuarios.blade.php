@@ -1,3 +1,4 @@
+{{-- Vista administrativa para listar usuarios y gestionar roles o permisos. --}}
 <div class="max-w-7xl mx-auto grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
     
     <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">

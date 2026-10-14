@@ -117,6 +117,30 @@ class HistorialReservas extends Component
         }
     }
 
+    public function tiempoRestanteComprobante(): ?array
+    {
+        if (
+            ! $this->reservaSeleccionada ||
+            $this->reservaSeleccionada->estado !== 'Confirmada' ||
+            ! empty($this->reservaSeleccionada->comprobante_pago)
+        ) {
+            return null;
+        }
+
+        $limite = $this->reservaSeleccionada->updated_at->copy()->addHours(24);
+        $segundos = max(0, $limite->timestamp - now()->timestamp);
+        $horas = intdiv($segundos, 3600);
+        $minutos = intdiv($segundos % 3600, 60);
+
+        return [
+            'segundos' => $segundos,
+            'texto' => $segundos > 0
+                ? ($horas > 0 ? "{$horas} h {$minutos} min" : "{$minutos} min")
+                : 'Plazo vencido',
+            'vence' => $limite->format('d/m/Y H:i'),
+        ];
+    }
+
     public function render(ReservaService $reservaService)
     {
         $turistaId = Auth::id();

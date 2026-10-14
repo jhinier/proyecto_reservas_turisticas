@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Servicio que calcula disponibilidad, fechas agotadas y reglas de stock por servicio.
+ */
+
 namespace App\Services;
 
 use App\Models\Servicio;

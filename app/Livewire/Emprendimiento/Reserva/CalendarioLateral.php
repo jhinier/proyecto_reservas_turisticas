@@ -26,7 +26,7 @@ class CalendarioLateral extends Component
     public int $anioActual;
     public string $diaSeleccionado;
 
-    protected $listeners = ['abrirCalendario' => 'abrir'];
+    protected $listeners = ['abrirCalendarioReservasEmprendimiento' => 'abrir'];
 
     public function mount()
     {

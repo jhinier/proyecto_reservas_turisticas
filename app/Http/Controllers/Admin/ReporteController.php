@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Controlador de reportes PDF del administrador GAD.
+ * Genera reportes generales o detallados de festividades, sitios, actividades y emprendimientos.
+ */
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Modelo base para publicaciones turisticas del GAD.
+ * Centraliza nombre, descripcion, usuario creador e imagenes, y se especializa en sitio,
+ * festividad o actividad turistica mediante relaciones uno a uno.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

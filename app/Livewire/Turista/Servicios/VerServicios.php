@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire del catalogo publico para consultar servicios y preparar reservas.
+ */
+
 namespace App\Livewire\Turista\Servicios;
 
 use Carbon\Carbon;

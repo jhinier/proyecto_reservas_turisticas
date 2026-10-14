@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire para crear, editar, listar y eliminar sitios turisticos del GAD.
+ */
+
 namespace App\Livewire\Admin;
 
 use Livewire\Component;
@@ -105,7 +109,6 @@ class GestionSitiosTuristicos extends Component
 
         $this->nombre = $sitio->publicacion->nombre;
         $this->descripcion = $sitio->publicacion->descripcion;
-
         $this->modoEdicion = true;
         $this->mostrarModal = true;
     }
@@ -114,7 +117,7 @@ class GestionSitiosTuristicos extends Component
     {
         $this->validate([
             'nombre' => 'required|string',
-            'descripcion' => 'required|string',
+            'descripcion' => 'required|string|max:10000',
         ]);
 
         if ($this->modoEdicion) {

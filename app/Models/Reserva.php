@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Modelo Eloquent para la cabecera de una reserva.
+ * Guarda turista, emprendimiento, estado, total, comprobante y datos de cancelacion,
+ * mientras sus detalles representan cada servicio reservado.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

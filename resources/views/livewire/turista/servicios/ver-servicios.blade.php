@@ -1,4 +1,5 @@
 {{-- Se aplica un margen negativo (-mt-6 md:-mt-8) para anular el padding que pone el layout principal y pegar la imagen al menú --}}
+{{-- Vista publica donde el turista consulta servicios, elige disponibilidad y arma su reserva. --}}
 <div class="w-full min-h-screen bg-[#f4f9f4] -mt-6 md:-mt-8 flex flex-col dark:bg-[#07110d]">
 
     {{-- Cabecera --}}

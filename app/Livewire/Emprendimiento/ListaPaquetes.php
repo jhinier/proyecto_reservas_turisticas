@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire que lista, edita y elimina paquetes turisticos del emprendimiento.
+ */
+
 namespace App\Livewire\Emprendimiento;
 
 use Livewire\Component;

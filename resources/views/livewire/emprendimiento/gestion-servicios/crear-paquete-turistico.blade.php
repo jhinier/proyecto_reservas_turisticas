@@ -1,3 +1,4 @@
+{{-- Formulario para registrar un paquete turistico con itinerario, precio, cupos e imagenes. --}}
 <div class="max-w-4xl mx-auto p-4 md:p-8 font-sans text-[#06281E] dark:text-gray-200">
     
     {{-- Cabecera --}}
