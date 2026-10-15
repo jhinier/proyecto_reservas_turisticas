@@ -110,11 +110,9 @@ La zona horaria de la aplicación ya está definida como `America/Guayaquil` en 
 
 ### Correo electrónico del GAD La Candelaria
 
-**El envío de mensajes debe realizarse desde la cuenta de correo institucional del GAD La Candelaria. La configuración y el tipo de clave dependen del proveedor que administra esa cuenta: Google, Microsoft u otro servicio.** El responsable del correo del GAD debe confirmar qué método de envío está permitido.
+**El correo electrónico y la clave para el envío de mensajes deben corresponder a la cuenta institucional del GAD La Candelaria. Estos datos deben ser proporcionados por el responsable del correo del GAD.**
 
-**No confunda la contraseña de aplicación con la contraseña habitual que utiliza para ingresar al correo.** La contraseña de aplicación es una clave especial que se genera desde las opciones de seguridad de la misma cuenta institucional y se utiliza para que el sistema pueda enviar mensajes. No es una clave inventada por el instalador ni una clave generada desde una cuenta personal diferente.
-
-El siguiente ejemplo corresponde al envío SMTP con una contraseña de aplicación, siempre que el proveedor y el administrador de la cuenta permitan ese método. Agregue o actualice estas variables en el `.env` del servidor:
+Agregue o actualice las siguientes variables en el `.env` del servidor:
 
 ```dotenv
 MAIL_MAILER=smtp
@@ -122,38 +120,15 @@ MAIL_SCHEME=smtp
 MAIL_HOST="SERVIDOR_SMTP_DEL_CORREO_DEL_GAD"
 MAIL_PORT=587
 MAIL_USERNAME="CORREO_INSTITUCIONAL_DEL_GAD_LA_CANDELARIA"
-MAIL_PASSWORD="CONTRASENA_DE_APLICACION_GENERADA_DESDE_EL_CORREO_DEL_GAD"
+MAIL_PASSWORD="CLAVE_QUE_GENERA_EL_CORREO_DEL_GAD_LA_CANDELARIA"
 MAIL_FROM_ADDRESS="CORREO_INSTITUCIONAL_DEL_GAD_LA_CANDELARIA"
 MAIL_FROM_NAME="GAD La Candelaria"
 ```
 
 - `MAIL_USERNAME`: dirección completa del correo institucional del GAD La Candelaria.
-- `MAIL_PASSWORD`: en este ejemplo, la contraseña de aplicación generada desde la cuenta institucional del GAD La Candelaria. Reemplace el texto de ejemplo por esa clave, no por la contraseña habitual de acceso al correo.
+- `MAIL_PASSWORD`: contraseña de esa cuenta o contraseña de aplicación, si el proveedor de correo la exige.
 - `MAIL_FROM_ADDRESS`: la misma dirección institucional autorizada para enviar mensajes.
 - `MAIL_HOST`, `MAIL_PORT` y `MAIL_SCHEME`: datos SMTP confirmados por el administrador del correo. El ejemplo utiliza el puerto 587 con STARTTLS; si el proveedor exige TLS implícito en el puerto 465, utilice `MAIL_SCHEME=smtps` y `MAIL_PORT=465`.
-
-#### Si el correo utiliza Gmail o Google Workspace
-
-Para utilizar una contraseña de aplicación:
-
-1. Ingrese a la cuenta institucional del GAD La Candelaria en Google.
-2. Active la verificación en dos pasos, si todavía no está activada.
-3. Abra [Contraseñas de aplicación de Google](https://myaccount.google.com/apppasswords) y genere una clave para el sistema de reservas.
-4. Coloque la clave generada, de 16 caracteres, en `MAIL_PASSWORD`.
-
-Si la opción no aparece, consulte al administrador: algunas cuentas institucionales tienen restricciones. Si cambia la contraseña habitual de la cuenta de Google, deberá generar otra contraseña de aplicación, porque Google revoca las anteriores. Consulte la [ayuda oficial de Google](https://support.google.com/accounts/answer/185833?hl=es).
-
-#### Si el correo utiliza Microsoft 365
-
-El administrador debe confirmar que la cuenta permite SMTP autenticado y qué método de autenticación admite. Algunas cuentas permiten generar una contraseña de aplicación desde sus opciones de seguridad; en ese caso, utilice la clave generada desde la cuenta institucional del GAD.
-
-**Si la cuenta exige autenticación moderna, una contraseña de aplicación tampoco funciona.** Se debe autorizar la aplicación mediante OAuth 2.0 y adaptar el envío de correos del sistema. Este caso no se resuelve únicamente cambiando `MAIL_PASSWORD`. Consulte la documentación de Microsoft sobre [contraseñas de aplicación](https://learn.microsoft.com/es-es/entra/identity/authentication/howto-mfa-app-passwords) y [envío SMTP mediante OAuth](https://learn.microsoft.com/es-es/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth).
-
-#### Si el correo utiliza otro proveedor
-
-Solicite al proveedor o al responsable del correo del GAD el servidor SMTP, el puerto, la seguridad de la conexión y el método de autenticación autorizado. Algunos servicios utilizan una contraseña de aplicación y otros permiten las credenciales habituales de la cuenta. Use la contraseña habitual únicamente si el proveedor confirma expresamente que corresponde a ese método de envío.
-
-Antes de completar `MAIL_PASSWORD`, confirme siempre qué credencial requiere la cuenta institucional. No aplique automáticamente las instrucciones de Google a un correo de Microsoft o de otro proveedor.
 
 La configuración de este proyecto utiliza `MAIL_SCHEME`. Si existe `MAIL_URL`, compruebe que no esté sobrescribiendo los datos SMTP anteriores. El valor `MAIL_MAILER=log` solo registra mensajes y debe cambiarse a `smtp` para enviar correos reales.
 
