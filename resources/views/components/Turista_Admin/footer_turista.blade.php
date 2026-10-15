@@ -3,7 +3,7 @@
      Diseño institucional, moderno y responsive
 ========================================================= -->
 
-<footer class="relative mt-10 overflow-hidden bg-[#014726] text-white dark:bg-[#031f17] sm:mt-16">
+<footer data-scroll-top-footer class="relative mt-10 overflow-hidden bg-[#014726] text-white dark:bg-[#031f17] sm:mt-16">
 
     <!-- Línea decorativa superior -->
     <div class="h-1 w-full bg-gradient-to-r from-[#0b8a0f] via-[#7ed957] to-[#0b8a0f] dark:from-[#052d1e] dark:via-[#7ed957] dark:to-[#052d1e]"></div>
@@ -143,13 +143,21 @@
                         Inicio
                     </a>
 
+                    <a
+                        href="{{ route('turista.servicios.index') }}"
+                        class="group flex items-center gap-2.5 text-xs text-white/60 transition duration-200 hover:translate-x-1 hover:text-[#7ed957] sm:gap-3 sm:text-sm"
+                    >
+                        <span class="h-1.5 w-1.5 rounded-full bg-[#7ed957]/70 transition group-hover:bg-[#7ed957]"></span>
+                        Servicios
+                    </a>
+
 
                     <a
                         href="{{ route('sitios') }}"
                         class="group flex items-center gap-2.5 text-xs text-white/60 transition duration-200 hover:translate-x-1 hover:text-[#7ed957] sm:gap-3 sm:text-sm"
                     >
                         <span class="h-1.5 w-1.5 rounded-full bg-[#7ed957]/70 transition group-hover:bg-[#7ed957]"></span>
-                        Atractivos Turísticos
+                        Sitios Tur&iacute;sticos
                     </a>
 
 
@@ -167,7 +175,7 @@
                         class="group flex items-center gap-2.5 text-xs text-white/60 transition duration-200 hover:translate-x-1 hover:text-[#7ed957] sm:gap-3 sm:text-sm"
                     >
                         <span class="h-1.5 w-1.5 rounded-full bg-[#7ed957]/70 transition group-hover:bg-[#7ed957]"></span>
-                        Festividades    
+                        Eventos
                     </a>
 
                 </nav>
@@ -440,9 +448,10 @@
 
     <button
         type="button"
+        data-footer-scroll-top
         onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
         aria-label="Volver arriba"
-        class="group fixed bottom-4 right-4 z-50 flex h-10 w-10 items-center justify-center rounded-xl bg-[#7ed957] text-[#10251b] shadow-lg shadow-black/20 transition duration-300 hover:-translate-y-1 hover:bg-[#91e76b] focus:outline-none focus:ring-2 focus:ring-[#7ed957] focus:ring-offset-2 focus:ring-offset-[#10251b] dark:focus:ring-offset-[#031f17] sm:bottom-6 sm:right-6 sm:h-11 sm:w-11"
+        class="group pointer-events-none fixed bottom-28 right-4 z-50 flex h-10 w-10 translate-y-4 items-center justify-center rounded-xl bg-[#7ed957] text-[#10251b] opacity-0 shadow-lg shadow-black/20 transition duration-300 hover:-translate-y-1 hover:bg-[#91e76b] focus:outline-none focus:ring-2 focus:ring-[#7ed957] focus:ring-offset-2 focus:ring-offset-[#10251b] dark:focus:ring-offset-[#031f17] sm:bottom-6 sm:right-6 sm:h-11 sm:w-11"
     >
 
         <svg
@@ -461,5 +470,53 @@
         </svg>
 
     </button>
+
+    <script>
+        (() => {
+            const initFooterScrollTop = () => {
+                document.querySelectorAll('[data-scroll-top-footer]').forEach((footer) => {
+                    const button = footer.querySelector('[data-footer-scroll-top]');
+
+                    if (!button || button.dataset.ready === 'true') {
+                        return;
+                    }
+
+                    button.dataset.ready = 'true';
+
+                    const toggleButton = (isVisible) => {
+                        button.classList.toggle('opacity-0', !isVisible);
+                        button.classList.toggle('pointer-events-none', !isVisible);
+                        button.classList.toggle('translate-y-4', !isVisible);
+                    };
+
+                    toggleButton(false);
+
+                    if ('IntersectionObserver' in window) {
+                        new IntersectionObserver(
+                            ([entry]) => toggleButton(entry.isIntersecting),
+                            { threshold: 0.08 }
+                        ).observe(footer);
+
+                        return;
+                    }
+
+                    const updateVisibility = () => {
+                        const rect = footer.getBoundingClientRect();
+                        toggleButton(rect.top < window.innerHeight && rect.bottom > 0);
+                    };
+
+                    updateVisibility();
+                    window.addEventListener('scroll', updateVisibility, { passive: true });
+                    window.addEventListener('resize', updateVisibility);
+                });
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initFooterScrollTop, { once: true });
+            } else {
+                initFooterScrollTop();
+            }
+        })();
+    </script>
 
 </footer>

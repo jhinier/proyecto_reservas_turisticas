@@ -2,31 +2,39 @@
 <div class="w-full pb-12 bg-transparent min-h-screen font-sans">
     <div class="max-w-4xl mx-auto px-4 pt-8 md:pt-12">
         
-        {{-- Indicador de pasos (Stepper) restaurado al estilo original --}}
-        <div class="flex items-center justify-center mb-10 overflow-x-auto pb-4">
-            <div class="flex items-center gap-2 shrink-0">
-                <div class="w-8 h-8 rounded-full bg-[#00A344] text-white flex items-center justify-center shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-                <span class="text-xs font-black text-[#00A344] uppercase tracking-widest">Servicios</span>
-            </div>
-            <div class="w-8 sm:w-16 h-[2px] bg-[#00A344] mx-2 sm:mx-4 shrink-0"></div>
-            
-            <div class="flex items-center gap-2 shrink-0">
-                <div class="w-8 h-8 rounded-full bg-[#00A344] text-white flex items-center justify-center shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-                <span class="text-xs font-black text-[#00A344] uppercase tracking-widest">Cliente</span>
-            </div>
-            <div class="w-8 sm:w-16 h-[2px] bg-[#00A344] mx-2 sm:mx-4 shrink-0"></div>
-            
-            <div class="flex items-center gap-2 shrink-0">
-                <div class="w-8 h-8 rounded-full border-2 border-[#06281E] text-[#06281E] font-black flex items-center justify-center bg-white shadow-sm">
-                    3
-                </div>
-                <span class="text-xs font-black text-[#06281E] uppercase tracking-widest">Resumen</span>
-            </div>
-        </div>
+        {{-- Indicador de pasos --}}
+        <nav aria-label="Progreso de reserva" class="mb-10 w-full">
+            <ol class="mx-auto grid w-full max-w-lg items-center gap-1" style="grid-template-columns: minmax(0, 1fr) minmax(1rem, 2rem) minmax(0, 1fr) minmax(1rem, 2rem) minmax(0, 1fr);">
+                <li class="flex min-w-0 flex-col items-center gap-1 text-center">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-[#00A344] text-white shadow-sm">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <span class="block max-w-full truncate text-[9px] font-black uppercase tracking-wide text-[#00A344] sm:text-xs sm:tracking-widest">Servicios</span>
+                </li>
+
+                <li class="h-[2px] w-full bg-[#00A344]"></li>
+
+                <li class="flex min-w-0 flex-col items-center gap-1 text-center">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-[#00A344] text-white shadow-sm">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <span class="block max-w-full truncate text-[9px] font-black uppercase tracking-wide text-[#00A344] sm:text-xs sm:tracking-widest">Cliente</span>
+                </li>
+
+                <li class="h-[2px] w-full bg-[#00A344]"></li>
+
+                <li class="flex min-w-0 flex-col items-center gap-1 text-center">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#06281E] bg-white font-black text-[#06281E] shadow-sm">
+                        3
+                    </div>
+                    <span class="block max-w-full truncate text-[9px] font-black uppercase tracking-wide text-[#06281E] sm:text-xs sm:tracking-widest">Resumen</span>
+                </li>
+            </ol>
+        </nav>
 
         {{-- CONTENEDOR PRINCIPAL TIPO FACTURA PROFESIONAL --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
