@@ -11,749 +11,554 @@
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
 
-
     <style>
 
         /* =====================================================
            CONTENEDOR GENERAL
         ====================================================== */
 
-        #mapaTuristicoWrapper {
-            position: relative;
+        #contenedorMapaTuristico {
+            width: 100%;
         }
 
+        #mapaTuristicoWrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        /* =====================================================
+           ESTRUCTURA MAPA + INFORMACIÓN
+        ====================================================== */
+
+        .mapa-contenido-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.65fr) minmax(320px, .85fr);
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .mapa-columna,
+        .informacion-columna {
+            min-width: 0;
+            height: 700px;
+        }
 
         /* =====================================================
            MAPA
         ====================================================== */
 
         #map {
-
             height: 700px;
-
             width: 100%;
-
             border-radius: 22px;
-
             overflow: hidden;
-
             border: 1px solid #e5e7eb;
-
-            box-shadow:
-                0 12px 35px rgba(0, 0, 0, 0.14);
-
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.14);
             background: #e5e7eb;
-
         }
-
 
         /* =====================================================
            MARCADORES
         ====================================================== */
 
         .marker-turistico {
-
             width: 46px;
-
             height: 46px;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             border-radius: 50%;
-
             background: white;
-
             border: 3px solid #16a34a;
-
             font-size: 23px;
-
-            box-shadow:
-                0 5px 14px rgba(0, 0, 0, .32);
-
+            box-shadow: 0 5px 14px rgba(0, 0, 0, .32);
             transition:
                 transform .2s ease,
                 box-shadow .2s ease;
-
         }
-
 
         .marker-turistico:hover {
-
-            transform:
-                scale(1.18)
-                translateY(-3px);
-
-            box-shadow:
-                0 8px 20px rgba(0, 0, 0, .38);
-
+            transform: scale(1.18) translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .38);
         }
+
         /* =====================================================
-           NOMBRE DE LOS LUGARES EN EL MAPA
+           NOMBRE DE LOS LUGARES
         ====================================================== */
 
-            .nombre-lugar-mapa {
-                background: white !important;
-                border: none !important;
-                border-radius: 8px !important;
-                padding: 5px 9px !important;
-                color: #166534 !important;
-                font-size: 12px !important;
-                font-weight: 700 !important;
-                box-shadow: 0 3px 10px rgba(0, 0, 0, .20) !important;
-                white-space: nowrap;
-            }
+        .nombre-lugar-mapa {
+            background: white !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 5px 9px !important;
+            color: #166534 !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .20) !important;
+            white-space: nowrap;
+        }
 
-            /* Quitar la flechita predeterminada */
-            .nombre-lugar-mapa::before {
-                display: none !important;
-            }
-
+        .nombre-lugar-mapa::before {
+            display: none !important;
+        }
 
         /* =====================================================
            BUSCADOR
         ====================================================== */
 
         .buscador-mapa {
-
             position: absolute;
-
             z-index: 1000;
-
             top: 15px;
-
             left: 15px;
-
             width: 300px;
-
         }
-
 
         .buscador-mapa input {
-
             width: 100%;
-
             height: 46px;
-
-            padding:
-                0 15px 0 43px;
-
-            border:
-
-                1px solid #d1d5db;
-
+            padding: 0 15px 0 43px;
+            border: 1px solid #d1d5db;
             border-radius: 14px;
-
             background: white;
-
-            box-shadow:
-                0 5px 18px rgba(0, 0, 0, .18);
-
+            box-shadow: 0 5px 18px rgba(0, 0, 0, .18);
             outline: none;
-
             font-size: 14px;
-
         }
 
-
         .buscador-mapa input:focus {
-
             border-color: #16a34a;
-
             box-shadow:
                 0 0 0 3px rgba(34,197,94,.15),
                 0 5px 18px rgba(0,0,0,.18);
-
         }
-
 
         .icono-busqueda {
-
             position: absolute;
-
             left: 15px;
-
             top: 12px;
-
             font-size: 18px;
-
             pointer-events: none;
-
         }
-
 
         /* =====================================================
            RESULTADOS BUSQUEDA
         ====================================================== */
 
         #resultadosBusqueda {
-
             display: none;
-
             margin-top: 7px;
-
             background: white;
-
             border-radius: 14px;
-
             overflow: hidden;
-
-            box-shadow:
-                0 7px 22px rgba(0,0,0,.20);
-
+            box-shadow: 0 7px 22px rgba(0,0,0,.20);
             max-height: 280px;
-
             overflow-y: auto;
-
         }
-
 
         .resultado-busqueda {
-
             padding: 11px 14px;
-
             cursor: pointer;
-
-            border-bottom:
-                1px solid #f3f4f6;
-
+            border-bottom: 1px solid #f3f4f6;
         }
-
 
         .resultado-busqueda:hover {
-
             background: #f0fdf4;
-
         }
-
 
         .resultado-nombre {
-
             font-weight: 700;
-
             color: #166534;
-
         }
-
 
         .resultado-categoria {
-
             font-size: 11px;
-
             color: #6b7280;
-
             margin-top: 2px;
-
         }
-
 
         /* =====================================================
            FILTROS
         ====================================================== */
 
         .filtros-mapa {
-
             position: absolute;
-
             z-index: 999;
-
             left: 15px;
-
             bottom: 15px;
-
             display: flex;
-
             flex-wrap: wrap;
-
             gap: 7px;
-
             max-width: calc(100% - 30px);
-
         }
-
 
         .filtro-btn {
-
             border: none;
-
             background: white;
-
             color: #374151;
-
-            padding:
-                8px 12px;
-
+            padding: 8px 12px;
             border-radius: 999px;
-
             font-size: 12px;
-
             font-weight: 600;
-
             cursor: pointer;
-
-            box-shadow:
-                0 4px 12px rgba(0,0,0,.18);
-
+            box-shadow: 0 4px 12px rgba(0,0,0,.18);
             transition: .2s;
-
         }
-
 
         .filtro-btn:hover {
-
-            transform:
-                translateY(-2px);
-
+            transform: translateY(-2px);
         }
-
 
         .filtro-btn.activo {
-
             background: #15803d;
-
             color: white;
-
         }
-
 
         /* =====================================================
            LEYENDA
         ====================================================== */
 
         .leyenda-mapa {
-
             background: white;
-
             padding: 13px 16px;
-
             border-radius: 15px;
-
-            box-shadow:
-                0 5px 18px rgba(0,0,0,.18);
-
+            box-shadow: 0 5px 18px rgba(0,0,0,.18);
             font-size: 12px;
-
             line-height: 1.8;
-
         }
-
 
         .leyenda-titulo {
-
             color: #166534;
-
             font-weight: 800;
-
             margin-bottom: 4px;
-
         }
-
 
         /* =====================================================
            CONTROL CAPAS
         ====================================================== */
 
         .leaflet-control-layers {
-
             border: none !important;
-
             border-radius: 14px !important;
-
             padding: 7px !important;
-
-            box-shadow:
-                0 5px 18px rgba(0,0,0,.18) !important;
-
+            box-shadow: 0 5px 18px rgba(0,0,0,.18) !important;
         }
-
 
         .leaflet-control-layers label {
-
             padding: 5px;
-
             font-size: 13px;
-
         }
-
 
         /* =====================================================
            BOTÓN CENTRAR
         ====================================================== */
 
         .btn-mapa {
-
             width: 42px;
-
             height: 42px;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             background: white;
-
             border-radius: 12px;
-
             cursor: pointer;
-
-            box-shadow:
-                0 4px 12px rgba(0,0,0,.20);
-
+            box-shadow: 0 4px 12px rgba(0,0,0,.20);
             font-size: 19px;
-
             transition: .2s;
-
         }
-
 
         .btn-mapa:hover {
-
             transform: scale(1.08);
-
             background: #f0fdf4;
-
         }
-
 
         /* =====================================================
            POPUP
         ====================================================== */
 
         .popup-turistico {
-
             width: 235px;
-
         }
-
 
         .popup-turistico img {
-
             width: 100%;
-
             height: 125px;
-
             object-fit: cover;
-
             border-radius: 11px;
-
             margin-bottom: 8px;
-
+            display: block;
         }
-
 
         .popup-turistico h3 {
-
             margin: 0;
-
             font-size: 17px;
-
             font-weight: 800;
-
             color: #166534;
-
         }
-
 
         .popup-categoria {
-
             display: inline-block;
-
             margin-top: 5px;
-
-            padding:
-                3px 9px;
-
+            padding: 3px 9px;
             border-radius: 999px;
-
             background: #dcfce7;
-
             color: #166534;
-
             font-size: 11px;
-
             font-weight: 700;
-
         }
 
+        /* =====================================================
+           PANEL INFORMACIÓN
+        ====================================================== */
+
+        #panelLugar {
+            width: 100%;
+            height: 700px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border-radius: 22px;
+            background: white;
+            padding: 22px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.10);
+            border: 1px solid #e5e7eb;
+            scrollbar-width: thin;
+            scrollbar-color: #86efac transparent;
+        }
+
+        #panelLugar::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        #panelLugar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #panelLugar::-webkit-scrollbar-thumb {
+            background: #86efac;
+            border-radius: 999px;
+        }
 
         /* =====================================================
            GALERÍA
         ====================================================== */
 
         .galeria-mapa {
-
             position: relative;
-
-            height: 250px;
-
+            width: 100%;
+            height: 260px;
             overflow: hidden;
-
             border-radius: 16px;
-
             background: #f0fdf4;
-
         }
-
 
         .galeria-mapa img {
-
             width: 100%;
-
             height: 100%;
-
+            display: block;
             object-fit: cover;
-
+            object-position: center;
         }
-
 
         .btn-galeria {
-
             position: absolute;
-
             top: 50%;
-
             transform: translateY(-50%);
-
             width: 36px;
-
             height: 36px;
-
             border: none;
-
             border-radius: 50%;
-
             background: rgba(255,255,255,.92);
-
-            box-shadow:
-                0 3px 10px rgba(0,0,0,.2);
-
+            box-shadow: 0 3px 10px rgba(0,0,0,.2);
             cursor: pointer;
-
             font-size: 17px;
-
+            z-index: 5;
         }
-
 
         .btn-galeria:hover {
-
             background: white;
-
         }
-
 
         .btn-anterior {
-
             left: 10px;
-
         }
-
 
         .btn-siguiente {
-
             right: 10px;
-
         }
-
 
         .contador-galeria {
-
             position: absolute;
-
             right: 10px;
-
             bottom: 10px;
-
-            padding:
-                4px 9px;
-
+            padding: 4px 9px;
             border-radius: 999px;
-
-            background:
-                rgba(0,0,0,.55);
-
+            background: rgba(0,0,0,.55);
             color: white;
-
             font-size: 11px;
-
         }
-
 
         /* =====================================================
            ESTRELLAS
         ====================================================== */
 
         .estrellas {
-
             color: #f59e0b;
-
             letter-spacing: 2px;
-
             font-size: 18px;
-
         }
 
+        /* =====================================================
+           DATOS
+        ====================================================== */
+
+        .dato-lugar {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .dato-icono {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            background: #f0fdf4;
+            font-size: 18px;
+        }
 
         /* =====================================================
            BOTONES PANEL
         ====================================================== */
 
         .btn-principal {
-
             display: block;
-
             width: 100%;
-
             padding: 12px;
-
             border-radius: 12px;
-
             text-align: center;
-
             font-weight: 700;
-
             color: white;
-
             background: #16a34a;
-
             transition: .2s;
-
         }
-
 
         .btn-principal:hover {
-
             background: #15803d;
-
-            transform:
-                translateY(-1px);
-
+            transform: translateY(-1px);
         }
-
 
         .btn-secundario {
-
             display: block;
-
             width: 100%;
-
             padding: 12px;
-
             border-radius: 12px;
-
             text-align: center;
-
             font-weight: 700;
-
             color: #166534;
-
             background: #dcfce7;
-
             transition: .2s;
-
         }
-
 
         .btn-secundario:hover {
-
             background: #bbf7d0;
-
         }
-
 
         /* =====================================================
-           PANEL INFORMACIÓN
+           RESPONSIVE TABLET
         ====================================================== */
 
-        .dato-lugar {
+        @media (max-width: 1100px) {
 
-            display: flex;
+            .mapa-contenido-grid {
+                grid-template-columns: minmax(0, 1.4fr) minmax(300px, .8fr);
+                gap: 16px;
+            }
 
-            gap: 12px;
-
-            align-items: flex-start;
-
-        }
-
-
-        .dato-icono {
-
-            width: 38px;
-
-            height: 38px;
-
-            min-width: 38px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            border-radius: 11px;
-
-            background: #f0fdf4;
-
-            font-size: 18px;
-
-        }
-
-
-        /* =====================================================
-           RESPONSIVE
-        ====================================================== */
-
-        @media (max-width: 1024px) {
+            #panelLugar {
+                padding: 18px;
+            }
 
             .buscador-mapa {
-
                 width: 250px;
-
             }
 
         }
 
+        /* =====================================================
+           RESPONSIVE MÓVIL
+        ====================================================== */
+
+        @media (max-width: 900px) {
+
+            .mapa-contenido-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mapa-columna,
+            .informacion-columna {
+                height: auto;
+            }
+
+            #map {
+                height: 550px;
+                border-radius: 18px;
+            }
+
+            #panelLugar {
+                height: 650px;
+                border-radius: 18px;
+            }
+
+        }
 
         @media (max-width: 640px) {
 
             #map {
-
-                height: 550px;
-
+                height: 520px;
                 border-radius: 15px;
-
             }
 
+            #panelLugar {
+                height: 620px;
+                padding: 16px;
+                border-radius: 15px;
+            }
 
             .buscador-mapa {
-
                 width: calc(100% - 30px);
-
             }
-
 
             .filtros-mapa {
-
                 bottom: 10px;
-
+                gap: 5px;
             }
 
-
             .filtro-btn {
+                padding: 7px 9px;
+                font-size: 11px;
+            }
 
-                padding:
-                    7px 9px;
-
+            .galeria-mapa {
+                height: 230px;
             }
 
         }
 
+        /* =====================================================
+           MODO OSCURO
+        ====================================================== */
+
         .dark #map {
             box-shadow: 0 18px 45px rgba(0,0,0,.45);
+        }
+
+        .dark #panelLugar {
+            background: #18181b;
+            border-color: rgba(255,255,255,.10);
+            color: #e5e7eb;
         }
 
         .dark .leaflet-control-layers,
@@ -762,6 +567,16 @@
             background: #18181b;
             color: #e5e7eb;
         }
+
+        .dark .resultado-busqueda {
+            background: #18181b;
+            border-color: #27272a;
+        }
+
+        .dark .resultado-busqueda:hover {
+            background: #27272a;
+        }
+
     </style>
 
 
@@ -771,28 +586,20 @@
 
     <div class="mx-auto max-w-7xl p-4 sm:p-6">
 
-
         {{-- =====================================================
              CABECERA
         ====================================================== --}}
 
         <div class="mb-6">
 
-            <div class="flex items-center gap-3">
-            <h1 class="text-3xl font-bold text-emerald-700 dark:text-emerald-300">
-                🗺️ Mapa Turístico de La Candelaria
-            </h1>
-
-            <p class="text-gray-500 mt-2 dark:text-slate-300">
-                Explora los atractivos turísticos de manera interactiva.
-            </p>
-        </div>
+            <div class="flex items-center gap-4">
 
                 <div
                     class="
                         flex
                         h-12
                         w-12
+                        min-w-12
                         items-center
                         justify-center
                         rounded-2xl
@@ -810,17 +617,24 @@
                             text-2xl
                             font-bold
                             text-emerald-700
+                            dark:text-emerald-300
                             sm:text-3xl
                         "
                     >
                         Mapa Turístico de La Candelaria
                     </h1>
 
-                    <p class="mt-1 text-sm text-gray-500 sm:text-base">
-
+                    <p
+                        class="
+                            mt-1
+                            text-sm
+                            text-gray-500
+                            dark:text-slate-300
+                            sm:text-base
+                        "
+                    >
                         Explora, descubre y vive los atractivos turísticos
                         de nuestra parroquia.
-
                     </p>
 
                 </div>
@@ -829,35 +643,22 @@
 
         </div>
 
-                <div id="panelLugar"
-                     class="bg-white rounded-2xl shadow-lg h-[700px] p-6 overflow-y-auto dark:border dark:border-white/10 dark:bg-zinc-900">
 
         {{-- =====================================================
-             MAPA + PANEL
+             MAPA + PANEL DE INFORMACIÓN
         ====================================================== --}}
 
-        <div class="grid grid-cols-12 gap-6">
-
+        <div class="mapa-contenido-grid">
 
             {{-- =================================================
-                 MAPA
+                 COLUMNA MAPA
             ================================================== --}}
 
-            <div
-                class="
-                    col-span-12
-                    lg:col-span-8
-                "
-            >
+            <div class="mapa-columna">
 
-                <div
-                    id="mapaTuristicoWrapper"
-                >
+                <div id="mapaTuristicoWrapper">
 
-
-                    {{-- =========================================
-                         BUSCADOR
-                    ========================================== --}}
+                    {{-- BUSCADOR --}}
 
                     <div class="buscador-mapa">
 
@@ -872,23 +673,17 @@
                             autocomplete="off"
                         >
 
-                        <div
-                            id="resultadosBusqueda"
-                        ></div>
+                        <div id="resultadosBusqueda"></div>
 
                     </div>
 
 
-                    {{-- =========================================
-                         MAPA
-                    ========================================== --}}
+                    {{-- MAPA --}}
 
                     <div id="map"></div>
 
 
-                    {{-- =========================================
-                         FILTROS
-                    ========================================== --}}
+                    {{-- FILTROS --}}
 
                     <div
                         id="filtrosMapa"
@@ -896,6 +691,7 @@
                     >
 
                         <button
+                            type="button"
                             class="filtro-btn activo"
                             data-categoria="todos"
                         >
@@ -903,6 +699,7 @@
                         </button>
 
                         <button
+                            type="button"
                             class="filtro-btn"
                             data-categoria="naturaleza"
                         >
@@ -910,6 +707,7 @@
                         </button>
 
                         <button
+                            type="button"
                             class="filtro-btn"
                             data-categoria="hospedaje"
                         >
@@ -917,6 +715,7 @@
                         </button>
 
                         <button
+                            type="button"
                             class="filtro-btn"
                             data-categoria="festividad"
                         >
@@ -924,6 +723,7 @@
                         </button>
 
                         <button
+                            type="button"
                             class="filtro-btn"
                             data-categoria="gastronomia"
                         >
@@ -931,6 +731,7 @@
                         </button>
 
                         <button
+                            type="button"
                             class="filtro-btn"
                             data-categoria="actividad"
                         >
@@ -945,35 +746,23 @@
 
 
             {{-- =================================================
-                 PANEL
+                 COLUMNA INFORMACIÓN
             ================================================== --}}
 
-            <div
-                class="
-                    col-span-12
-                    lg:col-span-4
-                "
-            >
+            <div class="informacion-columna">
 
-                <div
-                    id="panelLugar"
-                    class="
-                        h-[700px]
-                        overflow-y-auto
-                        rounded-2xl
-                        bg-white
-                        p-6
-                        shadow-lg
-                    "
-                >
+                <div id="panelLugar">
+
+                    {{-- ESTADO INICIAL --}}
 
                     <div
                         class="
                             flex
-                            h-full
+                            min-h-full
                             flex-col
                             items-center
                             justify-center
+                            px-4
                             text-center
                         "
                     >
@@ -994,37 +783,29 @@
                             🧭
                         </div>
 
-
                         <h2
                             class="
                                 text-2xl
                                 font-bold
                                 text-gray-700
+                                dark:text-white
                             "
                         >
                             Explora La Candelaria
                         </h2>
-
-                        <h2 class="text-2xl font-bold text-gray-700 dark:text-white">
-                            Explora el mapa
-                        </h2>
-
-                        <p class="text-gray-500 mt-4 dark:text-slate-300">
-
-                            Haz clic sobre cualquier marcador para visualizar toda la información del atractivo turístico.
 
                         <p
                             class="
                                 mt-4
                                 max-w-sm
                                 text-gray-500
+                                dark:text-slate-300
                             "
                         >
-                            Selecciona un marcador para descubrir
-                            información, fotografías y detalles
-                            del atractivo turístico.
+                            Haz clic sobre cualquier marcador del mapa
+                            para visualizar la información del atractivo
+                            turístico.
                         </p>
-
 
                         <div
                             class="
@@ -1037,9 +818,7 @@
                                 text-emerald-700
                             "
                         >
-
                             📍 Descubre los lugares turísticos
-
                         </div>
 
                     </div>
@@ -1089,20 +868,13 @@
 
         function iniciarMapaTuristico() {
 
-
-            /*
-             * Si ya existe el mapa, no lo volvemos a crear.
-             */
-
             if (mapaTuristico) {
-
                 return;
-
             }
 
 
             /* =================================================
-               CARGAR LUGARES DESDE LARAVEL
+               LUGARES
             ================================================== */
 
             lugaresTuristicos = @json($lugares);
@@ -1113,23 +885,14 @@
             ================================================== */
 
             mapaTuristico = L.map(
-
                 'map',
-
                 {
-
                     zoomControl: false,
-
                     worldCopyJump: false,
-
                     minZoom: 11,
-
                     maxZoom: 18,
-
                     attributionControl: true
-
                 }
-
             );
 
 
@@ -1138,14 +901,12 @@
             ================================================== */
 
             L.control.zoom({
-
                 position: 'topright'
-
             }).addTo(mapaTuristico);
 
 
             /* =================================================
-               CAPAS BASE
+               CAPAS
             ================================================== */
 
             const cartoVoyager = L.tileLayer(
@@ -1153,12 +914,9 @@
                 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
 
                 {
-
                     attribution:
                         '&copy; OpenStreetMap &copy; CARTO',
-
                     maxZoom: 20
-
                 }
 
             );
@@ -1169,12 +927,9 @@
                 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
 
                 {
-
                     attribution:
                         'Tiles &copy; Esri',
-
                     maxZoom: 19
-
                 }
 
             );
@@ -1185,20 +940,13 @@
                 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
 
                 {
-
                     attribution:
                         '&copy; OpenTopoMap',
-
                     maxZoom: 17
-
                 }
 
             );
 
-
-            /* =================================================
-               VOYAGER POR DEFECTO
-            ================================================== */
 
             cartoVoyager.addTo(
                 mapaTuristico
@@ -1206,13 +954,12 @@
 
 
             /* =================================================
-               CONTROL DE CAPAS
+               CONTROL CAPAS
             ================================================== */
 
             L.control.layers(
 
                 {
-
                     "🗺️ Mapa turístico":
                         cartoVoyager,
 
@@ -1221,17 +968,13 @@
 
                     "⛰️ Topográfico":
                         topografico
-
                 },
 
                 null,
 
                 {
-
                     collapsed: true,
-
                     position: 'topright'
-
                 }
 
             ).addTo(mapaTuristico);
@@ -1245,7 +988,7 @@
 
 
             /* =================================================
-               CREAR MARCADORES
+               MARCADORES
             ================================================== */
 
             crearMarcadores();
@@ -1268,11 +1011,10 @@
 
 
         /* =====================================================
-           CARGAR LÍMITE DE LA CANDELARIA
+           CARGAR LÍMITE
         ====================================================== */
 
         function cargarLimiteCandelaria() {
-
 
             fetch(
                 '/geojson/la-candelaria.geojson'
@@ -1293,11 +1035,6 @@
             })
 
             .then(data => {
-
-
-                /* =============================================
-                   CAPA GEOJSON
-                ============================================== */
 
                 limiteCandelaria = L.geoJSON(
 
@@ -1321,21 +1058,16 @@
 
                         },
 
-
                         onEachFeature:
                             function(feature, layer) {
-
 
                                 layer.bindTooltip(
 
                                     '📍 Parroquia La Candelaria',
 
                                     {
-
                                         sticky: true,
-
                                         direction: 'top'
-
                                     }
 
                                 );
@@ -1358,7 +1090,6 @@
 
                                         },
 
-
                                     mouseout:
                                         function(e) {
 
@@ -1376,15 +1107,9 @@
                     }
 
                 ).addTo(
-
                     mapaTuristico
-
                 );
 
-
-                /* =============================================
-                   BOUNDS
-                ============================================== */
 
                 boundsCandelaria =
                     limiteCandelaria.getBounds();
@@ -1395,17 +1120,11 @@
                     boundsCandelaria,
 
                     {
-
                         padding: [25, 25]
-
                     }
 
                 );
 
-
-                /* =============================================
-                   RESTRINGIR MAPA
-                ============================================== */
 
                 mapaTuristico.setMaxBounds(
 
@@ -1418,19 +1137,9 @@
                     1.0;
 
 
-                /* =============================================
-                   BOTÓN CENTRAR
-                ============================================== */
-
                 agregarBotonCentrar();
 
-
-                /* =============================================
-                   LEYENDA
-                ============================================== */
-
                 agregarLeyenda();
-
 
             })
 
@@ -1452,11 +1161,9 @@
 
         function crearMarcadores() {
 
-
             lugaresTuristicos.forEach(
 
                 function(lugar, index) {
-
 
                     const lat =
                         parseFloat(lugar.lat);
@@ -1465,31 +1172,17 @@
                         parseFloat(lugar.lng);
 
 
-                    /*
-                     * Validar coordenadas
-                     */
-
                     if (
                         isNaN(lat) ||
                         isNaN(lng)
                     ) {
-
                         return;
-
                     }
 
-
-                    /*
-                     * Emoji
-                     */
 
                     const emoji =
                         obtenerEmoji(lugar);
 
-
-                    /*
-                     * Icono
-                     */
 
                     const icono =
                         L.divIcon({
@@ -1519,23 +1212,14 @@
                         });
 
 
-                    /*
-                     * Marcador
-                     */
-
                     const marcador =
                         L.marker(
 
                             [lat, lng],
 
                             {
-
-                                icon:
-                                    icono,
-
-                                title:
-                                    lugar.nombre
-
+                                icon: icono,
+                                title: lugar.nombre
                             }
 
                         ).addTo(
@@ -1543,31 +1227,19 @@
                         );
 
 
-                         /*
-                          * Nombre visible permanentemente
-                          */
+                    marcador.bindTooltip(
 
-                         marcador.bindTooltip(
+                        lugar.nombre,
 
-                             lugar.nombre,
+                        {
+                            permanent: true,
+                            direction: 'top',
+                            offset: [0, -42],
+                            className: 'nombre-lugar-mapa'
+                        }
 
-                             {
+                    );
 
-                                 permanent: true,
-
-                                 direction: 'top',
-
-                                 offset: [0, -42],
-
-                                 className: 'nombre-lugar-mapa'
-
-                             }
-
-                         );
-
-                    /*
-                     * Guardar referencia
-                     */
 
                     marcadoresTuristicos.push({
 
@@ -1583,35 +1255,20 @@
                     });
 
 
-                    /*
-                     * Popup
-                     */
-
                     marcador.bindPopup(
 
                         crearPopup(lugar),
 
                         {
-
-                            maxWidth:
-                                280,
-
-                            className:
-                                'popup-lugar'
-
+                            maxWidth: 280,
+                            className: 'popup-lugar'
                         }
 
                     );
 
 
-                    /*
-                     * Click
-                     */
-
                     marcador.on(
-
                         'click',
-
                         function() {
 
                             mostrarLugar(
@@ -1619,7 +1276,6 @@
                             );
 
                         }
-
                     );
 
                 }
@@ -1630,11 +1286,10 @@
 
 
         /* =====================================================
-           OBTENER EMOJI
+           EMOJI
         ====================================================== */
 
         function obtenerEmoji(lugar) {
-
 
             const categoria =
                 String(
@@ -1706,9 +1361,15 @@
                 return '🏞️';
 
             }
-            if (icono === 'cooperativa') {
-               return '🏢';
-}              
+
+
+            if (
+                icono === 'cooperativa'
+            ) {
+
+                return '🏢';
+
+            }
 
 
             return '📍';
@@ -1717,11 +1378,10 @@
 
 
         /* =====================================================
-           CREAR POPUP
+           POPUP
         ====================================================== */
 
         function crearPopup(lugar) {
-
 
             const imagen =
 
@@ -1735,9 +1395,7 @@
 
             return `
 
-                <div
-                    class="popup-turistico"
-                >
+                <div class="popup-turistico">
 
                     ${
                         imagen
@@ -1754,21 +1412,18 @@
                         : ''
                     }
 
-
                     <h3>
                         ${lugar.nombre}
                     </h3>
 
+                    <span class="popup-categoria">
 
-                    <span
-                        class="popup-categoria"
-                    >
                         ${
                             lugar.categoria ||
                             'Lugar turístico'
                         }
-                    </span>
 
+                    </span>
 
                     <p
                         style="
@@ -1794,7 +1449,6 @@
 
         function configurarBuscador() {
 
-
             const input =
                 document.getElementById(
                     'buscadorLugar'
@@ -1807,12 +1461,16 @@
                 );
 
 
+            if (!input || !resultados) {
+                return;
+            }
+
+
             input.addEventListener(
 
                 'input',
 
                 function() {
-
 
                     const texto =
                         this.value
@@ -1885,7 +1543,6 @@
 
                         function(lugar) {
 
-
                             const div =
                                 document.createElement(
                                     'div'
@@ -1927,8 +1584,10 @@
                                         lugar
                                     );
 
+
                                     resultados.style.display =
                                         'none';
+
 
                                     input.value =
                                         lugar.nombre;
@@ -1954,11 +1613,6 @@
 
             );
 
-
-            /*
-             * Cerrar resultados al hacer
-             * clic fuera.
-             */
 
             document.addEventListener(
 
@@ -1990,7 +1644,6 @@
 
         function seleccionarLugar(lugar) {
 
-
             const encontrado =
                 marcadoresTuristicos.find(
 
@@ -2002,9 +1655,7 @@
 
 
             if (!encontrado) {
-
                 return;
-
             }
 
 
@@ -2022,9 +1673,7 @@
                 16,
 
                 {
-
                     duration: 1.2
-
                 }
 
             );
@@ -2054,7 +1703,6 @@
 
         function configurarFiltros() {
 
-
             document
                 .querySelectorAll(
                     '.filtro-btn'
@@ -2063,13 +1711,11 @@
 
                     function(boton) {
 
-
                         boton.addEventListener(
 
                             'click',
 
                             function() {
-
 
                                 document
                                     .querySelectorAll(
@@ -2113,15 +1759,11 @@
            FILTRAR MARCADORES
         ====================================================== */
 
-        function filtrarMarcadores(
-            categoria
-        ) {
-
+        function filtrarMarcadores(categoria) {
 
             marcadoresTuristicos.forEach(
 
                 function(item) {
-
 
                     const lugar =
                         item.lugar;
@@ -2137,13 +1779,10 @@
 
 
                     if (
-                        categoria !==
-                        'todos'
+                        categoria !== 'todos'
                     ) {
 
-                        switch (
-                            categoria
-                        ) {
+                        switch (categoria) {
 
                             case 'naturaleza':
 
@@ -2228,9 +1867,7 @@
 
                         }
 
-                    }
-
-                    else {
+                    } else {
 
                         if (
                             mapaTuristico.hasLayer(
@@ -2259,21 +1896,16 @@
 
         function agregarBotonCentrar() {
 
-
             const CentroControl =
                 L.Control.extend({
 
                     options: {
-
-                        position:
-                            'topleft'
-
+                        position: 'topleft'
                     },
 
 
                     onAdd:
                         function() {
-
 
                             const container =
                                 L.DomUtil.create(
@@ -2321,10 +1953,8 @@
                                             boundsCandelaria,
 
                                             {
-
                                                 padding:
                                                     [25, 25]
-
                                             }
 
                                         );
@@ -2344,9 +1974,7 @@
 
 
             mapaTuristico.addControl(
-
                 new CentroControl()
-
             );
 
         }
@@ -2357,7 +1985,6 @@
         ====================================================== */
 
         function agregarLeyenda() {
-
 
             const leyenda =
                 L.control({
@@ -2371,7 +1998,6 @@
             leyenda.onAdd =
                 function() {
 
-
                     const div =
                         L.DomUtil.create(
                             'div',
@@ -2381,9 +2007,7 @@
 
                     div.innerHTML = `
 
-                        <div
-                            class="leyenda-titulo"
-                        >
+                        <div class="leyenda-titulo">
                             🗺️ Referencias
                         </div>
 
@@ -2428,7 +2052,6 @@
 
         function mostrarLugar(lugar) {
 
-
             const panel =
                 document.getElementById(
                     'panelLugar'
@@ -2436,9 +2059,7 @@
 
 
             if (!panel) {
-
                 return;
-
             }
 
 
@@ -2458,18 +2079,6 @@
 
                 : [];
 
-
-            const imagenPrincipal =
-                imagenes.length
-
-                    ? imagenes[0]
-
-                    : null;
-
-
-            /* =================================================
-               ESTRELLAS
-            ================================================== */
 
             const rating =
                 parseFloat(
@@ -2504,16 +2113,13 @@
 
                 galeriaHTML = `
 
-                    <div
-                        class="galeria-mapa"
-                    >
+                    <div class="galeria-mapa">
 
                         <img
                             id="imagenGaleria"
                             src="${imagenes[0]}"
                             alt="${lugar.nombre}"
                         >
-
 
                         ${
                             imagenes.length > 1
@@ -2550,9 +2156,7 @@
 
                                 <div
                                     id="contadorGaleria"
-                                    class="
-                                        contador-galeria
-                                    "
+                                    class="contador-galeria"
                                 >
                                     1 /
                                     ${imagenes.length}
@@ -2567,16 +2171,14 @@
 
                 `;
 
-            }
-
-            else {
+            } else {
 
                 galeriaHTML = `
 
                     <div
                         class="
                             flex
-                            h-[250px]
+                            h-[260px]
                             items-center
                             justify-center
                             rounded-2xl
@@ -2621,9 +2223,7 @@
                             hover:bg-red-100
                         "
                     >
-
                         ▶️ Ver video turístico
-
                     </a>
 
                 `;
@@ -2656,9 +2256,7 @@
                         rel="noopener noreferrer"
                         class="btn-principal"
                     >
-
                         📅 Reservar
-
                     </a>
 
                 `;
@@ -2667,17 +2265,15 @@
 
 
             /* =================================================
-               PANEL
+               CONTENIDO DEL PANEL
             ================================================== */
 
             panel.innerHTML = `
-
 
                 ${galeriaHTML}
 
 
                 <div class="mt-5">
-
 
                     <div
                         class="
@@ -2688,13 +2284,15 @@
                         "
                     >
 
-                        <div>
+                        <div class="min-w-0">
 
                             <h2
                                 class="
                                     text-2xl
                                     font-bold
+                                    leading-tight
                                     text-emerald-700
+                                    dark:text-emerald-400
                                 "
                             >
                                 ${lugar.nombre}
@@ -2714,12 +2312,10 @@
                                     text-emerald-700
                                 "
                             >
-
                                 ${
                                     lugar.categoria ||
                                     'Turismo'
                                 }
-
                             </span>
 
                         </div>
@@ -2727,21 +2323,20 @@
 
                         <div
                             class="
+                                shrink-0
                                 text-right
                             "
                         >
 
-                            <div
-                                class="estrellas"
-                            >
+                            <div class="estrellas">
                                 ${estrellas}
                             </div>
-
 
                             <div
                                 class="
                                     text-xs
                                     text-gray-500
+                                    dark:text-slate-400
                                 "
                             >
                                 ${rating || 'Sin'}
@@ -2762,34 +2357,31 @@
                             mt-5
                             leading-relaxed
                             text-gray-700
+                            dark:text-slate-300
                         "
                     >
-
                         ${
                             lugar.descripcion ||
                             'No hay descripción disponible.'
                         }
-
                     </p>
 
 
                     <hr
-                        class="my-5"
+                        class="
+                            my-5
+                            border-gray-200
+                            dark:border-zinc-700
+                        "
                     >
 
 
-                    <div
-                        class="space-y-4"
-                    >
+                    <div class="space-y-4">
 
 
-                        <div
-                            class="dato-lugar"
-                        >
+                        <div class="dato-lugar">
 
-                            <div
-                                class="dato-icono"
-                            >
+                            <div class="dato-icono">
                                 🕒
                             </div>
 
@@ -2799,6 +2391,7 @@
                                     class="
                                         font-bold
                                         text-gray-700
+                                        dark:text-white
                                     "
                                 >
                                     Horario
@@ -2808,14 +2401,13 @@
                                     class="
                                         text-sm
                                         text-gray-500
+                                        dark:text-slate-400
                                     "
                                 >
-
                                     ${
                                         lugar.horario ||
                                         'No disponible'
                                     }
-
                                 </div>
 
                             </div>
@@ -2823,13 +2415,9 @@
                         </div>
 
 
-                        <div
-                            class="dato-lugar"
-                        >
+                        <div class="dato-lugar">
 
-                            <div
-                                class="dato-icono"
-                            >
+                            <div class="dato-icono">
                                 ⏳
                             </div>
 
@@ -2839,6 +2427,7 @@
                                     class="
                                         font-bold
                                         text-gray-700
+                                        dark:text-white
                                     "
                                 >
                                     Tiempo estimado
@@ -2848,14 +2437,13 @@
                                     class="
                                         text-sm
                                         text-gray-500
+                                        dark:text-slate-400
                                     "
                                 >
-
                                     ${
                                         lugar.tiempo ||
                                         'No disponible'
                                     }
-
                                 </div>
 
                             </div>
@@ -2863,13 +2451,9 @@
                         </div>
 
 
-                        <div
-                            class="dato-lugar"
-                        >
+                        <div class="dato-lugar">
 
-                            <div
-                                class="dato-icono"
-                            >
+                            <div class="dato-icono">
                                 🥾
                             </div>
 
@@ -2879,6 +2463,7 @@
                                     class="
                                         font-bold
                                         text-gray-700
+                                        dark:text-white
                                     "
                                 >
                                     Dificultad
@@ -2888,14 +2473,13 @@
                                     class="
                                         text-sm
                                         text-gray-500
+                                        dark:text-slate-400
                                     "
                                 >
-
                                     ${
                                         lugar.dificultad ||
                                         'No especificada'
                                     }
-
                                 </div>
 
                             </div>
@@ -2903,13 +2487,9 @@
                         </div>
 
 
-                        <div
-                            class="dato-lugar"
-                        >
+                        <div class="dato-lugar">
 
-                            <div
-                                class="dato-icono"
-                            >
+                            <div class="dato-icono">
                                 📍
                             </div>
 
@@ -2919,6 +2499,7 @@
                                     class="
                                         font-bold
                                         text-gray-700
+                                        dark:text-white
                                     "
                                 >
                                     Ubicación
@@ -2928,11 +2509,10 @@
                                     class="
                                         text-sm
                                         text-gray-500
+                                        dark:text-slate-400
                                     "
                                 >
-
                                     La Candelaria
-
                                 </div>
 
                             </div>
@@ -2957,20 +2537,15 @@
 
 
                         <a
-                            href="
-                                https://www.google.com/maps?q=${lugar.lat},${lugar.lng}
-                            "
+                            href="https://www.google.com/maps?q=${lugar.lat},${lugar.lng}"
                             target="_blank"
                             rel="noopener noreferrer"
                             class="btn-secundario"
                         >
-
                             📍 Cómo llegar
-
                         </a>
 
                     </div>
-
 
                 </div>
 
@@ -2984,7 +2559,6 @@
         ====================================================== */
 
         function cambiarImagen(direccion) {
-
 
             if (
                 !lugarGaleriaActual ||
@@ -3003,18 +2577,14 @@
 
 
             if (!imagenes.length) {
-
                 return;
-
             }
 
 
             imagenActual += direccion;
 
 
-            if (
-                imagenActual < 0
-            ) {
+            if (imagenActual < 0) {
 
                 imagenActual =
                     imagenes.length - 1;
@@ -3055,9 +2625,7 @@
             if (contador) {
 
                 contador.innerHTML =
-
-                    `${imagenActual + 1} /
-                     ${imagenes.length}`;
+                    `${imagenActual + 1} / ${imagenes.length}`;
 
             }
 
@@ -3072,14 +2640,21 @@
 
             'DOMContentLoaded',
 
-            iniciarMapaTuristico
+            function() {
+
+                setTimeout(
+                    iniciarMapaTuristico,
+                    100
+                );
+
+            }
 
         );
 
 
-        /*
-         * Compatible con Livewire Navigate.
-         */
+        /* =====================================================
+           LIVEWIRE NAVIGATE
+        ====================================================== */
 
         document.addEventListener(
 
@@ -3089,7 +2664,17 @@
 
                 setTimeout(
 
-                    iniciarMapaTuristico,
+                    function() {
+
+                        iniciarMapaTuristico();
+
+                        if (mapaTuristico) {
+
+                            mapaTuristico.invalidateSize();
+
+                        }
+
+                    },
 
                     100
 

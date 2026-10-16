@@ -3,8 +3,15 @@
 
 <head>
     @include('partials.head')
+
     <style>
-        [x-cloak] { display: none !important; }
+        [x-cloak] {
+            display: none !important;
+        }
+
+        /* =========================================================
+           ESTILOS GENERALES DEL ADMIN
+           ========================================================= */
 
         html.dark .admin-gad-shell {
             color-scheme: dark;
@@ -87,6 +94,10 @@
             color: rgba(187, 247, 208, 0.75) !important;
         }
 
+        /* =========================================================
+           COLORES DEL CONTENIDO EN MODO OSCURO
+           ========================================================= */
+
         html.dark .admin-gad-shell main .bg-white,
         html.dark .admin-gad-shell [data-flux-modal] .bg-white {
             background-color: #0b1512 !important;
@@ -130,6 +141,10 @@
             background-color: rgba(16, 185, 129, 0.10) !important;
         }
 
+        /* =========================================================
+           BORDES
+           ========================================================= */
+
         html.dark .admin-gad-shell main .border-slate-100,
         html.dark .admin-gad-shell main .border-slate-200,
         html.dark .admin-gad-shell main .border-gray-100,
@@ -161,6 +176,10 @@
         html.dark .admin-gad-shell main .border-danger {
             border-color: rgba(248, 113, 113, 0.42) !important;
         }
+
+        /* =========================================================
+           TEXTOS
+           ========================================================= */
 
         html.dark .admin-gad-shell main .text-slate-900,
         html.dark .admin-gad-shell main .text-gray-900,
@@ -203,6 +222,10 @@
         html.dark .admin-gad-shell main .text-neutral-400 {
             color: rgba(209, 250, 229, 0.72) !important;
         }
+
+        /* =========================================================
+           COLORES DE ESTADO
+           ========================================================= */
 
         html.dark .admin-gad-shell main .bg-emerald-50,
         html.dark .admin-gad-shell main .bg-green-50,
@@ -262,6 +285,10 @@
             color: #fca5a5 !important;
         }
 
+        /* =========================================================
+           FORMULARIOS
+           ========================================================= */
+
         html.dark .admin-gad-shell main input:not([type="checkbox"]):not([type="radio"]),
         html.dark .admin-gad-shell main textarea,
         html.dark .admin-gad-shell main select {
@@ -281,6 +308,10 @@
             border-color: transparent !important;
         }
 
+        /* =========================================================
+           TABLAS
+           ========================================================= */
+
         html.dark .admin-gad-shell main table {
             color: #d1fae5;
         }
@@ -295,12 +326,20 @@
             background-color: #0b1512 !important;
         }
 
+        /* =========================================================
+           SOMBRAS
+           ========================================================= */
+
         html.dark .admin-gad-shell main .shadow-sm,
         html.dark .admin-gad-shell main .shadow-md,
         html.dark .admin-gad-shell main .shadow-xl,
         html.dark .admin-gad-shell main .shadow-2xl {
             box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24) !important;
         }
+
+        /* =========================================================
+           MENÚS FLUX
+           ========================================================= */
 
         html.dark .admin-gad-shell [data-flux-menu] {
             background: #ffffff !important;
@@ -314,17 +353,72 @@
             color: #0f172a !important;
             fill: currentColor !important;
         }
+
+        /* =========================================================
+           SCROLL DEL SIDEBAR
+           ========================================================= */
+
+        .admin-gad-sidebar nav {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(110, 231, 183, 0.35) transparent;
+        }
+
+        .admin-gad-sidebar nav::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .admin-gad-sidebar nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .admin-gad-sidebar nav::-webkit-scrollbar-thumb {
+            background: rgba(110, 231, 183, 0.35);
+            border-radius: 999px;
+        }
+
+        .admin-gad-sidebar nav::-webkit-scrollbar-thumb:hover {
+            background: rgba(110, 231, 183, 0.55);
+        }
+
+        /* =========================================================
+           SCROLL DEL CONTENIDO PRINCIPAL
+           ========================================================= */
+
+        .admin-gad-main {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(16, 185, 129, 0.35) transparent;
+        }
+
+        .admin-gad-main::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .admin-gad-main::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .admin-gad-main::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.35);
+            border-radius: 999px;
+        }
+
+        .admin-gad-main::-webkit-scrollbar-thumb:hover {
+            background: rgba(16, 185, 129, 0.55);
+        }
     </style>
+
     @stack('styles')
 </head>
 
 <body
     x-data="{ adminSidebarOpen: false }"
     @keydown.escape.window="adminSidebarOpen = false"
-    class="admin-gad-shell min-h-screen bg-slate-50 text-zinc-800 font-sans antialiased overflow-x-hidden"
+    class="admin-gad-shell min-h-screen overflow-x-hidden bg-slate-50 text-zinc-800 font-sans antialiased"
 >
 
-    {{-- SIDEBAR WRAPPER REAL --}}
+    {{-- =========================================================
+         FONDO PARA EL MENÚ EN CELULAR
+         ========================================================= --}}
     <div
         x-cloak
         x-show="adminSidebarOpen"
@@ -334,139 +428,302 @@
         aria-hidden="true"
     ></div>
 
+
+    {{-- =========================================================
+         CONTENEDOR PRINCIPAL
+         ========================================================= --}}
     <div class="flex min-h-screen w-full">
-    <aside
-        x-bind:class="adminSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-        class="admin-gad-sidebar fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] flex flex-col shadow-2xl text-white bg-emerald-800 border-r border-emerald-900/20 transition-transform duration-300 ease-out lg:sticky lg:top-0 lg:min-h-screen lg:translate-x-0"
-    >
 
-        {{-- LOGO SECTION --}}
-        <div class="admin-gad-sidebar-header px-6 py-6 border-b border-emerald-700/50 bg-emerald-900/20">
-            <a href="{{ route('admin.dashboard') }}"
-               wire:navigate
-               @click="adminSidebarOpen = false"
-               class="flex items-center gap-3 group">
-               
-                <img src="{{ asset('img/Logo1.png') }}"
-                     class="admin-gad-logo h-11 w-11 rounded-xl bg-white p-1.5 shadow-md transform group-hover:scale-105 transition-all duration-200"
-                     alt="Explora Candelaria">
 
-                <div>
-                    <h1 class="font-bold text-base tracking-wide text-white transition-colors">
-                        Explora Candelaria
-                    </h1>
-                    <p class="text-xs text-emerald-200/60 font-medium tracking-wider uppercase">Admin Panel</p>
+        {{-- =====================================================
+             SIDEBAR
+             ===================================================== --}}
+        <aside
+            x-bind:class="adminSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+            class="admin-gad-sidebar fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] flex flex-col overflow-hidden shadow-2xl text-white bg-emerald-800 border-r border-emerald-900/20 transition-transform duration-300 ease-out lg:sticky lg:top-0 lg:h-screen lg:translate-x-0"
+        >
+
+            {{-- =================================================
+                 LOGO
+                 ================================================= --}}
+            <div class="admin-gad-sidebar-header shrink-0 px-6 py-6 border-b border-emerald-700/50 bg-emerald-900/20">
+
+                <a
+                    href="{{ route('admin.dashboard') }}"
+                    wire:navigate
+                    @click="adminSidebarOpen = false"
+                    class="flex items-center gap-3 group"
+                >
+
+                    <img
+                        src="{{ asset('img/Logo1.png') }}"
+                        class="admin-gad-logo h-11 w-11 rounded-xl bg-white p-1.5 shadow-md transform group-hover:scale-105 transition-all duration-200"
+                        alt="Explora Candelaria"
+                    >
+
+                    <div>
+                        <h1 class="font-bold text-base tracking-wide text-white transition-colors">
+                            Explora Candelaria
+                        </h1>
+
+                        <p class="text-xs text-emerald-200/60 font-medium tracking-wider uppercase">
+                            Admin Panel
+                        </p>
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            {{-- =================================================
+                 MENÚ
+                 SOLO ESTA PARTE PUEDE HACER SCROLL
+                 ================================================= --}}
+            <nav class="min-h-0 flex-1 overflow-y-auto px-4 py-6 space-y-7">
+
+                {{-- PRINCIPAL --}}
+                <div class="space-y-1.5">
+
+                    <p class="px-4 text-[10px] font-bold text-emerald-200/40 uppercase tracking-widest mb-2">
+                        Principal
+                    </p>
+
+                    <a
+                        href="{{ route('admin.dashboard') }}"
+                        @click="adminSidebarOpen = false"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.dashboard') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}"
+                    >
+
+                        <flux:icon.home
+                            class="w-5 h-5"
+                            style="color: white !important;"
+                        />
+
+                        <span>
+                            Dashboard
+                        </span>
+
+                    </a>
+
                 </div>
-            </a>
-        </div>
 
-        {{-- MENU NAVIGATION --}}
-        <nav class="flex-1 px-4 py-6 space-y-7 overflow-y-auto">
 
-            <div class="space-y-1.5">
-                <p class="px-4 text-[10px] font-bold text-emerald-200/40 uppercase tracking-widest mb-2">Principal</p>
-                
-                <a href="{{ route('admin.dashboard') }}"
-                   @click="adminSidebarOpen = false"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.dashboard') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
-                    <flux:icon.home class="w-5 h-5" style="color: white !important;" />
-                    <span>Dashboard</span>
-                </a>
+                {{-- SEPARADOR --}}
+                <div class="admin-gad-separator border-t border-emerald-700/40 mx-2"></div>
+
+
+                {{-- MÓDULOS --}}
+                <div class="space-y-1.5">
+
+                    <p class="px-4 text-[10px] font-bold text-emerald-200/40 uppercase tracking-widest mb-2">
+                        Módulos
+                    </p>
+
+
+                    <a
+                        href="{{ route('admin.emprendimientos.gestion') }}"
+                        @click="adminSidebarOpen = false"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.emprendimientos.gestion') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}"
+                    >
+
+                        <flux:icon.clapperboard
+                            class="w-5 h-5"
+                            style="color: white !important;"
+                        />
+
+                        <span>
+                            Emprendimientos
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="{{ route('admin.festividades.gestion') }}"
+                        @click="adminSidebarOpen = false"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.festividades.gestion') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}"
+                    >
+
+                        <flux:icon.calendar
+                            class="w-5 h-5"
+                            style="color: white !important;"
+                        />
+
+                        <span>
+                            Festividades
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                {{-- SEPARADOR --}}
+                <div class="admin-gad-separator border-t border-emerald-700/40 mx-2"></div>
+
+
+                {{-- EXPLORACIÓN --}}
+                <div class="space-y-1.5">
+
+                    <p class="px-4 text-[10px] font-bold text-emerald-200/40 uppercase tracking-widest mb-2">
+                        Exploración
+                    </p>
+
+
+                    <a
+                        href="{{ route('admin.sitios.gestion') }}"
+                        @click="adminSidebarOpen = false"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.sitios.gestion') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}"
+                    >
+
+                        <flux:icon.map
+                            class="w-5 h-5"
+                            style="color: white !important;"
+                        />
+
+                        <span>
+                            Sitios Turísticos
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="{{ route('admin.actividades') }}"
+                        @click="adminSidebarOpen = false"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.actividades') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}"
+                    >
+
+                        <flux:icon.sparkles
+                            class="w-5 h-5"
+                            style="color: white !important;"
+                        />
+
+                        <span>
+                            Actividades
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="{{ route('admin.reportes') }}"
+                        @click="adminSidebarOpen = false"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.reportes*') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}"
+                    >
+
+                        <flux:icon.chart-bar
+                            class="w-5 h-5"
+                            style="color:white!important;"
+                        />
+
+                        <span>
+                            Reportes
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </nav>
+
+
+            {{-- =================================================
+                 PERFIL
+                 SIEMPRE QUEDA ABAJO
+                 ================================================= --}}
+            <div class="admin-gad-user shrink-0 p-4 bg-emerald-950/30 border-t border-emerald-700/50">
+
+                <div class="p-1 rounded-xl text-white hover:bg-white/5 transition duration-200">
+
+                    @auth
+
+                        <x-desktop-user-menu
+                            :name="auth()->user()->name"
+                        />
+
+                    @endauth
+
+                </div>
+
             </div>
 
-            <div class="admin-gad-separator border-t border-emerald-700/40 mx-2"></div>
+        </aside>
 
-            <div class="space-y-1.5">
-                <p class="px-4 text-[10px] font-bold text-emerald-200/40 uppercase tracking-widest mb-2">Módulos</p>
 
-                <a href="{{ route('admin.emprendimientos.gestion') }}"
-                   @click="adminSidebarOpen = false"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.emprendimientos.gestion') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
-                    <flux:icon.clapperboard class="w-5 h-5" style="color: white !important;" />
-                    <span>Emprendimientos</span>
-                </a>
+        {{-- =====================================================
+             CONTENIDO PRINCIPAL
+             ===================================================== --}}
+        <main class="admin-gad-main min-w-0 flex-1 min-h-screen overflow-y-auto bg-slate-50">
 
-                <a href="{{ route('admin.festividades.gestion') }}"
-                   @click="adminSidebarOpen = false"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.festividades.gestion') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
-                    <flux:icon.calendar class="w-5 h-5" style="color: white !important;" />
-                    <span>Festividades</span>
-                </a>
-            </div>
 
-            <div class="admin-gad-separator border-t border-emerald-700/40 mx-2"></div>
-
-            <div class="space-y-1.5">
-                <p class="px-4 text-[10px] font-bold text-emerald-200/40 uppercase tracking-widest mb-2">Exploración</p>
-
-                <a href="{{ route('admin.sitios.gestion') }}"
-                   @click="adminSidebarOpen = false"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.sitios.gestion') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
-                    <flux:icon.map class="w-5 h-5" style="color: white !important;" />
-                    <span>Sitios Turísticos</span>
-                </a>
-
-                <a href="{{ route('admin.actividades') }}"
-                   @click="adminSidebarOpen = false"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.actividades') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
-                    <flux:icon.sparkles class="w-5 h-5" style="color: white !important;" />
-                    <span>Actividades</span>
-                </a>
-                
-                <a href="{{ route('admin.reportes') }}"
-                   @click="adminSidebarOpen = false"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 text-white {{ request()->routeIs('admin.reportes*') ? 'bg-white/15 shadow-sm font-semibold' : 'hover:bg-white/10 text-emerald-100' }}">
-                
-                    <flux:icon.chart-bar class="w-5 h-5" style="color:white!important;" />
-                
-                    <span>Reportes</span>
-                
-                </a>
-
-            </div>
-
-        </nav>
-
-        {{-- USER SECTION --}}
-        <div class="admin-gad-user p-4 bg-emerald-950/30 border-t border-emerald-700/50">
-            <div class="p-1 rounded-xl text-white hover:bg-white/5 transition duration-200">
-                @auth
-                    <x-desktop-user-menu :name="auth()->user()->name" />
-                @endauth
-            </div>
-        </div>
-
-    </aside>
-
-    {{-- CONTENIDO PRINCIPAL --}}
-    <main class="admin-gad-main flex-1 min-w-0 min-h-screen overflow-y-auto bg-slate-50">
-        <header class="admin-gad-mobile-header sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-slate-200 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
-            <button
-                type="button"
-                @click="adminSidebarOpen = true"
-                class="admin-gad-mobile-button inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-slate-50"
-                aria-label="Abrir menu"
+            {{-- =================================================
+                 HEADER MÓVIL
+                 ================================================= --}}
+            <header
+                class="admin-gad-mobile-header sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-slate-200 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden"
             >
-                <flux:icon.bars-2 class="h-5 w-5" />
-            </button>
 
-            <a href="{{ route('admin.dashboard') }}" wire:navigate class="flex min-w-0 items-center gap-2">
-                <img src="{{ asset('img/Logo1.png') }}" class="admin-gad-logo h-9 w-9 shrink-0 rounded-lg bg-white p-1 shadow-sm" alt="Explora Candelaria">
-                <div class="min-w-0">
-                    <p class="admin-gad-mobile-title truncate text-sm font-bold text-emerald-900">Explora Candelaria</p>
-                    <p class="admin-gad-mobile-subtitle text-[10px] font-semibold uppercase tracking-wider text-emerald-700/70">Admin Panel</p>
-                </div>
-            </a>
-        </header>
+                <button
+                    type="button"
+                    @click="adminSidebarOpen = true"
+                    class="admin-gad-mobile-button inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-slate-50"
+                    aria-label="Abrir menu"
+                >
 
-        <div class="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:p-8">
-            {{ $slot }}
-        </div>
-    </main>
+                    <flux:icon.bars-2 class="h-5 w-5" />
+
+                </button>
+
+
+                <a
+                    href="{{ route('admin.dashboard') }}"
+                    wire:navigate
+                    class="flex min-w-0 items-center gap-2"
+                >
+
+                    <img
+                        src="{{ asset('img/Logo1.png') }}"
+                        class="admin-gad-logo h-9 w-9 shrink-0 rounded-lg bg-white p-1 shadow-sm"
+                        alt="Explora Candelaria"
+                    >
+
+                    <div class="min-w-0">
+
+                        <p class="admin-gad-mobile-title truncate text-sm font-bold text-emerald-900">
+                            Explora Candelaria
+                        </p>
+
+                        <p class="admin-gad-mobile-subtitle text-[10px] font-semibold uppercase tracking-wider text-emerald-700/70">
+                            Admin Panel
+                        </p>
+
+                    </div>
+
+                </a>
+
+            </header>
+
+
+            {{-- =================================================
+                 CONTENIDO DE CADA PÁGINA
+                 ================================================= --}}
+            <div class="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:p-8">
+
+                {{ $slot }}
+
+            </div>
+
+        </main>
+
     </div>
 
+
     @stack('scripts')
+
     @fluxScripts
 
 </body>
+
 </html>
