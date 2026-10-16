@@ -34,7 +34,7 @@
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 p-2 ring-1 ring-white/10 backdrop-blur-sm dark:bg-[#7ed957]/10 dark:ring-[#7ed957]/15 sm:h-14 sm:w-14 sm:rounded-2xl lg:h-16 lg:w-16">
 
                         <img
-                            src="{{ asset('images/logo-gad.png') }}"
+                            src="{{ asset('img/logo-gad.jpg') }}"
                             alt="GAD Parroquial Rural La Candelaria"
                             class="h-full w-full object-contain"
                             onerror="this.style.display='none'"
