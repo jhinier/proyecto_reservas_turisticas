@@ -159,11 +159,18 @@ php artisan migrate --force
 
 ### Datos iniciales: únicamente para una base de datos nueva
 
-El archivo `database/seeders/permisos.php` crea los roles, permisos y una cuenta de superadministrador de prueba. **Antes de ejecutarlo, reemplace los datos de esa cuenta por los del responsable designado por el GAD y establezca una contraseña segura.**
+El archivo `database/seeders/permisos.php` crea los roles, permisos y la cuenta inicial de superadministrador del GAD. Antes de ejecutarlo, revise que los datos de esa cuenta correspondan al responsable designado y configure en el `.env` privado una contraseña segura de al menos 12 caracteres:
+
+```dotenv
+GAD_ADMIN_PASSWORD="REEMPLAZAR_POR_UNA_CONTRASENA_INICIAL_SEGURA"
+```
+
+Reemplace el texto de ejemplo por una contraseña propia. **`GAD_ADMIN_PASSWORD` es la contraseña inicial para ingresar como administrador a la aplicación; es distinta de `MAIL_PASSWORD`, que configura el envío de correos.** El seeder no contiene una contraseña predeterminada y se detiene antes de crear registros si falta este valor o tiene menos de 12 caracteres. No publique el `.env` ni incluya la contraseña real en el código.
 
 Después, ejecute una sola vez:
 
 ```bash
+php artisan config:clear
 php artisan db:seed --force
 php artisan db:seed --class=TipoServicioSeeder --force
 php artisan db:seed --class=TipoPublicacionSeeder --force

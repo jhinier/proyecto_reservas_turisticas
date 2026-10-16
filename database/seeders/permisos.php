@@ -12,6 +12,12 @@ class permisos extends Seeder
 {
     public function run(): void
     {
+        $adminPassword = config('seeding.gad_admin_password');
+
+        if (! is_string($adminPassword) || mb_strlen($adminPassword) < 12) {
+            throw new \RuntimeException('Configure GAD_ADMIN_PASSWORD en el .env con una contraseña inicial de al menos 12 caracteres antes de ejecutar el seeder.');
+        }
+
         // 1. Limpiar caché de permisos
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
@@ -20,7 +26,7 @@ class permisos extends Seeder
         // ==========================================
         
         // Permisos exclusivos del SuperAdministrador
-        Permission::create(['name' => 'crear administradores gad','web']);
+        Permission::create(['name' => 'crear administradores gad', 'guard_name' => 'web']);
         
         // Permisos del GAD (SuperAdmin y Admin GAD)
         Permission::create(['name' => 'gestionar emprendimientos']);
@@ -66,14 +72,14 @@ class permisos extends Seeder
 
 
         // ==========================================
-        // 4. CREAR UN USUARIO DE PRUEBA Y DARLE EL ROL MÁXIMO
+        // 4. CREAR EL ADMINISTRADOR INICIAL Y DARLE EL ROL MÁXIMO
         // ==========================================
         $superAdmin = User::updateOrCreate(
-            ['email' => 'alcaldia@gad.gob.ec'], 
+            ['email' => 'lacandelaria_penipe@hotmail.com'],
             [
                 'name' => 'Super',
                 'apellidos' => 'Admin',
-                'password' => Hash::make('admin1234'), 
+                'password' => Hash::make($adminPassword),
                 'cedula' => '0600000000',
                 'telefono' => '0900000000',
                 'edad'      => 30,
