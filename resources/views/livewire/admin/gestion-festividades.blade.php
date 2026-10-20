@@ -1,3 +1,4 @@
+{{-- Vista administrativa para crear, editar, listar y eliminar eventos turisticos. --}}
 <div class="space-y-6">
 
     @if (session()->has('mensaje'))
@@ -10,7 +11,7 @@
 
         <div>
             <h1 class="text-2xl font-bold text-slate-800 tracking-tight sm:text-3xl">
-                Festividades
+                Eventos
             </h1>
 
             <p class="text-slate-500 mt-1 text-sm">
@@ -37,7 +38,7 @@
                 />
             </svg>
 
-            Nueva Festividad
+            Nuevo Evento
 
         </button>
 
@@ -48,7 +49,7 @@
 
         <div>
             <h3 class="text-sm font-bold text-slate-700">
-                Estado de las festividades
+                Estado de los eventos
             </h3>
 
             <p class="text-xs text-slate-400 mt-0.5">
@@ -107,7 +108,7 @@
     </div>
 
     {{-- ============================================================
-    TABLA DE FESTIVIDADES
+    TABLA DE EVENTOS
     SOLO CAMBIO VISUAL: CARDS → TABLA
     ============================================================ --}}
 
@@ -123,7 +124,7 @@
                     <tr>
 
                         <th class="px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
-                            Festividad
+                            Evento
                         </th>
 
                         <th class="px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -173,7 +174,7 @@
                         <tr class="hover:bg-slate-50/80 transition duration-200">
 
                             {{-- ====================================================
-                                FESTIVIDAD
+                                EVENTO
                             ===================================================== --}}
 
                             <td class="px-5 py-4">
@@ -398,7 +399,7 @@
                                     <button
                                         wire:click="cargarFestividad({{ $festividad->publicacion_id }})"
                                         x-on:click="$flux.modal('modal-festividad').show()"
-                                        title="Editar festividad"
+                                        title="Editar evento"
                                         class="w-9 h-9 bg-white hover:bg-amber-50 text-amber-600 border border-amber-200 rounded-lg flex items-center justify-center transition shadow-sm"
                                     >
 
@@ -446,7 +447,7 @@
 
                                     <button
                                         wire:click="eliminar({{ $festividad->publicacion_id }})"
-                                        wire:confirm="¿Eliminar festividad?"
+                                        wire:confirm="¿Eliminar evento?"
                                         title="Eliminar"
                                         class="w-9 h-9 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg flex items-center justify-center transition"
                                     >
@@ -490,13 +491,13 @@
 
                                 <h2 class="text-xl font-bold text-slate-800 mb-1">
 
-                                    No hay festividades registradas
+                                    No hay eventos registrados
 
                                 </h2>
 
                                 <p class="text-sm text-slate-500">
 
-                                    Crea una nueva festividad para comenzar.
+                                    Crea un nuevo evento para comenzar.
 
                                 </p>
 
@@ -516,7 +517,7 @@
 
 
     {{-- ============================================================
-        MODAL NUEVA / EDITAR FESTIVIDAD
+        MODAL NUEVO / EDITAR EVENTO
     ============================================================ --}}
 
     <flux:modal
@@ -528,7 +529,7 @@
 
             <h2 class="text-xl font-bold mb-6 text-slate-800 sm:text-2xl">
 
-                {{ $modoEditar ? 'Editar Festividad' : 'Nueva Festividad' }}
+                {{ $modoEditar ? 'Editar Evento' : 'Nuevo Evento' }}
 
             </h2>
 
@@ -541,7 +542,7 @@
                 <input
                     type="text"
                     wire:model="nombre"
-                    placeholder="Nombre de la festividad"
+                    placeholder="Nombre del evento"
                     class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-sm"
                 >
 
@@ -592,13 +593,114 @@
 
                 </div>
 
+                {{-- ACTIVIDADES DEL EVENTO --}}
+                <div class="border border-slate-200 rounded-2xl p-4 space-y-3">
+
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <h3 class="font-bold text-slate-800">
+                                Actividades del evento
+                            </h3>
+
+                            <p class="text-xs text-slate-500 mt-1">
+                                Puedes modificar o eliminar las actividades registradas.
+                            </p>
+                        </div>
+
+                        <span class="px-3 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-bold">
+                            {{ count($actividadesEdicion) }}
+                        </span>
+                    </div>
+
+                    @if($modoEditar)
+
+                        @forelse($actividadesEdicion as $actividad)
+
+                            <div
+                                wire:key="actividad-edicion-{{ $actividad['id'] }}"
+                                class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200"
+                            >
+                                <div class="min-w-0">
+                                    <p class="font-semibold text-sm text-slate-800">
+                                        {{ $actividad['nombre'] }}
+                                    </p>
+
+                                    <p class="text-xs text-slate-500 mt-1">
+                                        {{ $actividad['fecha'] }}
+                                        @if($actividad['hora'])
+                                            · {{ $actividad['hora'] }}
+                                        @endif
+                                    </p>
+
+                                    @if($actividad['lugar'])
+                                        <p class="text-xs text-emerald-700 mt-1">
+                                            Lugar: {{ $actividad['lugar'] }}
+                                        </p>
+                                    @endif
+                                </div>
+
+                                <div class="flex items-center gap-2 shrink-0">
+
+                                    <button
+                                        type="button"
+                                        wire:click="cargarActividadParaEditar({{ $actividad['id'] }})"
+                                        class="px-3 py-2 rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 text-xs font-bold"
+                                    >
+                                        Editar
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        wire:click="eliminarActividad({{ $actividad['id'] }})"
+                                        wire:confirm="¿Seguro que deseas eliminar esta actividad?"
+                                        class="px-3 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 text-xs font-bold"
+                                    >
+                                        Eliminar
+                                    </button>
+
+                                </div>
+                            </div>
+
+                        @empty
+
+                            <div class="p-4 text-center rounded-xl border border-dashed border-slate-300">
+                                <p class="text-sm text-slate-500">
+                                    Este evento todavía no tiene actividades.
+                                </p>
+                            </div>
+
+                        @endforelse
+
+                    @else
+
+                        <p class="text-sm text-slate-500">
+                            Guarda primero el evento para poder administrar sus actividades.
+                        </p>
+
+                    @endif
+
+                </div>
+
+                {{-- ACCESO A LA GALERÍA --}}
+                @if($modoEditar)
+
+                    <button
+                        type="button"
+                        wire:click="abrirGaleria({{ $publicacion_id }})"
+                        class="w-full border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 py-3 rounded-xl font-bold text-sm transition"
+                    >
+                        Administrar fotografías del evento
+                    </button>
+
+                @endif
+
 
                 <button
                     type="submit"
                     class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-2xl font-bold transition shadow-lg text-sm"
                 >
 
-                    {{ $modoEditar ? 'Actualizar Festividad' : 'Guardar Festividad' }}
+                    {{ $modoEditar ? 'Actualizar Evento' : 'Guardar Evento' }}
 
                 </button>
 
@@ -616,7 +718,7 @@
     <flux:modal
         name="modal-actividad"
         class="w-[94vw] md:max-w-2xl"
-    >
+        >
 
         <div class="p-4 bg-white rounded-3xl text-slate-800 sm:p-6">
 
@@ -690,6 +792,181 @@
 
     </flux:modal>
 
+    {{-- MODAL EDITAR ACTIVIDAD --}}
+    <flux:modal
+        name="modal-editar-actividad"
+        class="w-[94vw] md:max-w-2xl"
+        x-on:abrir-modal-editar-actividad.window="$flux.modal('modal-editar-actividad').show()"
+    >
+        <div class="p-4 bg-white rounded-3xl text-slate-800 sm:p-6">
+    
+            <h2 class="text-xl font-bold mb-2 sm:text-2xl">
+                Editar actividad
+            </h2>
+    
+            <p class="text-sm text-slate-500 mb-6">
+                Modifica los datos y guarda los cambios.
+            </p>
+    
+            <form
+                wire:submit.prevent="actualizarActividad"
+                class="space-y-4"
+            >
+    
+                <div>
+                    <label class="block text-sm font-semibold mb-1">
+                        Nombre de la actividad
+                    </label>
+    
+                    <input
+                        type="text"
+                        wire:model="actividad_nombre"
+                        class="w-full border border-slate-200 rounded-xl p-3"
+                        required
+                    >
+    
+                    @error('actividad_nombre')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+    
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">
+                            Fecha
+                        </label>
+    
+                        <input
+                            type="date"
+                            wire:model="fecha"
+                            class="w-full border border-slate-200 rounded-xl p-3"
+                            required
+                        >
+    
+                        @error('fecha')
+                            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+    
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">
+                            Hora
+                        </label>
+    
+                        <input
+                            type="time"
+                            wire:model="hora"
+                            class="w-full border border-slate-200 rounded-xl p-3"
+                            required
+                        >
+    
+                        @error('hora')
+                            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+    
+                </div>
+    
+                <div>
+                    <label class="block text-sm font-semibold mb-1">
+                        Lugar
+                    </label>
+    
+                    <input
+                        type="text"
+                        wire:model="lugar"
+                        class="w-full border border-slate-200 rounded-xl p-3"
+                        required
+                    >
+    
+                    @error('lugar')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+    
+                <div>
+                    <label class="block text-sm font-semibold mb-1">
+                        Descripción
+                    </label>
+    
+                    <textarea
+                        wire:model="descripcion_actividad"
+                        rows="4"
+                        class="w-full border border-slate-200 rounded-xl p-3"
+                        required
+                    ></textarea>
+    
+                    @error('descripcion_actividad')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+    
+                @if($imagenActividadActual)
+                    <div>
+                        <p class="text-sm font-semibold mb-2">
+                            Fotografía actual
+                        </p>
+    
+                        <img
+                            src="{{ asset('storage/' . $imagenActividadActual) }}"
+                            alt="Imagen actual de la actividad"
+                            class="w-32 h-32 rounded-xl object-cover border"
+                        >
+                    </div>
+                @endif
+    
+                <div>
+                    <label class="block text-sm font-semibold mb-1">
+                        Reemplazar fotografía (opcional)
+                    </label>
+    
+                    <input
+                        type="file"
+                        wire:model="imagen_actividad"
+                        accept="image/*"
+                        class="w-full border border-slate-200 rounded-xl p-3"
+                    >
+    
+                    @error('imagen_actividad')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+    
+                    <p class="text-xs text-slate-500 mt-1">
+                        Si no eliges una imagen nueva, se conserva la actual.
+                    </p>
+                </div>
+    
+                <div wire:loading wire:target="imagen_actividad" class="text-sm text-emerald-700">
+                    Cargando imagen...
+                </div>
+    
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+    
+                    <button
+                        type="submit"
+                        wire:loading.attr="disabled"
+                        wire:target="actualizarActividad"
+                        class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-bold disabled:opacity-50"
+                    >
+                        Guardar cambios
+                    </button>
+    
+                    <button
+                        type="button"
+                        x-on:click="$flux.modal('modal-editar-actividad').close()"
+                        class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-bold"
+                    >
+                        Cerrar
+                    </button>
+    
+                </div>
+    
+            </form>
+    
+        </div>
+    </flux:modal>
+
 
     {{-- ============================================================
         GESTOR DE GALERÍA
@@ -717,7 +994,7 @@
 
                     <p class="text-xs text-emerald-600 font-bold mt-0.5">
 
-                        Festividad activa:
+                        Evento activo:
                         {{ $festividadSeleccionada?->publicacion?->nombre }}
 
                     </p>
@@ -901,7 +1178,7 @@
 
     <button
         type="button"
-        wire:click="$dispatch('abrirCalendario')"
+        wire:click="$dispatch('abrirCalendarioEventosGad')"
         class="fixed bottom-4 right-4 z-40 bg-emerald-700 hover:bg-emerald-800 text-white shadow-2xl rounded-full px-4 py-3 text-sm font-bold transition duration-300 hover:scale-105 flex items-center gap-2 sm:bottom-8 sm:right-8 sm:px-6 sm:py-3.5 sm:text-base"
     >
 
@@ -910,7 +1187,7 @@
     </button>
 
     {{-- ============================================================
-    MODAL DETALLES DE FESTIVIDAD
+    MODAL DETALLES DE EVENTO
     ============================================================ --}}
     
     <flux:modal
@@ -949,7 +1226,7 @@
                                 />
                             </svg>
                 
-                            Detalles de festividad
+                            Detalles del evento
                 
                         </span>
                 

@@ -1,3 +1,4 @@
+{{-- Selector reutilizable para cambiar entre vista de lista y vista de tarjetas de servicios. --}}
 @props(['vista' => 'lista'])
 
 <div {{ $attributes->class(['inline-flex w-full shrink-0 rounded-xl border border-[#d5dfbc] bg-[#e4eccf] p-0.5 sm:w-[230px]']) }}

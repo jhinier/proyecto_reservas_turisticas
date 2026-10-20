@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para el detalle especifico de un paquete turistico.
+ * Guarda salida, duracion, servicios incluidos, recomendaciones, documento y mensaje de pago.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

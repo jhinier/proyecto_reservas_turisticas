@@ -1,3 +1,4 @@
+{{-- Modal de detalle que presenta la informacion completa de un servicio seleccionado. --}}
 <div x-data="{ show: @entangle('abierto') }"
      x-show="show"
      x-on:keydown.escape.window="if (show) $wire.cerrar()"

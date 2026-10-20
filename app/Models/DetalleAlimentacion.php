@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para el detalle especifico de un servicio de alimentacion.
+ * Complementa el registro base de servicio usando servicio_id como llave primaria compartida.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

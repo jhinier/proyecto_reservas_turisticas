@@ -1,3 +1,4 @@
+{{-- Vista que muestra servicios del emprendimiento en tarjetas o tabla con acciones de detalle, editar y eliminar. --}}
 <div class="min-w-0 space-y-6">
     
     {{-- Selector de vista y botón Nuevo --}}
@@ -87,7 +88,7 @@
                 </table>
             </div>
         @else
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 @foreach($servicios as $servicio)
                     <x-servicio-card
                     :servicio="$servicio"

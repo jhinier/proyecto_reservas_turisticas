@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire que muestra servicios disponibles para agregarlos a una reserva.
+ */
+
 namespace App\Livewire\Emprendimiento\Reserva;
 
 use Carbon\Carbon;

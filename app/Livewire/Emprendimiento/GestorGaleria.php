@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire para administrar la galeria de imagenes de un servicio.
+ */
+
 namespace App\Livewire\Emprendimiento;
 
 use Livewire\Component;

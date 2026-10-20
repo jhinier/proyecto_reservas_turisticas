@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire para administrar usuarios y sus permisos dentro del sistema.
+ */
+
 namespace App\Livewire\Admin;
 
 use Livewire\Component;

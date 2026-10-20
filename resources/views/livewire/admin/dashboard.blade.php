@@ -1,3 +1,4 @@
+{{-- Vista del dashboard administrativo con indicadores y accesos principales del GAD. --}}
 <div class="mx-auto max-w-6xl space-y-6 sm:space-y-8">
 
     {{-- ALERTA --}}
@@ -72,11 +73,11 @@
         </div>
     </div>
 
-    {{-- FESTIVIDADES --}}
+    {{-- EVENTOS --}}
     <div class="rounded-3xl border bg-white p-5 shadow-sm hover:shadow-md hover:scale-[1.02] transition-transform duration-200 sm:p-6">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm text-zinc-500 font-semibold">Festividades</p>
+                <p class="text-sm text-zinc-500 font-semibold">Eventos</p>
                 <h2 class="mt-2 text-4xl font-extrabold text-orange-500">
                     {{ $festividadesCount ?? 0 }}
                 </h2>

@@ -38,6 +38,12 @@
                     </p>
                 </div>
             </a>
+
+            <a href="{{ url()->previous() ?: route('home') }}" class="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 p-2.5 text-white shadow-lg backdrop-blur-sm transition hover:bg-white/20" aria-label="Regresar">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </a>
         </div>
     </div>
 
@@ -52,6 +58,12 @@
             <p class="mt-4 text-base lg:text-lg text-gray-300 leading-relaxed">
                 Ingresa tu correo electrónico y te enviaremos las instrucciones paso a paso para restablecer tu contraseña de forma segura.
             </p>
+
+            <div class="mt-6">
+                <a href="{{ route('home') }}" class="inline-flex items-center justify-center rounded-full border border-[#7ed957]/70 px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#7ed957] transition hover:bg-[#7ed957] hover:text-black">
+                    Inicio
+                </a>
+            </div>
         </div>
 
         <div class="w-full max-w-lg bg-black/50 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 lg:p-10 shadow-2xl">

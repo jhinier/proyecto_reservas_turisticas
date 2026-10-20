@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Servicio que calcula metricas, agenda y servicio destacado del panel de emprendimiento.
+ */
+
 namespace App\Services;
 
 use App\Models\Reserva;

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire para crear, editar, listar y eliminar festividades turisticas.
+ */
+
 namespace App\Livewire\Admin\Festividades;
 
 use Livewire\Component;
@@ -68,6 +72,14 @@ class GestionFestividades extends Component
     public $descripcion_actividad;
 
     public $imagen_actividad;
+
+    // Identificador de la actividad que se está editando
+    public $actividadEditandoId = null;
+
+    // Imagen actual de la actividad
+    public $imagenActividadActual = null;
+
+    public $actividadesEdicion = [];
 
     // ====================================================
     // MÉTODOS DEL GESTOR DE GALERÍA
@@ -162,7 +174,7 @@ class GestionFestividades extends Component
     {
         $this->validate([
             'nombre' => 'required',
-            'descripcion' => 'required',
+            'descripcion' => 'required|string|max:10000',
             'fecha_inicio' => 'required',
             'fecha_fin' => 'required',
         ]);
@@ -241,27 +253,35 @@ class GestionFestividades extends Component
     {
         $this->limpiarCampos();
 
-        $this->modoEditar = true;
+        $this->resetValidation();
 
+        $this->modoEditar = true;
         $this->publicacion_id = $id;
 
-        $festividad = Festividad::with('publicacion')
+        $festividad = Festividad::with([
+            'publicacion',
+            'actividades',
+        ])
             ->where('publicacion_id', $id)
-            ->first();
+            ->firstOrFail();
 
-        if ($festividad) {
+        $this->nombre = $festividad->publicacion->nombre;
+        $this->descripcion = $festividad->publicacion->descripcion;
+        $this->fecha_inicio = $festividad->fecha_inicio;
+        $this->fecha_fin = $festividad->fecha_fin;
 
-            $this->nombre = $festividad->publicacion->nombre;
-
-            $this->descripcion =
-                $festividad->publicacion->descripcion;
-
-            $this->fecha_inicio =
-                $festividad->fecha_inicio;
-
-            $this->fecha_fin =
-                $festividad->fecha_fin;
-        }
+        $this->actividadesEdicion = Actividad::where('publicacion_id', $id)
+        ->get()
+        ->map(function ($actividad) {
+            return [
+                'id' => $actividad->id,
+                'nombre' => $actividad->nombre,
+                'fecha' => $actividad->fecha,
+                'hora' => $actividad->hora,
+                'lugar' => $actividad->lugar,
+            ];
+        })
+        ->toArray();
     }
 
     // ====================================================
@@ -312,7 +332,7 @@ class GestionFestividades extends Component
             'fecha' => 'required',
             'hora' => 'required',
             'lugar' => 'required',
-            'descripcion_actividad' => 'required',
+            'descripcion_actividad' => 'required|string|max:10000',
             'imagen_actividad' => 'nullable|image|max:2048',
         ]);
 
@@ -353,8 +373,148 @@ class GestionFestividades extends Component
             'mensaje',
             'Actividad guardada correctamente'
         );
+        $this->actividadesEdicion = $festividad->actividades
+        ->map(function ($actividad) {
+            return [
+                'id' => $actividad->id,
+                'nombre' => $actividad->nombre,
+                'fecha' => $actividad->fecha,
+                'hora' => $actividad->hora,
+                'lugar' => $actividad->lugar,
+            ];
+        })
+        ->toArray();
     }
 
+        /**
+     * Cargar una actividad existente en el formulario de edición.
+     */
+    public function cargarActividadParaEditar($id)
+    {
+        $actividad = Actividad::where('publicacion_id', $this->publicacion_id)
+            ->whereKey($id)
+            ->firstOrFail();
+
+        $this->resetValidation();
+
+        $this->actividadEditandoId = $actividad->id;
+        $this->actividad_nombre = $actividad->nombre;
+        $this->fecha = $actividad->fecha;
+        $this->hora = $actividad->hora;
+        $this->lugar = $actividad->lugar;
+        $this->descripcion_actividad = $actividad->descripcion;
+        $this->imagenActividadActual = $actividad->imagen;
+        $this->imagen_actividad = null;
+
+        $this->dispatch('abrir-modal-editar-actividad');
+    }
+
+
+    /**
+     * Guardar los cambios de una actividad existente.
+     */
+    public function actualizarActividad()
+    {
+        $this->validate([
+            'actividad_nombre' => 'required|string|max:255',
+            'fecha' => 'required|date',
+            'hora' => 'required',
+            'lugar' => 'required|string|max:255',
+            'descripcion_actividad' => 'required|string|max:10000',
+            'imagen_actividad' => 'nullable|image|max:2048',
+        ]);
+
+        $actividad = Actividad::where('publicacion_id', $this->publicacion_id)
+            ->whereKey($this->actividadEditandoId)
+            ->firstOrFail();
+
+        $datos = [
+            'nombre' => $this->actividad_nombre,
+            'fecha' => $this->fecha,
+            'hora' => $this->hora,
+            'lugar' => $this->lugar,
+            'descripcion' => $this->descripcion_actividad,
+        ];
+
+        // Reemplazar la imagen solo si se seleccionó una nueva.
+        if ($this->imagen_actividad) {
+            if ($actividad->imagen) {
+                Storage::disk('public')->delete($actividad->imagen);
+            }
+
+            $datos['imagen'] = $this->imagen_actividad->store(
+                'actividades',
+                'public'
+            );
+        }
+
+        $actividad->update($datos);
+        $this->refrescarActividadesEdicion();
+
+        $this->reset([
+            'actividadEditandoId',
+            'actividad_nombre',
+            'fecha',
+            'hora',
+            'lugar',
+            'descripcion_actividad',
+            'imagen_actividad',
+            'imagenActividadActual',
+        ]);
+
+        $this->dispatch('actualizarCalendarioLateral');
+        $this->emitEventos();
+
+        session()->flash('mensaje', 'Actividad actualizada correctamente');
+    }
+
+
+    /**
+     * Eliminar una actividad existente.
+     */
+    public function eliminarActividad($id)
+    {
+        $actividad = Actividad::where('publicacion_id', $this->publicacion_id)
+            ->whereKey($id)
+            ->firstOrFail();
+
+        if ($actividad->imagen) {
+            Storage::disk('public')->delete($actividad->imagen);
+        }
+
+        $actividad->delete();
+        $this->refrescarActividadesEdicion();
+
+        $this->dispatch('actualizarCalendarioLateral');
+        $this->emitEventos();
+
+        session()->flash('mensaje', 'Actividad eliminada correctamente');
+    }
+
+
+    private function refrescarActividadesEdicion(): void
+    {
+        if (!$this->publicacion_id) {
+            $this->actividadesEdicion = [];
+            return;
+        }
+
+        $this->actividadesEdicion = Actividad::where(
+            'publicacion_id',
+            $this->publicacion_id
+        )
+            ->get()
+            ->map(function ($actividad) {
+                return [
+                    'id' => $actividad->id,
+                    'nombre' => $actividad->nombre,
+                    'fecha' => $actividad->fecha,
+                    'hora' => $actividad->hora,
+                    'lugar' => $actividad->lugar,
+                ];
+            })
+            ->toArray();
+    }
     // ====================================================
     // LIMPIAR CAMPOS
     // ====================================================
@@ -366,7 +526,10 @@ class GestionFestividades extends Component
             'descripcion',
             'fecha_inicio',
             'fecha_fin',
-            'publicacion_id'
+            'publicacion_id',
+            'actividadesEdicion',
+            'actividadEditandoId',
+            'imagenActividadActual',
         ]);
     }
 

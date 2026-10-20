@@ -1,3 +1,4 @@
+{{-- Vista principal de gestion de servicios con pestanas por categoria y cambio de vista. --}}
 <div class="flex flex-col gap-6 p-4 md:p-6">
     {{-- Alertas Globales --}}
     <x-alert-success />

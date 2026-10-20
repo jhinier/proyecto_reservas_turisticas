@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Servicio central de reservas: crea, consulta, reagenda, cancela y actualiza estados.
+ */
+
 namespace App\Services;
 
 use App\Mail\ComprobanteSubidoEmprendedorMail;

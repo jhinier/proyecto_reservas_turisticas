@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Servicio de consulta y gestion general del catalogo de servicios.
+ */
+
 namespace App\Services;
 
 use App\Models\Emprendimiento;

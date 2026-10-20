@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para las cuentas bancarias asociadas a un emprendimiento.
+ * Permite registrar los datos de pago del negocio y conservar historial con borrado suave.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

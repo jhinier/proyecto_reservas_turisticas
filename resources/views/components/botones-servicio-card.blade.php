@@ -1,6 +1,8 @@
+{{-- Componente reutilizable para los botones de detalle, galeria, editar y eliminar en tarjetas de servicio. --}}
 @props([
     'servicio',
     'soloIconos' => false,
+    'deleteAction' => 'eliminarServicio',
 ])
 
 <div class="flex items-center gap-2 shrink-0">
@@ -33,7 +35,7 @@
 
     {{-- Eliminar --}}
     <button 
-        @click="$dispatch('abrir-modal-eliminar', { id: @js($servicio->id), action: 'eliminarServicio' })"
+        @click="$dispatch('abrir-modal-eliminar', { id: @js($servicio->id), action: @js($deleteAction) })"
         title="Borrar Servicio"
         class="inline-flex items-center justify-center {{ $soloIconos ? 'size-9 rounded-lg' : 'gap-1.5 rounded-xl px-3 py-1.5' }} bg-red-50 border border-red-200 text-red-600 hover:-translate-y-0.5 hover:shadow-md hover:bg-red-600 hover:border-red-600 hover:text-white dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-400 dark:hover:bg-red-600 dark:hover:text-white transition-all duration-300 outline-none cursor-pointer">
         <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

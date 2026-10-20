@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para imagenes de servicios de emprendimientos.
+ * Guarda la ruta de cada foto y la conecta con el servicio al que pertenece.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

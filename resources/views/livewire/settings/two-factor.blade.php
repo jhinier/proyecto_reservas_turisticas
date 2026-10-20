@@ -20,16 +20,19 @@
 
                     <livewire:settings.two-factor.recovery-codes :$requiresConfirmation/>
 
-                    <div class="flex justify-start">
+                    <form method="POST" action="{{ route('two-factor.disable') }}" class="flex justify-start">
+                        @csrf
+                        @method('DELETE')
+
                         <flux:button
+                            type="submit"
                             variant="danger"
                             icon="shield-exclamation"
                             icon:variant="outline"
-                            wire:click="disable"
                         >
                             {{ __('Desactivar 2FA') }}
                         </flux:button>
-                    </div>
+                    </form>
                 </div>
             @else
                 <div class="space-y-4">
@@ -39,6 +42,10 @@
 
                     <flux:text variant="subtle">
                         {{ __('Cuando habilites la autenticación de dos factores, se te pedirá un PIN seguro durante el inicio de sesión. Este PIN puede obtenerse desde una aplicación compatible con TOTP en tu teléfono.') }}
+                    </flux:text>
+
+                    <flux:text variant="subtle">
+                        {{ __('Si no tienes una app autenticadora, instala Google Authenticator, Microsoft Authenticator o Authy antes de activar esta opción.') }}
                     </flux:text>
 
                     <flux:button
@@ -97,6 +104,13 @@
                             label:sr-only
                             class="mx-auto"
                         />
+
+                        @error('code')
+                            <flux:text color="red">
+                                {{ $message }}
+                            </flux:text>
+                        @enderror
+
                     </div>
 
                     <div class="flex items-center space-x-3">
@@ -123,6 +137,35 @@
                     <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}"/>
                 @enderror
 
+                <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-200">
+                    {{ __('Necesitas una app autenticadora en tu celular. Si ya la tienes, escanea el QR. Si no puedes escanearlo, copia la clave de abajo en la app.') }}
+                </div>
+
+                <div class="space-y-3 rounded-lg border border-stone-200 p-3 dark:border-stone-700">
+                    <div class="space-y-1 text-center">
+                        <p class="text-sm font-semibold text-stone-800 dark:text-stone-100">
+                            {{ __('¿No tienes la app?') }}
+                        </p>
+                        <p class="text-xs text-stone-500 dark:text-stone-400">
+                            {{ __('Elige tu celular para abrir la tienda de descarga.') }}
+                        </p>
+                    </div>
+
+                    <div class="grid gap-2 sm:grid-cols-2">
+                        @foreach ($this->authenticatorDownloadLinks as $app)
+                            <a
+                                href="{{ $app['url'] }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center justify-center rounded-lg border border-stone-200 px-3 py-2 text-sm font-semibold text-stone-700 transition hover:bg-stone-50 dark:border-stone-700 dark:text-stone-200 dark:hover:bg-white/10"
+                                aria-label="Descargar Google Authenticator para {{ $app['label'] }}"
+                            >
+                                Descargar para {{ $app['label'] }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+
                 <div class="flex justify-center">
                     <div class="relative w-64 overflow-hidden border rounded-lg border-stone-200 dark:border-stone-700 aspect-square">
                         @empty($qrCodeSvg)
@@ -130,11 +173,8 @@
                                 <flux:icon.loading/>
                             </div>
                         @else
-                        <div x-data class="flex items-center justify-center h-full p-4">
-                            <div
-                                class="bg-white p-3 rounded"
-                                :style="($flux.appearance === 'dark' || ($flux.appearance === 'system' && $flux.dark)) ? 'filter: invert(1) brightness(1.5)' : ''"
-                            >
+                        <div class="flex items-center justify-center h-full p-4 bg-white">
+                            <div class="bg-white p-3 rounded">
                                     {!! $qrCodeSvg !!}
                                 </div>
                             </div>
@@ -149,7 +189,7 @@
                         class="w-full"
                         wire:click="showVerificationIfNecessary"
                     >
-                        {{ $this->modalConfig['buttonText'] }}
+                        {{ $requiresConfirmation ? __('Ya escaneé el QR') : $this->modalConfig['buttonText'] }}
                     </flux:button>
                 </div>
 
@@ -157,7 +197,7 @@
                     <div class="relative flex items-center justify-center w-full">
                         <div class="absolute inset-0 w-full h-px top-1/2 bg-stone-200 dark:bg-stone-600"></div>
                         <span class="relative px-2 text-sm bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400">
-                            {{ __('o, ingresa el código manualmente') }}
+                            {{ __('o, copia esta clave en tu app') }}
                         </span>
                     </div>
 
@@ -165,9 +205,10 @@
                         class="flex items-center space-x-2"
                         x-data="{
                             copied: false,
+                            setupKey: @js($manualSetupKey),
                             async copy() {
                                 try {
-                                    await navigator.clipboard.writeText('{{ $manualSetupKey }}');
+                                    await navigator.clipboard.writeText(this.setupKey);
                                     this.copied = true;
                                     setTimeout(() => this.copied = false, 1500);
                                 } catch (e) {
@@ -186,10 +227,11 @@
                                     type="text"
                                     readonly
                                     value="{{ $manualSetupKey }}"
-                                    class="w-full p-3 bg-transparent outline-none text-stone-900 dark:text-stone-100"
+                                    class="w-full p-3 font-mono text-sm tracking-wider bg-transparent outline-none text-stone-900 dark:text-stone-100"
                                 />
 
                                 <button
+                                    type="button"
                                     @click="copy()"
                                     class="px-3 transition-colors border-l cursor-pointer border-stone-200 dark:border-stone-600"
                                 >

@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * Servicio de aplicacion para crear y actualizar servicios de hospedaje.
+ */
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;

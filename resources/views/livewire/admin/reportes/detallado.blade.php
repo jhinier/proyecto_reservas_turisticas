@@ -1,3 +1,4 @@
+{{-- Plantilla HTML del reporte detallado administrativo con informacion filtrada del GAD. --}}
 <!DOCTYPE html>
 <html lang="es">
 

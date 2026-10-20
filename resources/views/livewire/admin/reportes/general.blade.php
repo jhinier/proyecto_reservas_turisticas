@@ -1,3 +1,4 @@
+{{-- Plantilla HTML del reporte general administrativo para imprimir o exportar datos del GAD. --}}
 <!DOCTYPE html>
 <html lang="es">
 

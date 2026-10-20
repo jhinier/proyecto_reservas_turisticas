@@ -1,3 +1,4 @@
+{{-- Componente que selecciona el icono visual segun el tipo o categoria del servicio. --}}
 @props(['tipo'])
 
 <div {{ $attributes->merge(['class' => 'p-3 rounded-full bg-[#1a4031]/10 text-[#1a4031] dark:bg-success/20 dark:text-success flex items-center justify-center']) }}>

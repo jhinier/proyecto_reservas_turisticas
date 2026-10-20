@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Servicio de busqueda publica para filtrar servicios turisticos por texto y tipo.
+ */
+
 namespace App\Services;
 
 use App\Models\Servicio;

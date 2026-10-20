@@ -1,3 +1,4 @@
+{{-- Vista administrativa para crear, editar, listar y eliminar sitios turisticos. --}}
  <div class="space-y-6">
     @if (session()->has('mensaje'))
         <div class="mb-4 p-4 bg-green-800 text-white rounded-2xl shadow-lg text-sm font-medium">

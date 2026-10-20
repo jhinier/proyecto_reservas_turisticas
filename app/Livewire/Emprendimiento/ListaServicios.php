@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire que lista, edita y elimina servicios generales del emprendimiento.
+ */
+
 namespace App\Livewire\Emprendimiento;
 
 use Livewire\Component;

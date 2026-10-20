@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire del asistente para crear un emprendimiento desde el administrador GAD.
+ */
+
 namespace App\Livewire\Admin;
 
 use Livewire\Component;
@@ -40,7 +44,7 @@ class CrearEmprendimiento extends Component
         } elseif ($this->step === 2) {
             $this->validate([
                 'nombre_emprendimiento' => 'required|string|min:3|max:150',
-                'descripcion'           => 'required|string|min:10|max:500',
+                'descripcion'           => 'required|string|min:10|max:10000',
                 'imagen'                => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120', 
                 'enlaces'               => 'nullable|array',
                 'enlaces.*'             => 'nullable|url|max:255',

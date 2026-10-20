@@ -1,6 +1,7 @@
 @php
     $isTouristSettings = auth()->user()?->hasRole('turista');
     $isEntrepreneurSettings = auth()->user()?->hasRole('emprendimiento');
+    $canManageTwoFactor = \Laravel\Fortify\Features::canManageTwoFactorAuthentication();
 @endphp
 
 <div @class([
@@ -40,6 +41,14 @@
                     wire:navigate
                     class="{{ request()->routeIs('user-password.edit') ? 'bg-emerald-50 text-emerald-700 font-semibold ring-1 ring-emerald-200 dark:bg-emerald-400/10 dark:text-emerald-300 dark:ring-emerald-400/20' : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-emerald-300' }}"
                 >{{ $isTouristSettings ? 'Contraseña' : __('Contraseña') }}</flux:navlist.item>
+                @if ($canManageTwoFactor)
+                    <flux:navlist.item
+                        :href="route('two-factor.show')"
+                        wire:navigate
+                        class="{{ request()->routeIs('two-factor.show') ? 'bg-emerald-50 text-emerald-700 font-semibold ring-1 ring-emerald-200 dark:bg-emerald-400/10 dark:text-emerald-300 dark:ring-emerald-400/20' : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-emerald-300' }}"
+                    >{{ $isTouristSettings ? 'Autenticación 2FA' : __('Autenticación 2FA') }}</flux:navlist.item>
+                @endif
+
                 <flux:navlist.item
                     :href="route('appearance.edit')"
                     wire:navigate

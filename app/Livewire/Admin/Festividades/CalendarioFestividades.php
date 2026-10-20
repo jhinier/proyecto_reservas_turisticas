@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire que organiza festividades en una vista de calendario.
+ */
+
 namespace App\Livewire\Admin\Festividades;
 
 use App\Models\Actividad;
@@ -26,7 +30,7 @@ class CalendarioFestividades extends Component
     public string $diaSeleccionado;
 
     protected $listeners = [
-        'abrirCalendario' => 'abrir'
+        'abrirCalendarioEventosGad' => 'abrir'
     ];
 
     public function mount()

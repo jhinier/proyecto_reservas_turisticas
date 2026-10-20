@@ -1,3 +1,4 @@
+{{-- Vista del buscador publico para filtrar servicios por texto y tipo. --}}
 <div class="max-w-6xl mx-auto px-4 py-8 ">
     
     <div class="flex justify-center mb-12">

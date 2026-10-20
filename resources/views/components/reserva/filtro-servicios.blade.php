@@ -1,3 +1,4 @@
+{{-- Filtro reutilizable para cambiar la categoria de servicios dentro de una reserva. --}}
 @props(['categorias', 'filtroCategoria'])
 
 <div class="space-y-1">

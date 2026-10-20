@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * Modelo Eloquent principal para servicios ofrecidos por emprendimientos.
+ * Guarda datos comunes como nombre, descripcion, precio y stock, y conecta con categoria,
+ * imagenes y detalles especificos de hospedaje, guianza, alimentacion o paquete.
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

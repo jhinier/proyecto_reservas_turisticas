@@ -1,3 +1,4 @@
+{{-- Vista administrativa para crear, editar, listar y eliminar actividades turisticas. --}}
 <div class="space-y-6">
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
@@ -818,7 +819,7 @@
 
                                 @foreach ($imagenesGuardadas as $img)
 
-                                    <div class="relative group/thumb">
+                                    <div class="relative group/thumb" wire:key="actividad-imagen-{{ $img->id }}">
 
                                         <img
                                             src="{{ asset('storage/' . $img->imagen) }}"
@@ -829,7 +830,9 @@
 
                                         <button
                                             type="button"
-                                            wire:click="eliminarImagen({{ $img->id }})"
+                                            wire:click.stop.prevent="eliminarImagen({{ $img->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="eliminarImagen({{ $img->id }})"
                                             class="absolute -top-1.5 -right-1.5
                                                    bg-red-500 hover:bg-red-600
                                                    text-white w-5 h-5 rounded-full

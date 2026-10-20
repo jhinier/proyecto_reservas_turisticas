@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire para crear, editar, listar y eliminar actividades turisticas del GAD.
+ */
+
 namespace App\Livewire\Admin;
 
 use Livewire\Component;
@@ -90,10 +94,10 @@ class GestionActividadesTuristicas extends Component
     {
         $this->validate([
             'nombre' => 'required|string',
-            'descripcion' => 'required|string',
+            'descripcion' => 'required|string|max:10000',
             'duracion_estimada' => 'required|string',
             'dificultad' => 'required|string',
-            'recomendaciones' => 'required|string',
+            'recomendaciones' => 'required|string|max:10000',
             'imagenes.*' => 'nullable|image|max:5120',
         ]);
 
@@ -146,13 +150,24 @@ class GestionActividadesTuristicas extends Component
     // Función del gestor de galería para eliminar fotos individuales sin cerrar el modal
     public function eliminarImagen($id)
     {
-        $imagen = ImagenPublicacion::findOrFail($id);
-        Storage::disk('public')->delete($imagen->imagen);
+        $imagen = ImagenPublicacion::find($id);
+
+        if (! $imagen) {
+            return;
+        }
+
+        $publicacionId = $this->publicacionId ?: $imagen->publicacion_id;
+        $ruta = str_replace('storage/', '', $imagen->imagen);
+
+        if ($ruta !== '') {
+            Storage::disk('public')->delete($ruta);
+        }
+
         $imagen->delete();
 
         // Refrescar el visor de la galería en caliente
-        if ($this->modoEdicion) {
-            $this->imagenesGuardadas = ImagenPublicacion::where('publicacion_id', $this->publicacionId)->get();
+        if ($this->modoEdicion && $publicacionId) {
+            $this->imagenesGuardadas = ImagenPublicacion::where('publicacion_id', $publicacionId)->get();
         }
     }
 
@@ -164,7 +179,8 @@ class GestionActividadesTuristicas extends Component
 
         // Borrar archivos del storage físico
         foreach ($actividad->publicacion->imagenes as $img) {
-            Storage::disk('public')->delete($img->imagen);
+            $ruta = str_replace('storage/', '', $img->imagen);
+            Storage::disk('public')->delete($ruta);
             $img->delete();
         }
 

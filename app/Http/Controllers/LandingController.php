@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Controlador de paginas publicas principales.
+ * Carga la pagina de inicio y los detalles publicos de sitios, actividades y festividades turisticas.
+ */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;

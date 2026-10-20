@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para imagenes asociadas a publicaciones turisticas del GAD.
+ * Se usa en sitios, actividades y festividades para manejar galerias publicas.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

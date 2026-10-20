@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire que muestra indicadores y resumen general del administrador GAD.
+ */
+
 namespace App\Livewire\Admin;
 
 use Livewire\Component;

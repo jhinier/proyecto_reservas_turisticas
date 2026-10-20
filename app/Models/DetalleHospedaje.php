@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo Eloquent para el detalle especifico de un servicio de hospedaje.
+ * Maneja la capacidad del alojamiento y hereda su identificador desde el servicio base.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

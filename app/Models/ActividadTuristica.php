@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Modelo Eloquent para actividades turisticas publicadas por el administrador GAD.
+ * Usa la publicacion turistica como registro principal y agrega datos propios
+ * como duracion estimada, dificultad y recomendaciones.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

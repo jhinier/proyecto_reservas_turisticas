@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Modelo pivote entre emprendimientos y tipos de servicio.
+ * Representa una categoria habilitada para un emprendimiento y sirve como padre de sus servicios.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;

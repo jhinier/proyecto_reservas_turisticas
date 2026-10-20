@@ -67,6 +67,12 @@
                     “Descubre, reserva y vive experiencias.”
                 </p>
             </div>
+
+            <div class="mt-8">
+                <a href="{{ route('home') }}" class="inline-flex items-center justify-center rounded-full border border-[#7ed957]/70 px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#7ed957] transition hover:bg-[#7ed957] hover:text-black">
+                    Inicio
+                </a>
+            </div>
         </div>
 
         <div class="w-full max-w-md bg-black/50 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 lg:p-10 shadow-2xl">

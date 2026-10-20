@@ -1,4 +1,4 @@
-<footer class="relative mt-10 overflow-hidden bg-[#014726] text-white dark:bg-[#031f17] sm:mt-16">
+<footer data-scroll-top-footer class="relative mt-10 overflow-hidden bg-[#014726] text-white dark:bg-[#031f17] sm:mt-16">
     {{-- Linea decorativa superior --}}
     <div class="h-1 w-full bg-gradient-to-r from-[#0b8a0f] via-[#7ed957] to-[#0b8a0f] dark:from-[#052d1e] dark:via-[#7ed957] dark:to-[#052d1e]"></div>
 
@@ -221,12 +221,61 @@
 
     <button
         type="button"
+        data-footer-scroll-top
         onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
         aria-label="Volver arriba"
-        class="group fixed bottom-4 right-4 z-50 flex h-10 w-10 items-center justify-center rounded-xl bg-[#7ed957] text-[#10251b] shadow-lg shadow-black/20 transition duration-300 hover:-translate-y-1 hover:bg-[#91e76b] focus:outline-none focus:ring-2 focus:ring-[#7ed957] focus:ring-offset-2 focus:ring-offset-[#10251b] dark:focus:ring-offset-[#031f17] sm:bottom-6 sm:right-6 sm:h-11 sm:w-11"
+        class="group pointer-events-none fixed bottom-28 right-4 z-50 flex h-10 w-10 translate-y-4 items-center justify-center rounded-xl bg-[#7ed957] text-[#10251b] opacity-0 shadow-lg shadow-black/20 transition duration-300 hover:-translate-y-1 hover:bg-[#91e76b] focus:outline-none focus:ring-2 focus:ring-[#7ed957] focus:ring-offset-2 focus:ring-offset-[#10251b] dark:focus:ring-offset-[#031f17] sm:bottom-6 sm:right-6 sm:h-11 sm:w-11"
     >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
         </svg>
     </button>
+
+    <script>
+        (() => {
+            const initFooterScrollTop = () => {
+                document.querySelectorAll('[data-scroll-top-footer]').forEach((footer) => {
+                    const button = footer.querySelector('[data-footer-scroll-top]');
+
+                    if (!button || button.dataset.ready === 'true') {
+                        return;
+                    }
+
+                    button.dataset.ready = 'true';
+
+                    const toggleButton = (isVisible) => {
+                        button.classList.toggle('opacity-0', !isVisible);
+                        button.classList.toggle('pointer-events-none', !isVisible);
+                        button.classList.toggle('translate-y-4', !isVisible);
+                    };
+
+                    toggleButton(false);
+
+                    if ('IntersectionObserver' in window) {
+                        new IntersectionObserver(
+                            ([entry]) => toggleButton(entry.isIntersecting),
+                            { threshold: 0.08 }
+                        ).observe(footer);
+
+                        return;
+                    }
+
+                    const updateVisibility = () => {
+                        const rect = footer.getBoundingClientRect();
+                        toggleButton(rect.top < window.innerHeight && rect.bottom > 0);
+                    };
+
+                    updateVisibility();
+                    window.addEventListener('scroll', updateVisibility, { passive: true });
+                    window.addEventListener('resize', updateVisibility);
+                });
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initFooterScrollTop, { once: true });
+            } else {
+                initFooterScrollTop();
+            }
+        })();
+    </script>
 </footer>

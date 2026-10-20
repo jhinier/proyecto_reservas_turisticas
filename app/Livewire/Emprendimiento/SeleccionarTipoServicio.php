@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire para seleccionar los tipos de servicio que ofrece el emprendimiento.
+ */
+
 namespace App\Livewire\Emprendimiento;
 
 use Livewire\Component;

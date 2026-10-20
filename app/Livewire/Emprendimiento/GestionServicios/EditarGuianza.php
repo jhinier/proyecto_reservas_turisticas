@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire para cargar y actualizar un servicio de guianza.
+ */
+
 namespace App\Livewire\Emprendimiento\GestionServicios;
 
 use Livewire\Component;

@@ -59,9 +59,9 @@
 
             </h2>
 
-            <div class="text-gray-600 text-lg leading-9 text-justify dark:text-slate-300">
+            <div class="text-gray-600 text-lg leading-9 text-justify whitespace-pre-line dark:text-slate-300">
 
-                {!! nl2br(e($actividad->publicacion->descripcion)) !!}
+                {{ $actividad->publicacion->descripcion }}
 
             </div>
 

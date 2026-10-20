@@ -2,15 +2,21 @@
 
 use App\Models\User;
 use Laravel\Fortify\Features;
+use Spatie\Permission\Models\Role;
 
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
 
-    $response->assertOk();
+    $response
+        ->assertOk()
+        ->assertSee('Inicio');
 });
 
 test('users can authenticate using the login screen', function () {
+    Role::create(['name' => 'turista']);
+
     $user = User::factory()->create();
+    $user->assignRole('turista');
 
     $response = $this->post(route('login.store'), [
         'email' => $user->email,
@@ -19,7 +25,7 @@ test('users can authenticate using the login screen', function () {
 
     $response
         ->assertSessionHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
+        ->assertRedirect(route('home'));
 
     $this->assertAuthenticated();
 });
@@ -45,8 +51,10 @@ test('users with two factor enabled are redirected to two factor challenge', fun
         'confirm' => true,
         'confirmPassword' => true,
     ]);
+    Role::create(['name' => 'turista']);
 
     $user = User::factory()->withTwoFactor()->create();
+    $user->assignRole('turista');
 
     $response = $this->post(route('login.store'), [
         'email' => $user->email,

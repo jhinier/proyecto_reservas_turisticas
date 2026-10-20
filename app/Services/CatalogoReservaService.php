@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Servicio que arma el catalogo de servicios disponibles para una reserva.
+ */
+
 namespace App\Services;
 
 use App\Services\ServicioService;

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Componente Livewire para registrar un nuevo servicio de guianza.
+ */
+
 namespace App\Livewire\Emprendimiento\GestionServicios;
 
 use Livewire\Component;

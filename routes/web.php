@@ -126,6 +126,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reservas/nueva', CrearReserva::class)->name('emprendimiento.reservas.crear');
         Route::get('/reportes', \App\Livewire\Emprendimiento\GestionReportes::class)->name('emprendimiento.reportes'); // <--- EL NOMBRE TIENE QUE SER ESTE EXACTO
         Route::get('/reportes/descargar', [App\Http\Controllers\Emprendimiento\ReporteEmprendedorController::class, 'descargarReporte'])->name('reportes.descargar');
+        Route::get('/reportes/descargar-excel', [App\Http\Controllers\Emprendimiento\ReporteEmprendedorController::class, 'descargarExcel'])->name('reportes.descargar.excel');
     });
 
    // --- GRUPO DEL TURISTA ---

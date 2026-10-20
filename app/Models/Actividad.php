@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Modelo Eloquent para las actividades internas de una festividad.
+ * Guarda fecha, hora, lugar, descripcion e imagen de cada actividad vinculada
+ * a una publicacion turistica del modulo de festividades del GAD.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

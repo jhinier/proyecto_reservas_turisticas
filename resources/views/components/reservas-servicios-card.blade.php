@@ -1,3 +1,4 @@
+{{-- Tarjeta reutilizable para mostrar un servicio disponible dentro del flujo de reservas. --}}
 @props(['servicio', 'onSelect' => null])
 
 @php

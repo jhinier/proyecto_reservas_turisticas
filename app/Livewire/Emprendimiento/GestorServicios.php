@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * Componente Livewire principal para navegar categorias y vistas de servicios del emprendimiento.
+ */
 namespace App\Livewire\Emprendimiento;
 
 use Livewire\Component;

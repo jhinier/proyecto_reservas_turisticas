@@ -176,6 +176,15 @@
                                             'Cancelada', 'Rechazada' => '<span class="text-[8px] bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-300 px-1.5 py-0.5 rounded font-black tracking-wider uppercase border border-red-200 dark:border-red-400/20">Canc.</span>',
                                             default => '<span class="text-[8px] bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-300 px-1.5 py-0.5 rounded font-black tracking-wider uppercase border border-yellow-200 dark:border-yellow-400/20">Pend.</span>',
                                         };
+                                        $badgeTexto = strip_tags($badgeEstado);
+                                        $badgeClases = match($estadoReserva) {
+                                            'Confirmada' => 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-400/20',
+                                            'Completada' => 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-400/20',
+                                            'Pago en revisiÃ³n' => 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-400/20',
+                                            'Reagendada' => 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-400/20',
+                                            'Cancelada', 'Rechazada' => 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-300 border-red-200 dark:border-red-400/20',
+                                            default => 'bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-400/20',
+                                        };
                                     @endphp
 
                                     <div class="flex gap-3 items-center">
@@ -186,7 +195,9 @@
                                         <div wire:click="mostrarDetalle({{ $item->reserva->id }})" class="flex-1 p-3 rounded-xl shadow-sm flex flex-col hover:scale-[1.02] transition cursor-pointer {{ $estilo }}">
                                             <div class="flex items-start justify-between mb-0.5">
                                                 <h4 class="text-sm font-bold text-[#3B4D36] dark:text-emerald-50 pr-2">{{ $item->servicio->nombre }}</h4>
-                                                <div class="shrink-0">{!! $badgeEstado !!}</div>
+                                                <div class="shrink-0">
+                                                    <span class="text-[8px] px-1.5 py-0.5 rounded font-black tracking-wider uppercase border {{ $badgeClases }}">{{ $badgeTexto }}</span>
+                                                </div>
                                             </div>
                                             <div class="flex items-center gap-2 mt-1">
                                                 <p class="text-[9px] text-slate-500 dark:text-emerald-100/60 uppercase tracking-wider font-bold">{{ $item->servicio->tipoServicio->nombre }}</p>
@@ -262,6 +273,15 @@
                                                 'Cancelada', 'Rechazada' => '<span class="text-[8px] bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-300 px-1.5 py-0.5 rounded font-black tracking-wider uppercase border border-red-200 dark:border-red-400/20 shadow-sm">Canc.</span>',
                                                 default => '<span class="text-[8px] bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-300 px-1.5 py-0.5 rounded font-black tracking-wider uppercase border border-yellow-200 dark:border-yellow-400/20 shadow-sm">Pend.</span>',
                                             };
+                                            $badgeTexto = strip_tags($badgeEstado);
+                                            $badgeClases = match($estadoReserva) {
+                                                'Confirmada' => 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-400/20',
+                                                'Completada' => 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-400/20',
+                                                'Pago en revisiÃ³n' => 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-400/20',
+                                                'Reagendada' => 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-400/20',
+                                                'Cancelada', 'Rechazada' => 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-300 border-red-200 dark:border-red-400/20',
+                                                default => 'bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-400/20',
+                                            };
                                         @endphp
 
                                         <div wire:click="mostrarDetalle({{ $item->reserva->id }})" class="p-2 rounded-lg shadow-sm transition flex flex-col gap-1 hover:shadow-md cursor-pointer {{ $estilo['bg'] }} {{ $estilo['border'] }}">
@@ -271,7 +291,7 @@
                                                     <span class="text-[10px] font-black">{{ $hora }}</span>
                                                 </div>
                                                 <div class="flex items-center">
-                                                    {!! $badgeEstado !!}
+                                                    <span class="text-[8px] px-1.5 py-0.5 rounded font-black tracking-wider uppercase border shadow-sm {{ $badgeClases }}">{{ $badgeTexto }}</span>
                                                 </div>
                                             </div>
                                             <p class="text-xs font-bold leading-tight {{ $estilo['text'] }} line-clamp-3">{{ $item->servicio->nombre }}</p>

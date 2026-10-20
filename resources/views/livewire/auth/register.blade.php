@@ -62,6 +62,12 @@
                 Crea tu cuenta para gestionar tus reservaciones, guardar tus lugares favoritos y planificar tu próxima aventura en la naturaleza.
             </p>
 
+            <div class="mt-6">
+                <a href="{{ route('home') }}" class="inline-flex items-center justify-center rounded-full border border-[#7ed957]/70 px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#7ed957] transition hover:bg-[#7ed957] hover:text-black">
+                    Inicio
+                </a>
+            </div>
+
             <div class="mt-8 border-l-4 border-[#7ed957] pl-5">
                 <p class="text-white italic text-lg lg:text-xl font-light">
                     “El primer paso hacia tu próxima experiencia inolvidable.”
@@ -102,8 +108,8 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Nombre</label>
-                                <input type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" placeholder="Tu nombre"
+                                <label class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Nombres</label>
+                                <input type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" placeholder="Tus nombres"
                                     class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-gray-500 focus:border-[#7ed957] focus:bg-white/10 focus:outline-none transition text-sm">
                                 @error('name') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
                             </div>
@@ -310,10 +316,23 @@
 <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 @if(session()->has('registro_pending_token') || session()->has('registro.pending.token'))
+    <div
+        id="registro-pending-config"
+        hidden
+        data-estado-url="{{ route('registro.estado', [], false) }}"
+        data-registro-token="{{ session('registro_pending_token', session('registro.pending.token')) }}"
+    ></div>
+
     <script>
         (() => {
-            const estadoUrl = new URL(@json(route('registro.estado', [], false)), window.location.origin);
-            const registroToken = @json(session('registro_pending_token', session('registro.pending.token')));
+            const registroConfig = document.getElementById('registro-pending-config');
+
+            if (!registroConfig) {
+                return;
+            }
+
+            const estadoUrl = new URL(registroConfig.dataset.estadoUrl || '/registro/estado', window.location.origin);
+            const registroToken = registroConfig.dataset.registroToken || '';
             let consultando = false;
             let redireccionando = false;
 
