@@ -551,7 +551,7 @@
                         />
 
                         <span>
-                            Festividades
+                            Eventos
                         </span>
 
                     </a>
